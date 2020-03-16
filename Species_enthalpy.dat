@@ -1,0 +1,118 @@
+! References:
+!   BM02: Binnewies and Milke 2002
+!   BP95: Barin, I. and Platzki, G. 1995, Thermochemical data of pure substances
+!   VS91: Vandooren et al. 1991
+!   NCet10: Nagy et al. 2010
+!   NIST Chemistry WebBook: http://webbook.nist.gov/chemistry/
+!23456789ABC123456789ABC123456789ABC123456789ABC123456789ABC123456789ABC123456789ABC12345678912345678912345678912345612345612312123
+gC           716.7   !kJ/mol, http://webbook.nist.gov/cgi/cbook.cgi?ID=C7440440&Units=SI&Mask=1#Thermo-Gas
+gCH          594.1   !kJ/mol, BM02, p238
+gCH2         386.4   !kJ/mol, BM02, p240
+gCH3         145.7   !kJ/mol, BM02, p241
+gCH3O        17.0    !kJ/mol, http://webbook.nist.gov/cgi/cbook.cgi?ID=C2143682&Units=SI&Mask=1#Thermo-Gas
+gCH2OH       -9.0    !kJ/mol, http://webbook.nist.gov/cgi/cbook.cgi?ID=C2597435&Units=SI&Mask=1#Thermo-Gas
+gCH3OH       -201.2  !kJ/mol, BM02, p241
+gCH4         -74.9   !kJ/mol, BM02, p241
+gCN          435.1   !kJ/mol, BM02, p247
+gCO          -110.5  !kJ/mol, BM02, p251
+gCO2         -393.5  !kJ/mol, BM02, p251
+gCS          280.3   !kJ/mol, BM02, p253
+gH           218.0   !kJ/mol, BM02, p558
+gH2          0.0     !kJ/mol, BM02, p568
+gH2CO        -115.9  !kJ/mol, BM02, p240
+gH2O         -241.8  !kJ/mol, BM02, p571
+gH2O2        -135.8  !kJ/mol, BM02, p572
+gH2S         -20.5   !kJ/mol, BM02, p574
+gHCN         135.1   !kJ/mol, BM02, p239
+gHNC         135.1   !kJ/mol, Est
+gHCO         43.5    !kJ/mol, BM02, p239
+gHCOO        -386.8  !kJ/mol, http://chem.engr.utc.edu/webres/331f/teams-98/chp/Boiler%20DC/tsld007.htm 
+gHCOOH       -378.6  !kJ/mol, BM02, p240
+gHCS         296.2   !kJ/mol, http://www.sciencemag.org/content/279/5354/1181.full
+gHNO         99.6    !kJ/mol, BM02, p563
+gHNO2        -78.8   !kJ/mol, BM02, p563
+gHNO3        -134.3  !kJ/mol, BM02, p563
+gHS          139.3   !kJ/mol, BM02, p567
+gN           472.7   !kJ/mol, BM02, p693
+gN2          0.0     !kJ/mol, BM02, p699
+!gN2H         58.6    !kJ/mol, VS91
+gN2H         245.2   !kJ/mol, VS91
+gN2H2        213.0   !kJ/mol, BM02, p570
+gNH          376.6   !kJ/mol, BM02, p563
+gNH2         190.4   !kJ/mol, BM02, p570
+gNH2CHO      -186.0  !kJ/mol, http://webbook.nist.gov/cgi/cbook.cgi?ID=C75127&Units=SI&Mask=1#Thermo-Gas
+gNH2CO       -13.1   !kJ/mol, NCet10
+gNH3         -45.9   !kJ/mol, BM02, p577
+gNHCO        -101.7  !kJ/mol, BM02, p239
+gNO          90.3    !kJ/mol, BM02, p695
+gNO2         33.1    !kJ/mol, BM02, p695
+gNO3         71.1    !kJ/mol, BM02, p695
+gO           249.2   !kJ/mol, BM02, p733
+gO2          0.0     !kJ/mol, BM02, p741
+gO2H         2.1     !kJ/mol, BM02, p567
+gO3          142.7   !kJ/mol, BM02, p752
+gOCN         159.4   !kJ/mol, BM02, p248
+gOCS         -138.4  !kJ/mol, BM02, p251
+gOH          39.0    !kJ/mol, BM02, p566 
+gS           277.0   !kJ/mol, BM02, p811
+gSO          5.0     !kJ/mol, BM02, p736
+gSO2         -296.8  !kJ/mol, BM02, p743
+gC2          837.74  !kJ/mol, http://webbook.nist.gov/cgi/cbook.cgi?ID=C12070154&Units=SI&Mask=1#Thermo-Gas
+gC2H         476.98  !kJ/mol, http://webbook.nist.gov/cgi/cbook.cgi?ID=C2122487&Units=SI&Mask=1#Thermo-Gas
+gC2H2        226.73  !kJ/mol, http://webbook.nist.gov/cgi/cbook.cgi?ID=C74862&Units=SI&Mask=1#Thermo-Gas
+
+!23456789ABC123456789ABC123456789ABC123456789ABC123456789ABC123456789ABC123456789ABC12345678912345678912345678912345612345612312123
+C            716.7   !kJ/mol, http://webbook.nist.gov/cgi/cbook.cgi?ID=C7440440&Units=SI&Mask=1#Thermo-Gas
+CH           594.1   !kJ/mol, BM02, p238
+CH2          386.4   !kJ/mol, BM02, p240
+CH3          145.7   !kJ/mol, BM02, p241
+CH3O         17.0    !kJ/mol, http://webbook.nist.gov/cgi/cbook.cgi?ID=C2143682&Units=SI&Mask=1#Thermo-Gas
+CH2OH        -9.0    !kJ/mol, http://webbook.nist.gov/cgi/cbook.cgi?ID=C2597435&Units=SI&Mask=1#Thermo-Gas
+CH3OH        -201.2  !kJ/mol, BM02, p241
+CH4          -74.9   !kJ/mol, BM02, p241
+CN           435.1   !kJ/mol, BM02, p247
+CO           -110.5  !kJ/mol, BM02, p251
+CO2          -393.5  !kJ/mol, BM02, p251
+CS           280.3   !kJ/mol, BM02, p253
+H            218.0   !kJ/mol, BM02, p558
+H2           0.0     !kJ/mol, BM02, p568
+H2CO         -115.9  !kJ/mol, BM02, p240
+H2O          -241.8  !kJ/mol, BM02, p571
+H2O2         -135.8  !kJ/mol, BM02, p572
+H2S          -20.5   !kJ/mol, BM02, p574
+HCN          135.1   !kJ/mol, BM02, p239
+HNC          135.1   !kJ/mol, Est
+HCO          43.5    !kJ/mol, BM02, p239
+HCOO         -386.8  !kJ/mol, http://chem.engr.utc.edu/webres/331f/teams-98/chp/Boiler%20DC/tsld007.htm 
+HCOOH        -378.6  !kJ/mol, BM02, p240
+HCS          296.2   !kJ/mol, http://www.sciencemag.org/content/279/5354/1181.full
+HNO          99.6    !kJ/mol, BM02, p563
+HNO2         -78.8   !kJ/mol, BM02, p563
+HNO3         -134.3  !kJ/mol, BM02, p563
+HS           139.3   !kJ/mol, BM02, p567
+N            472.7   !kJ/mol, BM02, p693
+N2           0.0     !kJ/mol, BM02, p699
+N2H          245.2   !kJ/mol, VS91
+N2H2         213.0   !kJ/mol, BM02, p570
+NH           376.6   !kJ/mol, BM02, p563
+NH2          190.4   !kJ/mol, BM02, p570
+NH2CHO       -186.0  !kJ/mol, http://webbook.nist.gov/cgi/cbook.cgi?ID=C75127&Units=SI&Mask=1#Thermo-Gas
+NH2CO        -13.1   !kJ/mol, NCet10
+NH3          -45.9   !kJ/mol, BM02, p577
+NHCO         -101.7  !kJ/mol, BM02, p239
+NO           90.3    !kJ/mol, BM02, p695
+NO2          33.1    !kJ/mol, BM02, p695
+NO3          71.1    !kJ/mol, BM02, p695
+O            249.2   !kJ/mol, BM02, p733
+O2           0.0     !kJ/mol, BM02, p741
+O2H          2.1     !kJ/mol, BM02, p567
+O3           142.7   !kJ/mol, BM02, p752
+OCN          159.4   !kJ/mol, BM02, p248
+OCS          -138.4  !kJ/mol, BM02, p251
+OH           39.0    !kJ/mol, BM02, p566 
+S            277.0   !kJ/mol, BM02, p811
+SO           5.0     !kJ/mol, BM02, p736
+SO2          -296.8  !kJ/mol, BM02, p743
+C2           837.74  !kJ/mol, http://webbook.nist.gov/cgi/cbook.cgi?ID=C12070154&Units=SI&Mask=1#Thermo-Gas
+C2H          476.98  !kJ/mol, http://webbook.nist.gov/cgi/cbook.cgi?ID=C2122487&Units=SI&Mask=1#Thermo-Gas
+C2H2         226.73  !kJ/mol, http://webbook.nist.gov/cgi/cbook.cgi?ID=C74862&Units=SI&Mask=1#Thermo-Gas
