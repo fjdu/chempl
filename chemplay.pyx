@@ -98,11 +98,12 @@ cdef class pyUserData:
   cdef User_data user_data
   cdef Updater_RE updater_re
 
-  def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6):
+  def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6,
+                 showmsg=1, msglun=6):
     self.updater_re.set_user_data(self.user_data.ptr)
     self.updater_re.initialize_solver(rtol, atol, mf, LRW_F)
-    self.updater_re.set_solver_msg(1);
-    self.updater_re.set_solver_msg_lun(19);
+    self.updater_re.set_solver_msg(showmsg);
+    self.updater_re.set_solver_msg_lun(msglun);
 
   def allocate_y(self):
     self.user_data.allocate_y()

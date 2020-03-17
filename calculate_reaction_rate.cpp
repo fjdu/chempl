@@ -26,10 +26,10 @@ TYPES::DTP_FLOAT rate_adsorption(
     TYPES::AuxData& m)
 {
   r.drdy[0] = r.abc[0] // Act as sticking efficiency
-       * p.get_n_gas(t)
-       * p.get_dust2gas_num()
-       * p.get_dust_crosssec()
-       * thermal_velocity_CGS(p.get_T_gas(t),
+       * p.n_gas
+       * p.dust2gas_num
+       * p.dust_crosssec
+       * thermal_velocity_CGS(p.T_gas,
                               s.massSpecies.at(r.idxReactants[0]));
   return NV_Ith_S(y, r.idxReactants[0]) * r.drdy[0];
 }
@@ -45,8 +45,8 @@ TYPES::DTP_FLOAT rate_desorption(
 {
   r.drdy[0] = s.vibFreqs.at(r.idxReactants[0])
     * r.abc[0]
-    * (exp(-r.abc[2]/p.get_T_dust(t))
-     + p.get_chi_cosmicray()
+    * (exp(-r.abc[2]/p.T_dust)
+     + p.chi_cosmicray
      * CONST::phy_cosmicray_desorption_factor
      * exp(-r.abc[2] / CONST::phy_cosmicray_desorption_T));
   return r.drdy[0] * NV_Ith_S(y, r.idxReactants[0]);
@@ -61,14 +61,14 @@ TYPES::DTP_FLOAT rate_ion_neutral(
     const TYPES::Species& s,
     TYPES::AuxData& m)
 {
-  double Tgas = p.get_T_gas(t), tmp;
+  double Tgas = p.T_gas, tmp;
   if (((Tgas < r.Trange[0]) || (Tgas > r.Trange[1])) &&
       (r.Trange[1] > 0.0)) {
     tmp = 0.0;
   } else {
-    tmp = p.get_n_gas(t) * r.abc[0]
-        * pow(p.get_T_gas(t)/3e2, r.abc[1])
-        * exp(-r.abc[2] / p.get_T_gas(t));
+    tmp = p.n_gas * r.abc[0]
+        * pow(p.T_gas/3e2, r.abc[1])
+        * exp(-r.abc[2] / p.T_gas);
   }
   r.drdy[0] = tmp * NV_Ith_S(y, r.idxReactants[1]);
   r.drdy[1] = tmp * NV_Ith_S(y, r.idxReactants[0]);
@@ -86,7 +86,7 @@ TYPES::DTP_FLOAT rate_cosmicray_ionization(
     const TYPES::Species& s,
     TYPES::AuxData& m)
 {
-  r.drdy[0] = r.abc[0] * p.get_chi_cosmicray();
+  r.drdy[0] = r.abc[0] * p.chi_cosmicray;
   return NV_Ith_S(y, r.idxReactants[0]) * r.drdy[0];
 }
 
@@ -99,9 +99,9 @@ TYPES::DTP_FLOAT rate_cosmicray_induced_ionization(
     const TYPES::Species& s,
     TYPES::AuxData& m)
 {
-  r.drdy[0] = r.abc[0] * p.get_chi_cosmicray()
-       * pow(p.get_T_gas(t)/3e2, r.abc[1])
-       * r.abc[2] / (1.0 - p.get_dust_albedo());
+  r.drdy[0] = r.abc[0] * p.chi_cosmicray
+       * pow(p.T_gas/3e2, r.abc[1])
+       * r.abc[2] / (1.0 - p.dust_albedo);
   return NV_Ith_S(y, r.idxReactants[0]) * r.drdy[0];
 }
 
@@ -114,7 +114,24 @@ TYPES::DTP_FLOAT rate_photoionization(
     const TYPES::Species& s,
     TYPES::AuxData& m)
 {
-  r.drdy[0] = r.abc[0] * p.get_G0_UV() * exp(-r.abc[2] * p.get_Av());
+  r.drdy[0] = r.abc[0] * p.G0_UV * exp(-r.abc[2] * p.Av);
+  return NV_Ith_S(y, r.idxReactants[0]) * r.drdy[0];
+}
+
+
+TYPES::DTP_FLOAT rate_photodissociation_H2(
+    const TYPES::DTP_FLOAT& t,
+    double *y,
+    TYPES::Reaction& r,
+    const TYPES::PhyParams& p,
+    const TYPES::Species& s,
+    TYPES::AuxData& m)
+{ // Draine, 31.25 -- 31.27
+  double x = p.Ncol_H2/5e14;
+  double t1 = 1 + x/p.dv_km_s, t2 = sqrt(1+x);
+  double f_SS = 0.965/(t1*t1)
+              + 0.035/t2 * exp(-8.5e-4*t2);
+  r.drdy[0] = f_SS * r.abc[0] * p.G0_UV * exp(-r.abc[2] * p.Av);
   return NV_Ith_S(y, r.idxReactants[0]) * r.drdy[0];
 }
 
@@ -143,13 +160,13 @@ TYPES::DTP_FLOAT rate_surface_AA(
     const TYPES::Species& s,
     TYPES::AuxData& m)
 {
-  double Tdust = p.get_T_dust(t);
+  double Tdust = p.T_dust;
   int i0 = r.idxReactants[0];
   TYPES::DTP_FLOAT tmp =
          std::max(s.vibFreqs.at(i0) * exp(-s.diffBarriers.at(i0)/Tdust),
                   s.quantMobilities.at(i0))
-       / (4.0*p.get_dust_crosssec()*p.get_dust_site_density())
-       / p.get_dust2gas_num() * r.abc[0] * calc_cross_surf_barrier_prob(Tdust, r);
+       / (4.0*p.dust_crosssec*p.dust_site_density)
+       / p.dust2gas_num * r.abc[0] * calc_cross_surf_barrier_prob(Tdust, r);
   r.drdy[0] = tmp * NV_Ith_S(y, i0);
   r.drdy[1] = tmp * NV_Ith_S(y, i0);
   return NV_Ith_S(y, i0) * NV_Ith_S(y, i0) * tmp;
@@ -164,15 +181,15 @@ TYPES::DTP_FLOAT rate_surface_AB(
     const TYPES::Species& s,
     TYPES::AuxData& m)
 {
-  double Tdust = p.get_T_dust(t);
+  double Tdust = p.T_dust;
   int i0 = r.idxReactants[0], i1 = r.idxReactants[1];
   TYPES::DTP_FLOAT tmp =
       (std::max(s.vibFreqs.at(i0) * exp(-s.diffBarriers.at(i0)/Tdust),
                 s.quantMobilities.at(i0))
      + std::max(s.vibFreqs.at(i1) * exp(-s.diffBarriers.at(i1)/Tdust),
                 s.quantMobilities.at(i1)))
-    / (4.0*p.get_dust_crosssec()*p.get_dust_site_density())
-    / p.get_dust2gas_num() * r.abc[0] * calc_cross_surf_barrier_prob(Tdust, r);
+    / (4.0*p.dust_crosssec*p.dust_site_density)
+    / p.dust2gas_num * r.abc[0] * calc_cross_surf_barrier_prob(Tdust, r);
   r.drdy[0] = tmp * NV_Ith_S(y, i1);
   r.drdy[1] = tmp * NV_Ith_S(y, i0);
   return NV_Ith_S(y, i0) * NV_Ith_S(y, i1) * tmp;
@@ -217,8 +234,8 @@ TYPES::DTP_FLOAT rate_surf2mant(
   if (m.t_calc != t) {
     update_surfmant(t, y, p, s, m);
   }
-  r.drdy[0] = m.k_ads_tot / p.get_dust2gas_num()
-       / (4.0*p.get_dust_crosssec()*p.get_dust_site_density());
+  r.drdy[0] = m.k_ads_tot / p.dust2gas_num
+       / (4.0*p.dust_crosssec*p.dust_site_density);
   return NV_Ith_S(y, i0) * r.drdy[0];
 }
 
@@ -249,10 +266,10 @@ TYPES::DTP_FLOAT rate_iongrain(
     const TYPES::Species& s,
     TYPES::AuxData& m)
 {
-  double TemperatureReduced = CONST::phy_kBoltzmann_SI * p.get_T_gas(t)
+  double TemperatureReduced = CONST::phy_kBoltzmann_SI * p.T_gas
                             / (pow(CONST::phy_elementaryCharge_SI,2)
                              * CONST::phy_CoulombConst_SI
-                             / (p.get_dust_radius()*1e-2));
+                             / (p.dust_radius*1e-2));
   double JNegaPosi = (1.0 + 1.0/TemperatureReduced)
                    * (1.0 + sqrt(2.0/(2.0+TemperatureReduced)));
   double JChargeNeut = 1.0 + sqrt(CONST::PI/2.0/TemperatureReduced);
@@ -269,11 +286,11 @@ TYPES::DTP_FLOAT rate_iongrain(
   }
   int tmp;
   if (charge < 0) {
-    tmp = p.get_dust_crosssec() * JNegaPosi
-        * thermal_velocity_CGS(p.get_T_gas(t), s.massSpecies.at(i2));
+    tmp = p.dust_crosssec * JNegaPosi
+        * thermal_velocity_CGS(p.T_gas, s.massSpecies.at(i2));
   } else {
-    tmp = p.get_dust_crosssec() * JChargeNeut
-        * thermal_velocity_CGS(p.get_T_gas(t), s.massSpecies.at(i2));
+    tmp = p.dust_crosssec * JChargeNeut
+        * thermal_velocity_CGS(p.T_gas, s.massSpecies.at(i2));
   }
   r.drdy[0] = tmp * NV_Ith_S(y, i1);
   r.drdy[1] = tmp * NV_Ith_S(y, i0);
@@ -289,12 +306,12 @@ TYPES::DTP_FLOAT rate_photodesorption(
     const TYPES::Species& s,
     TYPES::AuxData& m)
 {
-  double yield = r.abc[0] + r.abc[1] * p.get_T_gas(t);
-  double uv_flux = p.get_G0_UV() * exp(-CONST::phy_UVext2Av * p.get_Av())
+  double yield = r.abc[0] + r.abc[1] * p.T_gas;
+  double uv_flux = p.G0_UV * exp(-CONST::phy_UVext2Av * p.Av)
                  * CONST::phy_Habing_photon_flux_CGS;
-  double rate = uv_flux * yield * p.get_dust2gas_num() * p.get_dust_crosssec();
-  double tmp1 = p.get_dust2gas_num()
-              * (4.0 * p.get_dust_site_density() * p.get_dust_crosssec());
+  double rate = uv_flux * yield * p.dust2gas_num * p.dust_crosssec;
+  double tmp1 = p.dust2gas_num
+              * (4.0 * p.dust_site_density * p.dust_crosssec);
   double tmp = NV_Ith_S(y, r.idxReactants[0]) / tmp1;
   if (tmp < 1e-6) {
     r.drdy[0] = rate / tmp1;
@@ -318,6 +335,13 @@ TYPES::DTP_FLOAT rate_dummy(
   r.drdy[0] = 0.0;
   r.drdy[1] = 0.0;
   return 0.0;
+}
+
+
+void assignAReactionHandler(TYPES::RateCalculators rcs,
+                            TYPES::RateCalculator rc,
+                            int itype) {
+  rcs[itype] = rc;
 }
 
 

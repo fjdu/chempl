@@ -1344,9 +1344,11 @@ static const char __pyx_k_range[] = "range";
 static const char __pyx_k_ISTATE[] = "ISTATE";
 static const char __pyx_k_Trange[] = "Trange";
 static const char __pyx_k_lenABC[] = "lenABC";
+static const char __pyx_k_msglun[] = "msglun";
 static const char __pyx_k_name_2[] = "__name__";
 static const char __pyx_k_reduce[] = "__reduce__";
 static const char __pyx_k_lenType[] = "lenType";
+static const char __pyx_k_showmsg[] = "showmsg";
 static const char __pyx_k_elements[] = "elements";
 static const char __pyx_k_getstate[] = "__getstate__";
 static const char __pyx_k_products[] = "products";
@@ -1405,6 +1407,7 @@ static PyObject *__pyx_n_s_lenT;
 static PyObject *__pyx_n_s_lenType;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_mf;
+static PyObject *__pyx_n_s_msglun;
 static PyObject *__pyx_n_s_nABC;
 static PyObject *__pyx_n_s_nProducts;
 static PyObject *__pyx_n_s_nReactants;
@@ -1429,11 +1432,12 @@ static PyObject *__pyx_kp_s_self_updater_re_self_user_data_c;
 static PyObject *__pyx_n_s_set_phy_param;
 static PyObject *__pyx_n_s_setstate;
 static PyObject *__pyx_n_s_setstate_cython;
+static PyObject *__pyx_n_s_showmsg;
 static PyObject *__pyx_n_s_t;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_val;
 static PyObject *__pyx_n_s_y;
-static PyObject *__pyx_pf_8chemplay_10pyUserData_set_solver(struct __pyx_obj_8chemplay_pyUserData *__pyx_v_self, PyObject *__pyx_v_rtol, PyObject *__pyx_v_atol, PyObject *__pyx_v_mf, PyObject *__pyx_v_LRW_F); /* proto */
+static PyObject *__pyx_pf_8chemplay_10pyUserData_set_solver(struct __pyx_obj_8chemplay_pyUserData *__pyx_v_self, PyObject *__pyx_v_rtol, PyObject *__pyx_v_atol, PyObject *__pyx_v_mf, PyObject *__pyx_v_LRW_F, PyObject *__pyx_v_showmsg, PyObject *__pyx_v_msglun); /* proto */
 static PyObject *__pyx_pf_8chemplay_10pyUserData_2allocate_y(struct __pyx_obj_8chemplay_pyUserData *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8chemplay_10pyUserData_4deallocate_y(struct __pyx_obj_8chemplay_pyUserData *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8chemplay_10pyUserData_6get_solver_internals(struct __pyx_obj_8chemplay_pyUserData *__pyx_v_self); /* proto */
@@ -1476,6 +1480,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_48__setstate_cython__(CYTHON_UN
 static PyObject *__pyx_tp_new_8chemplay_pyUserData(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_float_1eneg_6;
 static PyObject *__pyx_float_1eneg_30;
+static PyObject *__pyx_int_1;
 static PyObject *__pyx_int_2;
 static PyObject *__pyx_int_3;
 static PyObject *__pyx_int_4;
@@ -1491,9 +1496,9 @@ static PyObject *__pyx_tuple__2;
 /* "chemplay.pyx":101
  *   cdef Updater_RE updater_re
  * 
- *   def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6):             # <<<<<<<<<<<<<<
+ *   def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6,             # <<<<<<<<<<<<<<
+ *                  showmsg=1, msglun=6):
  *     self.updater_re.set_user_data(self.user_data.ptr)
- *     self.updater_re.initialize_solver(rtol, atol, mf, LRW_F)
  */
 
 /* Python wrapper */
@@ -1503,20 +1508,28 @@ static PyObject *__pyx_pw_8chemplay_10pyUserData_1set_solver(PyObject *__pyx_v_s
   PyObject *__pyx_v_atol = 0;
   PyObject *__pyx_v_mf = 0;
   PyObject *__pyx_v_LRW_F = 0;
+  PyObject *__pyx_v_showmsg = 0;
+  PyObject *__pyx_v_msglun = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("set_solver (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_rtol,&__pyx_n_s_atol,&__pyx_n_s_mf,&__pyx_n_s_LRW_F,0};
-    PyObject* values[4] = {0,0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_rtol,&__pyx_n_s_atol,&__pyx_n_s_mf,&__pyx_n_s_LRW_F,&__pyx_n_s_showmsg,&__pyx_n_s_msglun,0};
+    PyObject* values[6] = {0,0,0,0,0,0};
     values[0] = ((PyObject *)__pyx_float_1eneg_6);
     values[1] = ((PyObject *)__pyx_float_1eneg_30);
     values[2] = ((PyObject *)__pyx_int_21);
     values[3] = ((PyObject *)__pyx_int_6);
+    values[4] = ((PyObject *)__pyx_int_1);
+    values[5] = ((PyObject *)__pyx_int_6);
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+        CYTHON_FALLTHROUGH;
+        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+        CYTHON_FALLTHROUGH;
         case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
         CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
@@ -1553,12 +1566,28 @@ static PyObject *__pyx_pw_8chemplay_10pyUserData_1set_solver(PyObject *__pyx_v_s
           PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_LRW_F);
           if (value) { values[3] = value; kw_args--; }
         }
+        CYTHON_FALLTHROUGH;
+        case  4:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_showmsg);
+          if (value) { values[4] = value; kw_args--; }
+        }
+        CYTHON_FALLTHROUGH;
+        case  5:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_msglun);
+          if (value) { values[5] = value; kw_args--; }
+        }
       }
       if (unlikely(kw_args > 0)) {
         if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "set_solver") < 0)) __PYX_ERR(0, 101, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+        CYTHON_FALLTHROUGH;
+        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+        CYTHON_FALLTHROUGH;
         case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
         CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
@@ -1575,23 +1604,25 @@ static PyObject *__pyx_pw_8chemplay_10pyUserData_1set_solver(PyObject *__pyx_v_s
     __pyx_v_atol = values[1];
     __pyx_v_mf = values[2];
     __pyx_v_LRW_F = values[3];
+    __pyx_v_showmsg = values[4];
+    __pyx_v_msglun = values[5];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("set_solver", 0, 0, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 101, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("set_solver", 0, 0, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 101, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("chemplay.pyUserData.set_solver", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8chemplay_10pyUserData_set_solver(((struct __pyx_obj_8chemplay_pyUserData *)__pyx_v_self), __pyx_v_rtol, __pyx_v_atol, __pyx_v_mf, __pyx_v_LRW_F);
+  __pyx_r = __pyx_pf_8chemplay_10pyUserData_set_solver(((struct __pyx_obj_8chemplay_pyUserData *)__pyx_v_self), __pyx_v_rtol, __pyx_v_atol, __pyx_v_mf, __pyx_v_LRW_F, __pyx_v_showmsg, __pyx_v_msglun);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8chemplay_10pyUserData_set_solver(struct __pyx_obj_8chemplay_pyUserData *__pyx_v_self, PyObject *__pyx_v_rtol, PyObject *__pyx_v_atol, PyObject *__pyx_v_mf, PyObject *__pyx_v_LRW_F) {
+static PyObject *__pyx_pf_8chemplay_10pyUserData_set_solver(struct __pyx_obj_8chemplay_pyUserData *__pyx_v_self, PyObject *__pyx_v_rtol, PyObject *__pyx_v_atol, PyObject *__pyx_v_mf, PyObject *__pyx_v_LRW_F, PyObject *__pyx_v_showmsg, PyObject *__pyx_v_msglun) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   double __pyx_t_1;
@@ -1600,52 +1631,54 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_set_solver(struct __pyx_obj_8ch
   int __pyx_t_4;
   __Pyx_RefNannySetupContext("set_solver", 0);
 
-  /* "chemplay.pyx":102
- * 
- *   def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6):
+  /* "chemplay.pyx":103
+ *   def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6,
+ *                  showmsg=1, msglun=6):
  *     self.updater_re.set_user_data(self.user_data.ptr)             # <<<<<<<<<<<<<<
  *     self.updater_re.initialize_solver(rtol, atol, mf, LRW_F)
- *     self.updater_re.set_solver_msg(1);
+ *     self.updater_re.set_solver_msg(showmsg);
  */
   __pyx_v_self->updater_re.set_user_data(__pyx_v_self->user_data.ptr);
 
-  /* "chemplay.pyx":103
- *   def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6):
+  /* "chemplay.pyx":104
+ *                  showmsg=1, msglun=6):
  *     self.updater_re.set_user_data(self.user_data.ptr)
  *     self.updater_re.initialize_solver(rtol, atol, mf, LRW_F)             # <<<<<<<<<<<<<<
- *     self.updater_re.set_solver_msg(1);
- *     self.updater_re.set_solver_msg_lun(19);
+ *     self.updater_re.set_solver_msg(showmsg);
+ *     self.updater_re.set_solver_msg_lun(msglun);
  */
-  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_v_rtol); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 103, __pyx_L1_error)
-  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_v_atol); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 103, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_v_mf); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 103, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_LRW_F); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 103, __pyx_L1_error)
+  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_v_rtol); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 104, __pyx_L1_error)
+  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_v_atol); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 104, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_v_mf); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 104, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_LRW_F); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 104, __pyx_L1_error)
   (void)(__pyx_v_self->updater_re.initialize_solver(__pyx_t_1, __pyx_t_2, __pyx_t_3, __pyx_t_4));
 
-  /* "chemplay.pyx":104
+  /* "chemplay.pyx":105
  *     self.updater_re.set_user_data(self.user_data.ptr)
  *     self.updater_re.initialize_solver(rtol, atol, mf, LRW_F)
- *     self.updater_re.set_solver_msg(1);             # <<<<<<<<<<<<<<
- *     self.updater_re.set_solver_msg_lun(19);
+ *     self.updater_re.set_solver_msg(showmsg);             # <<<<<<<<<<<<<<
+ *     self.updater_re.set_solver_msg_lun(msglun);
  * 
  */
-  __pyx_v_self->updater_re.set_solver_msg(1);
+  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_showmsg); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_v_self->updater_re.set_solver_msg(__pyx_t_4);
 
-  /* "chemplay.pyx":105
+  /* "chemplay.pyx":106
  *     self.updater_re.initialize_solver(rtol, atol, mf, LRW_F)
- *     self.updater_re.set_solver_msg(1);
- *     self.updater_re.set_solver_msg_lun(19);             # <<<<<<<<<<<<<<
+ *     self.updater_re.set_solver_msg(showmsg);
+ *     self.updater_re.set_solver_msg_lun(msglun);             # <<<<<<<<<<<<<<
  * 
  *   def allocate_y(self):
  */
-  __pyx_v_self->updater_re.set_solver_msg_lun(19);
+  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_msglun); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 106, __pyx_L1_error)
+  __pyx_v_self->updater_re.set_solver_msg_lun(__pyx_t_4);
 
   /* "chemplay.pyx":101
  *   cdef Updater_RE updater_re
  * 
- *   def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6):             # <<<<<<<<<<<<<<
+ *   def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6,             # <<<<<<<<<<<<<<
+ *                  showmsg=1, msglun=6):
  *     self.updater_re.set_user_data(self.user_data.ptr)
- *     self.updater_re.initialize_solver(rtol, atol, mf, LRW_F)
  */
 
   /* function exit code */
@@ -1660,8 +1693,8 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_set_solver(struct __pyx_obj_8ch
   return __pyx_r;
 }
 
-/* "chemplay.pyx":107
- *     self.updater_re.set_solver_msg_lun(19);
+/* "chemplay.pyx":108
+ *     self.updater_re.set_solver_msg_lun(msglun);
  * 
  *   def allocate_y(self):             # <<<<<<<<<<<<<<
  *     self.user_data.allocate_y()
@@ -1686,7 +1719,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_2allocate_y(struct __pyx_obj_8c
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("allocate_y", 0);
 
-  /* "chemplay.pyx":108
+  /* "chemplay.pyx":109
  * 
  *   def allocate_y(self):
  *     self.user_data.allocate_y()             # <<<<<<<<<<<<<<
@@ -1695,8 +1728,8 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_2allocate_y(struct __pyx_obj_8c
  */
   __pyx_v_self->user_data.allocate_y();
 
-  /* "chemplay.pyx":107
- *     self.updater_re.set_solver_msg_lun(19);
+  /* "chemplay.pyx":108
+ *     self.updater_re.set_solver_msg_lun(msglun);
  * 
  *   def allocate_y(self):             # <<<<<<<<<<<<<<
  *     self.user_data.allocate_y()
@@ -1710,7 +1743,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_2allocate_y(struct __pyx_obj_8c
   return __pyx_r;
 }
 
-/* "chemplay.pyx":110
+/* "chemplay.pyx":111
  *     self.user_data.allocate_y()
  * 
  *   def deallocate_y(self):             # <<<<<<<<<<<<<<
@@ -1736,7 +1769,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_4deallocate_y(struct __pyx_obj_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("deallocate_y", 0);
 
-  /* "chemplay.pyx":111
+  /* "chemplay.pyx":112
  * 
  *   def deallocate_y(self):
  *     self.user_data.deallocate_y()             # <<<<<<<<<<<<<<
@@ -1745,7 +1778,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_4deallocate_y(struct __pyx_obj_
  */
   __pyx_v_self->user_data.deallocate_y();
 
-  /* "chemplay.pyx":110
+  /* "chemplay.pyx":111
  *     self.user_data.allocate_y()
  * 
  *   def deallocate_y(self):             # <<<<<<<<<<<<<<
@@ -1760,7 +1793,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_4deallocate_y(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "chemplay.pyx":113
+/* "chemplay.pyx":114
  *     self.user_data.deallocate_y()
  * 
  *   def get_solver_internals(self):             # <<<<<<<<<<<<<<
@@ -1788,7 +1821,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_6get_solver_internals(struct __
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("get_solver_internals", 0);
 
-  /* "chemplay.pyx":114
+  /* "chemplay.pyx":115
  * 
  *   def get_solver_internals(self):
  *     return {             # <<<<<<<<<<<<<<
@@ -1797,144 +1830,144 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_6get_solver_internals(struct __
  */
   __Pyx_XDECREF(__pyx_r);
 
-  /* "chemplay.pyx":115
+  /* "chemplay.pyx":116
  *   def get_solver_internals(self):
  *     return {
  *       'NEQ':    self.updater_re.NEQ,             # <<<<<<<<<<<<<<
  *       'ITOL':   self.updater_re.ITOL,
  *       'ITASK':  self.updater_re.ITASK,
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(11); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 115, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(11); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 116, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.NEQ); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.NEQ); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 116, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_NEQ, __pyx_t_2) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_NEQ, __pyx_t_2) < 0) __PYX_ERR(0, 116, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "chemplay.pyx":116
+  /* "chemplay.pyx":117
  *     return {
  *       'NEQ':    self.updater_re.NEQ,
  *       'ITOL':   self.updater_re.ITOL,             # <<<<<<<<<<<<<<
  *       'ITASK':  self.updater_re.ITASK,
  *       'ISTATE': self.updater_re.ISTATE,
  */
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.ITOL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 116, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.ITOL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 117, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_ITOL, __pyx_t_2) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_ITOL, __pyx_t_2) < 0) __PYX_ERR(0, 116, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "chemplay.pyx":117
+  /* "chemplay.pyx":118
  *       'NEQ':    self.updater_re.NEQ,
  *       'ITOL':   self.updater_re.ITOL,
  *       'ITASK':  self.updater_re.ITASK,             # <<<<<<<<<<<<<<
  *       'ISTATE': self.updater_re.ISTATE,
  *       'IOPT':   self.updater_re.IOPT,
  */
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.ITASK); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.ITASK); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 118, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_ITASK, __pyx_t_2) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_ITASK, __pyx_t_2) < 0) __PYX_ERR(0, 116, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "chemplay.pyx":118
+  /* "chemplay.pyx":119
  *       'ITOL':   self.updater_re.ITOL,
  *       'ITASK':  self.updater_re.ITASK,
  *       'ISTATE': self.updater_re.ISTATE,             # <<<<<<<<<<<<<<
  *       'IOPT':   self.updater_re.IOPT,
  *       'LRW':    self.updater_re.LRW,
  */
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.ISTATE); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 118, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.ISTATE); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 119, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_ISTATE, __pyx_t_2) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_ISTATE, __pyx_t_2) < 0) __PYX_ERR(0, 116, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "chemplay.pyx":119
+  /* "chemplay.pyx":120
  *       'ITASK':  self.updater_re.ITASK,
  *       'ISTATE': self.updater_re.ISTATE,
  *       'IOPT':   self.updater_re.IOPT,             # <<<<<<<<<<<<<<
  *       'LRW':    self.updater_re.LRW,
  *       'LIW':    self.updater_re.LIW,
  */
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.IOPT); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 119, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.IOPT); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 120, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_IOPT, __pyx_t_2) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_IOPT, __pyx_t_2) < 0) __PYX_ERR(0, 116, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "chemplay.pyx":120
+  /* "chemplay.pyx":121
  *       'ISTATE': self.updater_re.ISTATE,
  *       'IOPT':   self.updater_re.IOPT,
  *       'LRW':    self.updater_re.LRW,             # <<<<<<<<<<<<<<
  *       'LIW':    self.updater_re.LIW,
  *       'MF':     self.updater_re.MF,
  */
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.LRW); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 120, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.LRW); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_LRW, __pyx_t_2) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_LRW, __pyx_t_2) < 0) __PYX_ERR(0, 116, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "chemplay.pyx":121
+  /* "chemplay.pyx":122
  *       'IOPT':   self.updater_re.IOPT,
  *       'LRW':    self.updater_re.LRW,
  *       'LIW':    self.updater_re.LIW,             # <<<<<<<<<<<<<<
  *       'MF':     self.updater_re.MF,
  *       'NNZ':    self.updater_re.NNZ,
  */
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.LIW); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 121, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.LIW); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 122, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_LIW, __pyx_t_2) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_LIW, __pyx_t_2) < 0) __PYX_ERR(0, 116, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "chemplay.pyx":122
+  /* "chemplay.pyx":123
  *       'LRW':    self.updater_re.LRW,
  *       'LIW':    self.updater_re.LIW,
  *       'MF':     self.updater_re.MF,             # <<<<<<<<<<<<<<
  *       'NNZ':    self.updater_re.NNZ,
  *       'RTOL':   self.updater_re.RTOL,
  */
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.MF); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 122, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.MF); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 123, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_MF, __pyx_t_2) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_MF, __pyx_t_2) < 0) __PYX_ERR(0, 116, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "chemplay.pyx":123
+  /* "chemplay.pyx":124
  *       'LIW':    self.updater_re.LIW,
  *       'MF':     self.updater_re.MF,
  *       'NNZ':    self.updater_re.NNZ,             # <<<<<<<<<<<<<<
  *       'RTOL':   self.updater_re.RTOL,
  *       'ATOL':   self.updater_re.ATOL}
  */
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.NNZ); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 123, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.NNZ); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_NNZ, __pyx_t_2) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_NNZ, __pyx_t_2) < 0) __PYX_ERR(0, 116, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "chemplay.pyx":124
+  /* "chemplay.pyx":125
  *       'MF':     self.updater_re.MF,
  *       'NNZ':    self.updater_re.NNZ,
  *       'RTOL':   self.updater_re.RTOL,             # <<<<<<<<<<<<<<
  *       'ATOL':   self.updater_re.ATOL}
  * 
  */
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_self->updater_re.RTOL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 124, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_self->updater_re.RTOL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 125, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_RTOL, __pyx_t_2) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_RTOL, __pyx_t_2) < 0) __PYX_ERR(0, 116, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "chemplay.pyx":125
+  /* "chemplay.pyx":126
  *       'NNZ':    self.updater_re.NNZ,
  *       'RTOL':   self.updater_re.RTOL,
  *       'ATOL':   self.updater_re.ATOL}             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_self->updater_re.ATOL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 125, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_self->updater_re.ATOL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 126, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_ATOL, __pyx_t_2) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_ATOL, __pyx_t_2) < 0) __PYX_ERR(0, 116, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":113
+  /* "chemplay.pyx":114
  *     self.user_data.deallocate_y()
  * 
  *   def get_solver_internals(self):             # <<<<<<<<<<<<<<
@@ -1954,7 +1987,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_6get_solver_internals(struct __
   return __pyx_r;
 }
 
-/* "chemplay.pyx":128
+/* "chemplay.pyx":129
  * 
  * 
  *   def update(self, vector[double] y, double t, double dt):             # <<<<<<<<<<<<<<
@@ -1996,17 +2029,17 @@ static PyObject *__pyx_pw_8chemplay_10pyUserData_9update(PyObject *__pyx_v_self,
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_t)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("update", 1, 3, 3, 1); __PYX_ERR(0, 128, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update", 1, 3, 3, 1); __PYX_ERR(0, 129, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dt)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("update", 1, 3, 3, 2); __PYX_ERR(0, 128, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update", 1, 3, 3, 2); __PYX_ERR(0, 129, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "update") < 0)) __PYX_ERR(0, 128, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "update") < 0)) __PYX_ERR(0, 129, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -2015,13 +2048,13 @@ static PyObject *__pyx_pw_8chemplay_10pyUserData_9update(PyObject *__pyx_v_self,
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
     }
-    __pyx_v_y = __pyx_convert_vector_from_py_double(values[0]); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 128, __pyx_L3_error)
-    __pyx_v_t = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_t == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 128, __pyx_L3_error)
-    __pyx_v_dt = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 128, __pyx_L3_error)
+    __pyx_v_y = __pyx_convert_vector_from_py_double(values[0]); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 129, __pyx_L3_error)
+    __pyx_v_t = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_t == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 129, __pyx_L3_error)
+    __pyx_v_dt = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 129, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("update", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 128, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("update", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 129, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("chemplay.pyUserData.update", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2049,7 +2082,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8update(struct __pyx_obj_8chemp
   PyObject *__pyx_t_7 = NULL;
   __Pyx_RefNannySetupContext("update", 0);
 
-  /* "chemplay.pyx":131
+  /* "chemplay.pyx":132
  *     cdef int i
  *     cdef double t1
  *     for i in range(self.updater_re.NEQ):             # <<<<<<<<<<<<<<
@@ -2061,7 +2094,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8update(struct __pyx_obj_8chemp
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "chemplay.pyx":132
+    /* "chemplay.pyx":133
  *     cdef double t1
  *     for i in range(self.updater_re.NEQ):
  *       self.user_data.y[i] = y[i]             # <<<<<<<<<<<<<<
@@ -2071,7 +2104,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8update(struct __pyx_obj_8chemp
     (__pyx_v_self->user_data.y[__pyx_v_i]) = (__pyx_v_y[__pyx_v_i]);
   }
 
-  /* "chemplay.pyx":133
+  /* "chemplay.pyx":134
  *     for i in range(self.updater_re.NEQ):
  *       self.user_data.y[i] = y[i]
  *     t1 = self.updater_re.update(t, dt, self.user_data.y)             # <<<<<<<<<<<<<<
@@ -2080,7 +2113,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8update(struct __pyx_obj_8chemp
  */
   __pyx_v_t1 = __pyx_v_self->updater_re.update(__pyx_v_t, __pyx_v_dt, __pyx_v_self->user_data.y);
 
-  /* "chemplay.pyx":134
+  /* "chemplay.pyx":135
  *       self.user_data.y[i] = y[i]
  *     t1 = self.updater_re.update(t, dt, self.user_data.y)
  *     if self.updater_re.ISTATE != 2:             # <<<<<<<<<<<<<<
@@ -2090,7 +2123,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8update(struct __pyx_obj_8chemp
   __pyx_t_4 = ((__pyx_v_self->updater_re.ISTATE != 2) != 0);
   if (__pyx_t_4) {
 
-    /* "chemplay.pyx":135
+    /* "chemplay.pyx":136
  *     t1 = self.updater_re.update(t, dt, self.user_data.y)
  *     if self.updater_re.ISTATE != 2:
  *       if self.updater_re.ISTATE in [-1, -4, -5]:             # <<<<<<<<<<<<<<
@@ -2102,7 +2135,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8update(struct __pyx_obj_8chemp
       case -4L:
       case -5L:
 
-      /* "chemplay.pyx":136
+      /* "chemplay.pyx":137
  *     if self.updater_re.ISTATE != 2:
  *       if self.updater_re.ISTATE in [-1, -4, -5]:
  *         self.updater_re.set_ISTATE(3)             # <<<<<<<<<<<<<<
@@ -2111,7 +2144,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8update(struct __pyx_obj_8chemp
  */
       __pyx_v_self->updater_re.set_ISTATE(3);
 
-      /* "chemplay.pyx":135
+      /* "chemplay.pyx":136
  *     t1 = self.updater_re.update(t, dt, self.user_data.y)
  *     if self.updater_re.ISTATE != 2:
  *       if self.updater_re.ISTATE in [-1, -4, -5]:             # <<<<<<<<<<<<<<
@@ -2121,16 +2154,16 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8update(struct __pyx_obj_8chemp
       break;
       default:
 
-      /* "chemplay.pyx":138
+      /* "chemplay.pyx":139
  *         self.updater_re.set_ISTATE(3)
  *       else:
  *         print('Unrecoverable error: ISTATE = ', self.updater_re.ISTATE)             # <<<<<<<<<<<<<<
  *         return
  *     return t1, [self.user_data.y[i] for i in range(self.updater_re.NEQ)]
  */
-      __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.ISTATE); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 138, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_self->updater_re.ISTATE); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 139, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 138, __pyx_L1_error)
+      __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 139, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_INCREF(__pyx_kp_u_Unrecoverable_error_ISTATE);
       __Pyx_GIVEREF(__pyx_kp_u_Unrecoverable_error_ISTATE);
@@ -2138,12 +2171,12 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8update(struct __pyx_obj_8chemp
       __Pyx_GIVEREF(__pyx_t_5);
       PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_t_5);
       __pyx_t_5 = 0;
-      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_t_6, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 138, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_t_6, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 139, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "chemplay.pyx":139
+      /* "chemplay.pyx":140
  *       else:
  *         print('Unrecoverable error: ISTATE = ', self.updater_re.ISTATE)
  *         return             # <<<<<<<<<<<<<<
@@ -2156,7 +2189,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8update(struct __pyx_obj_8chemp
       break;
     }
 
-    /* "chemplay.pyx":134
+    /* "chemplay.pyx":135
  *       self.user_data.y[i] = y[i]
  *     t1 = self.updater_re.update(t, dt, self.user_data.y)
  *     if self.updater_re.ISTATE != 2:             # <<<<<<<<<<<<<<
@@ -2165,7 +2198,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8update(struct __pyx_obj_8chemp
  */
   }
 
-  /* "chemplay.pyx":140
+  /* "chemplay.pyx":141
  *         print('Unrecoverable error: ISTATE = ', self.updater_re.ISTATE)
  *         return
  *     return t1, [self.user_data.y[i] for i in range(self.updater_re.NEQ)]             # <<<<<<<<<<<<<<
@@ -2173,22 +2206,22 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8update(struct __pyx_obj_8chemp
  *   cdef _get_all_reactions(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_t1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 140, __pyx_L1_error)
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_t1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 141, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   { /* enter inner scope */
-    __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 140, __pyx_L1_error)
+    __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 141, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_1 = __pyx_v_self->updater_re.NEQ;
     __pyx_t_2 = __pyx_t_1;
     for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
       __pyx_7genexpr__pyx_v_i = __pyx_t_3;
-      __pyx_t_7 = PyFloat_FromDouble((__pyx_v_self->user_data.y[__pyx_7genexpr__pyx_v_i])); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 140, __pyx_L1_error)
+      __pyx_t_7 = PyFloat_FromDouble((__pyx_v_self->user_data.y[__pyx_7genexpr__pyx_v_i])); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 141, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_6, (PyObject*)__pyx_t_7))) __PYX_ERR(0, 140, __pyx_L1_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_6, (PyObject*)__pyx_t_7))) __PYX_ERR(0, 141, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     }
   } /* exit inner scope */
-  __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 140, __pyx_L1_error)
+  __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 141, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_GIVEREF(__pyx_t_5);
   PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_5);
@@ -2200,7 +2233,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8update(struct __pyx_obj_8chemp
   __pyx_t_7 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":128
+  /* "chemplay.pyx":129
  * 
  * 
  *   def update(self, vector[double] y, double t, double dt):             # <<<<<<<<<<<<<<
@@ -2221,7 +2254,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8update(struct __pyx_obj_8chemp
   return __pyx_r;
 }
 
-/* "chemplay.pyx":142
+/* "chemplay.pyx":143
  *     return t1, [self.user_data.y[i] for i in range(self.updater_re.NEQ)]
  * 
  *   cdef _get_all_reactions(self):             # <<<<<<<<<<<<<<
@@ -2241,7 +2274,7 @@ static PyObject *__pyx_f_8chemplay_10pyUserData__get_all_reactions(struct __pyx_
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("_get_all_reactions", 0);
 
-  /* "chemplay.pyx":143
+  /* "chemplay.pyx":144
  * 
  *   cdef _get_all_reactions(self):
  *     return [{'reactants': _.sReactants,             # <<<<<<<<<<<<<<
@@ -2250,10 +2283,10 @@ static PyObject *__pyx_f_8chemplay_10pyUserData__get_all_reactions(struct __pyx_
  */
   __Pyx_XDECREF(__pyx_r);
   { /* enter inner scope */
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 143, __pyx_L1_error)
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 144, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
 
-    /* "chemplay.pyx":151
+    /* "chemplay.pyx":152
  *              'rate': _.rate
  *             }
  *             for _ in self.user_data.reactions]             # <<<<<<<<<<<<<<
@@ -2268,95 +2301,95 @@ static PyObject *__pyx_f_8chemplay_10pyUserData__get_all_reactions(struct __pyx_
       ++__pyx_t_2;
       __pyx_8genexpr1__pyx_v__ = __pyx_t_4;
 
-      /* "chemplay.pyx":143
+      /* "chemplay.pyx":144
  * 
  *   cdef _get_all_reactions(self):
  *     return [{'reactants': _.sReactants,             # <<<<<<<<<<<<<<
  *              'products': _.sProducts,
  *              'abc': _.abc,
  */
-      __pyx_t_5 = __Pyx_PyDict_NewPresized(7); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 143, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyDict_NewPresized(7); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 144, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_6 = __pyx_convert_vector_to_py_std_3a__3a_string(__pyx_8genexpr1__pyx_v__.sReactants); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 143, __pyx_L1_error)
+      __pyx_t_6 = __pyx_convert_vector_to_py_std_3a__3a_string(__pyx_8genexpr1__pyx_v__.sReactants); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 144, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      if (PyDict_SetItem(__pyx_t_5, __pyx_n_u_reactants, __pyx_t_6) < 0) __PYX_ERR(0, 143, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_5, __pyx_n_u_reactants, __pyx_t_6) < 0) __PYX_ERR(0, 144, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "chemplay.pyx":144
+      /* "chemplay.pyx":145
  *   cdef _get_all_reactions(self):
  *     return [{'reactants': _.sReactants,
  *              'products': _.sProducts,             # <<<<<<<<<<<<<<
  *              'abc': _.abc,
  *              'Trange': _.Trange,
  */
-      __pyx_t_6 = __pyx_convert_vector_to_py_std_3a__3a_string(__pyx_8genexpr1__pyx_v__.sProducts); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 144, __pyx_L1_error)
+      __pyx_t_6 = __pyx_convert_vector_to_py_std_3a__3a_string(__pyx_8genexpr1__pyx_v__.sProducts); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 145, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      if (PyDict_SetItem(__pyx_t_5, __pyx_n_u_products, __pyx_t_6) < 0) __PYX_ERR(0, 143, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_5, __pyx_n_u_products, __pyx_t_6) < 0) __PYX_ERR(0, 144, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "chemplay.pyx":145
+      /* "chemplay.pyx":146
  *     return [{'reactants': _.sReactants,
  *              'products': _.sProducts,
  *              'abc': _.abc,             # <<<<<<<<<<<<<<
  *              'Trange': _.Trange,
  *              'itype': _.itype,
  */
-      __pyx_t_6 = __pyx_convert_vector_to_py_double(__pyx_8genexpr1__pyx_v__.abc); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 145, __pyx_L1_error)
+      __pyx_t_6 = __pyx_convert_vector_to_py_double(__pyx_8genexpr1__pyx_v__.abc); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 146, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      if (PyDict_SetItem(__pyx_t_5, __pyx_n_u_abc, __pyx_t_6) < 0) __PYX_ERR(0, 143, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_5, __pyx_n_u_abc, __pyx_t_6) < 0) __PYX_ERR(0, 144, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "chemplay.pyx":146
+      /* "chemplay.pyx":147
  *              'products': _.sProducts,
  *              'abc': _.abc,
  *              'Trange': _.Trange,             # <<<<<<<<<<<<<<
  *              'itype': _.itype,
  *              'drdy': _.drdy,
  */
-      __pyx_t_6 = __pyx_convert_vector_to_py_double(__pyx_8genexpr1__pyx_v__.Trange); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __pyx_t_6 = __pyx_convert_vector_to_py_double(__pyx_8genexpr1__pyx_v__.Trange); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 147, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      if (PyDict_SetItem(__pyx_t_5, __pyx_n_u_Trange, __pyx_t_6) < 0) __PYX_ERR(0, 143, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_5, __pyx_n_u_Trange, __pyx_t_6) < 0) __PYX_ERR(0, 144, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "chemplay.pyx":147
+      /* "chemplay.pyx":148
  *              'abc': _.abc,
  *              'Trange': _.Trange,
  *              'itype': _.itype,             # <<<<<<<<<<<<<<
  *              'drdy': _.drdy,
  *              'rate': _.rate
  */
-      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_8genexpr1__pyx_v__.itype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 147, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_8genexpr1__pyx_v__.itype); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 148, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      if (PyDict_SetItem(__pyx_t_5, __pyx_n_u_itype, __pyx_t_6) < 0) __PYX_ERR(0, 143, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_5, __pyx_n_u_itype, __pyx_t_6) < 0) __PYX_ERR(0, 144, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "chemplay.pyx":148
+      /* "chemplay.pyx":149
  *              'Trange': _.Trange,
  *              'itype': _.itype,
  *              'drdy': _.drdy,             # <<<<<<<<<<<<<<
  *              'rate': _.rate
  *             }
  */
-      __pyx_t_6 = __Pyx_carray_to_py_double(__pyx_8genexpr1__pyx_v__.drdy, 2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 148, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_carray_to_py_double(__pyx_8genexpr1__pyx_v__.drdy, 2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 149, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      if (PyDict_SetItem(__pyx_t_5, __pyx_n_u_drdy, __pyx_t_6) < 0) __PYX_ERR(0, 143, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_5, __pyx_n_u_drdy, __pyx_t_6) < 0) __PYX_ERR(0, 144, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "chemplay.pyx":149
+      /* "chemplay.pyx":150
  *              'itype': _.itype,
  *              'drdy': _.drdy,
  *              'rate': _.rate             # <<<<<<<<<<<<<<
  *             }
  *             for _ in self.user_data.reactions]
  */
-      __pyx_t_6 = PyFloat_FromDouble(__pyx_8genexpr1__pyx_v__.rate); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 149, __pyx_L1_error)
+      __pyx_t_6 = PyFloat_FromDouble(__pyx_8genexpr1__pyx_v__.rate); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 150, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      if (PyDict_SetItem(__pyx_t_5, __pyx_n_u_rate, __pyx_t_6) < 0) __PYX_ERR(0, 143, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_5, __pyx_n_u_rate, __pyx_t_6) < 0) __PYX_ERR(0, 144, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_5))) __PYX_ERR(0, 143, __pyx_L1_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_5))) __PYX_ERR(0, 144, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "chemplay.pyx":151
+      /* "chemplay.pyx":152
  *              'rate': _.rate
  *             }
  *             for _ in self.user_data.reactions]             # <<<<<<<<<<<<<<
@@ -2369,7 +2402,7 @@ static PyObject *__pyx_f_8chemplay_10pyUserData__get_all_reactions(struct __pyx_
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":142
+  /* "chemplay.pyx":143
  *     return t1, [self.user_data.y[i] for i in range(self.updater_re.NEQ)]
  * 
  *   cdef _get_all_reactions(self):             # <<<<<<<<<<<<<<
@@ -2390,7 +2423,7 @@ static PyObject *__pyx_f_8chemplay_10pyUserData__get_all_reactions(struct __pyx_
   return __pyx_r;
 }
 
-/* "chemplay.pyx":153
+/* "chemplay.pyx":154
  *             for _ in self.user_data.reactions]
  * 
  *   def add_reaction(self,             # <<<<<<<<<<<<<<
@@ -2438,29 +2471,29 @@ static PyObject *__pyx_pw_8chemplay_10pyUserData_11add_reaction(PyObject *__pyx_
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sProducts)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("add_reaction", 1, 5, 5, 1); __PYX_ERR(0, 153, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("add_reaction", 1, 5, 5, 1); __PYX_ERR(0, 154, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_abc)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("add_reaction", 1, 5, 5, 2); __PYX_ERR(0, 153, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("add_reaction", 1, 5, 5, 2); __PYX_ERR(0, 154, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Trange)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("add_reaction", 1, 5, 5, 3); __PYX_ERR(0, 153, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("add_reaction", 1, 5, 5, 3); __PYX_ERR(0, 154, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_itype)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("add_reaction", 1, 5, 5, 4); __PYX_ERR(0, 153, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("add_reaction", 1, 5, 5, 4); __PYX_ERR(0, 154, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "add_reaction") < 0)) __PYX_ERR(0, 153, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "add_reaction") < 0)) __PYX_ERR(0, 154, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
       goto __pyx_L5_argtuple_error;
@@ -2471,15 +2504,15 @@ static PyObject *__pyx_pw_8chemplay_10pyUserData_11add_reaction(PyObject *__pyx_
       values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
       values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
     }
-    __pyx_v_sReactants = __pyx_convert_vector_from_py_std_3a__3a_string(values[0]); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 154, __pyx_L3_error)
-    __pyx_v_sProducts = __pyx_convert_vector_from_py_std_3a__3a_string(values[1]); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 155, __pyx_L3_error)
-    __pyx_v_abc = __pyx_convert_vector_from_py_double(values[2]); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 156, __pyx_L3_error)
-    __pyx_v_Trange = __pyx_convert_vector_from_py_double(values[3]); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 157, __pyx_L3_error)
-    __pyx_v_itype = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_itype == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 158, __pyx_L3_error)
+    __pyx_v_sReactants = __pyx_convert_vector_from_py_std_3a__3a_string(values[0]); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 155, __pyx_L3_error)
+    __pyx_v_sProducts = __pyx_convert_vector_from_py_std_3a__3a_string(values[1]); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 156, __pyx_L3_error)
+    __pyx_v_abc = __pyx_convert_vector_from_py_double(values[2]); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 157, __pyx_L3_error)
+    __pyx_v_Trange = __pyx_convert_vector_from_py_double(values[3]); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 158, __pyx_L3_error)
+    __pyx_v_itype = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_itype == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 159, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("add_reaction", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 153, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("add_reaction", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 154, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("chemplay.pyUserData.add_reaction", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2498,7 +2531,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_10add_reaction(struct __pyx_obj
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("add_reaction", 0);
 
-  /* "chemplay.pyx":160
+  /* "chemplay.pyx":161
  *                    int itype):
  *     cdef Reaction rs
  *     rs = Reaction(sReactants, sProducts, abc, Trange, itype)             # <<<<<<<<<<<<<<
@@ -2507,7 +2540,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_10add_reaction(struct __pyx_obj
  */
   __pyx_v_rs = TYPES::Reaction(__pyx_v_sReactants, __pyx_v_sProducts, __pyx_v_abc, __pyx_v_Trange, __pyx_v_itype);
 
-  /* "chemplay.pyx":161
+  /* "chemplay.pyx":162
  *     cdef Reaction rs
  *     rs = Reaction(sReactants, sProducts, abc, Trange, itype)
  *     self.user_data.add_reaction(rs)             # <<<<<<<<<<<<<<
@@ -2516,7 +2549,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_10add_reaction(struct __pyx_obj
  */
   __pyx_v_self->user_data.add_reaction(__pyx_v_rs);
 
-  /* "chemplay.pyx":153
+  /* "chemplay.pyx":154
  *             for _ in self.user_data.reactions]
  * 
  *   def add_reaction(self,             # <<<<<<<<<<<<<<
@@ -2531,7 +2564,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_10add_reaction(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "chemplay.pyx":163
+/* "chemplay.pyx":164
  *     self.user_data.add_reaction(rs)
  * 
  *   def clear_reactions(self):             # <<<<<<<<<<<<<<
@@ -2557,7 +2590,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_12clear_reactions(struct __pyx_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("clear_reactions", 0);
 
-  /* "chemplay.pyx":164
+  /* "chemplay.pyx":165
  * 
  *   def clear_reactions(self):
  *     self.user_data.clear_reactions()             # <<<<<<<<<<<<<<
@@ -2566,7 +2599,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_12clear_reactions(struct __pyx_
  */
   __pyx_v_self->user_data.clear_reactions();
 
-  /* "chemplay.pyx":163
+  /* "chemplay.pyx":164
  *     self.user_data.add_reaction(rs)
  * 
  *   def clear_reactions(self):             # <<<<<<<<<<<<<<
@@ -2581,7 +2614,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_12clear_reactions(struct __pyx_
   return __pyx_r;
 }
 
-/* "chemplay.pyx":166
+/* "chemplay.pyx":167
  *     self.user_data.clear_reactions()
  * 
  *   def set_phy_param(self, string name, double val):             # <<<<<<<<<<<<<<
@@ -2620,11 +2653,11 @@ static PyObject *__pyx_pw_8chemplay_10pyUserData_15set_phy_param(PyObject *__pyx
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_val)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("set_phy_param", 1, 2, 2, 1); __PYX_ERR(0, 166, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("set_phy_param", 1, 2, 2, 1); __PYX_ERR(0, 167, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "set_phy_param") < 0)) __PYX_ERR(0, 166, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "set_phy_param") < 0)) __PYX_ERR(0, 167, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -2632,12 +2665,12 @@ static PyObject *__pyx_pw_8chemplay_10pyUserData_15set_phy_param(PyObject *__pyx
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_name = __pyx_convert_string_from_py_std__in_string(values[0]); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 166, __pyx_L3_error)
-    __pyx_v_val = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_val == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 166, __pyx_L3_error)
+    __pyx_v_name = __pyx_convert_string_from_py_std__in_string(values[0]); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 167, __pyx_L3_error)
+    __pyx_v_val = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_val == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 167, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("set_phy_param", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 166, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("set_phy_param", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 167, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("chemplay.pyUserData.set_phy_param", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2655,7 +2688,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_14set_phy_param(struct __pyx_ob
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("set_phy_param", 0);
 
-  /* "chemplay.pyx":167
+  /* "chemplay.pyx":168
  * 
  *   def set_phy_param(self, string name, double val):
  *     self.user_data.set_phy_param(name, val)             # <<<<<<<<<<<<<<
@@ -2664,7 +2697,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_14set_phy_param(struct __pyx_ob
  */
   __pyx_v_self->user_data.set_phy_param(__pyx_v_name, __pyx_v_val);
 
-  /* "chemplay.pyx":168
+  /* "chemplay.pyx":169
  *   def set_phy_param(self, string name, double val):
  *     self.user_data.set_phy_param(name, val)
  *     self.user_data.physical_params.prep_params()             # <<<<<<<<<<<<<<
@@ -2673,7 +2706,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_14set_phy_param(struct __pyx_ob
  */
   __pyx_v_self->user_data.physical_params.prep_params();
 
-  /* "chemplay.pyx":166
+  /* "chemplay.pyx":167
  *     self.user_data.clear_reactions()
  * 
  *   def set_phy_param(self, string name, double val):             # <<<<<<<<<<<<<<
@@ -2688,7 +2721,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_14set_phy_param(struct __pyx_ob
   return __pyx_r;
 }
 
-/* "chemplay.pyx":170
+/* "chemplay.pyx":171
  *     self.user_data.physical_params.prep_params()
  * 
  *   def get_phy_param(self, string name):             # <<<<<<<<<<<<<<
@@ -2704,7 +2737,7 @@ static PyObject *__pyx_pw_8chemplay_10pyUserData_17get_phy_param(PyObject *__pyx
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_phy_param (wrapper)", 0);
   assert(__pyx_arg_name); {
-    __pyx_v_name = __pyx_convert_string_from_py_std__in_string(__pyx_arg_name); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 170, __pyx_L3_error)
+    __pyx_v_name = __pyx_convert_string_from_py_std__in_string(__pyx_arg_name); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 171, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -2725,7 +2758,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_16get_phy_param(struct __pyx_ob
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("get_phy_param", 0);
 
-  /* "chemplay.pyx":171
+  /* "chemplay.pyx":172
  * 
  *   def get_phy_param(self, string name):
  *     return self.user_data.get_phy_param(name)             # <<<<<<<<<<<<<<
@@ -2733,13 +2766,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_16get_phy_param(struct __pyx_ob
  *   def set_phy_params_by_dict(self, d):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->user_data.get_phy_param(__pyx_v_name)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 171, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->user_data.get_phy_param(__pyx_v_name)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":170
+  /* "chemplay.pyx":171
  *     self.user_data.physical_params.prep_params()
  * 
  *   def get_phy_param(self, string name):             # <<<<<<<<<<<<<<
@@ -2758,7 +2791,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_16get_phy_param(struct __pyx_ob
   return __pyx_r;
 }
 
-/* "chemplay.pyx":173
+/* "chemplay.pyx":174
  *     return self.user_data.get_phy_param(name)
  * 
  *   def set_phy_params_by_dict(self, d):             # <<<<<<<<<<<<<<
@@ -2794,7 +2827,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_18set_phy_params_by_dict(struct
   PyObject *__pyx_t_9 = NULL;
   __Pyx_RefNannySetupContext("set_phy_params_by_dict", 0);
 
-  /* "chemplay.pyx":174
+  /* "chemplay.pyx":175
  * 
  *   def set_phy_params_by_dict(self, d):
  *     for k in d:             # <<<<<<<<<<<<<<
@@ -2805,26 +2838,26 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_18set_phy_params_by_dict(struct
     __pyx_t_1 = __pyx_v_d; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
     __pyx_t_3 = NULL;
   } else {
-    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_d); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 174, __pyx_L1_error)
+    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_d); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 174, __pyx_L1_error)
+    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 175, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_3)) {
       if (likely(PyList_CheckExact(__pyx_t_1))) {
         if (__pyx_t_2 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 174, __pyx_L1_error)
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 175, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 174, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 175, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
         if (__pyx_t_2 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 174, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 175, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 174, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 175, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
@@ -2834,7 +2867,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_18set_phy_params_by_dict(struct
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 174, __pyx_L1_error)
+          else __PYX_ERR(0, 175, __pyx_L1_error)
         }
         break;
       }
@@ -2843,16 +2876,16 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_18set_phy_params_by_dict(struct
     __Pyx_XDECREF_SET(__pyx_v_k, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "chemplay.pyx":175
+    /* "chemplay.pyx":176
  *   def set_phy_params_by_dict(self, d):
  *     for k in d:
  *       self.set_phy_param(k, d[k])             # <<<<<<<<<<<<<<
  *     self.user_data.physical_params.prep_params()
  * 
  */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_set_phy_param); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 175, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_set_phy_param); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 176, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_v_d, __pyx_v_k); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 175, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_v_d, __pyx_v_k); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 176, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_7 = NULL;
     __pyx_t_8 = 0;
@@ -2869,7 +2902,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_18set_phy_params_by_dict(struct
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_5)) {
       PyObject *__pyx_temp[3] = {__pyx_t_7, __pyx_v_k, __pyx_t_6};
-      __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 175, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 176, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -2878,14 +2911,14 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_18set_phy_params_by_dict(struct
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_5)) {
       PyObject *__pyx_temp[3] = {__pyx_t_7, __pyx_v_k, __pyx_t_6};
-      __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 175, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 176, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     } else
     #endif
     {
-      __pyx_t_9 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 175, __pyx_L1_error)
+      __pyx_t_9 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 176, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       if (__pyx_t_7) {
         __Pyx_GIVEREF(__pyx_t_7); PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_7); __pyx_t_7 = NULL;
@@ -2896,14 +2929,14 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_18set_phy_params_by_dict(struct
       __Pyx_GIVEREF(__pyx_t_6);
       PyTuple_SET_ITEM(__pyx_t_9, 1+__pyx_t_8, __pyx_t_6);
       __pyx_t_6 = 0;
-      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_9, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 175, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_9, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 176, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     }
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "chemplay.pyx":174
+    /* "chemplay.pyx":175
  * 
  *   def set_phy_params_by_dict(self, d):
  *     for k in d:             # <<<<<<<<<<<<<<
@@ -2913,7 +2946,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_18set_phy_params_by_dict(struct
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "chemplay.pyx":176
+  /* "chemplay.pyx":177
  *     for k in d:
  *       self.set_phy_param(k, d[k])
  *     self.user_data.physical_params.prep_params()             # <<<<<<<<<<<<<<
@@ -2922,7 +2955,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_18set_phy_params_by_dict(struct
  */
   __pyx_v_self->user_data.physical_params.prep_params();
 
-  /* "chemplay.pyx":173
+  /* "chemplay.pyx":174
  *     return self.user_data.get_phy_param(name)
  * 
  *   def set_phy_params_by_dict(self, d):             # <<<<<<<<<<<<<<
@@ -2949,7 +2982,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_18set_phy_params_by_dict(struct
   return __pyx_r;
 }
 
-/* "chemplay.pyx":178
+/* "chemplay.pyx":179
  *     self.user_data.physical_params.prep_params()
  * 
  *   def get_all_phy_params(self):             # <<<<<<<<<<<<<<
@@ -2976,7 +3009,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_20get_all_phy_params(struct __p
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("get_all_phy_params", 0);
 
-  /* "chemplay.pyx":179
+  /* "chemplay.pyx":180
  * 
  *   def get_all_phy_params(self):
  *     return self.user_data.get_all_phy_params()             # <<<<<<<<<<<<<<
@@ -2984,13 +3017,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_20get_all_phy_params(struct __p
  *   def get_all_reactions(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert_map_to_py_std_3a__3a_string____double(__pyx_v_self->user_data.get_all_phy_params()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 179, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_map_to_py_std_3a__3a_string____double(__pyx_v_self->user_data.get_all_phy_params()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 180, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":178
+  /* "chemplay.pyx":179
  *     self.user_data.physical_params.prep_params()
  * 
  *   def get_all_phy_params(self):             # <<<<<<<<<<<<<<
@@ -3009,7 +3042,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_20get_all_phy_params(struct __p
   return __pyx_r;
 }
 
-/* "chemplay.pyx":181
+/* "chemplay.pyx":182
  *     return self.user_data.get_all_phy_params()
  * 
  *   def get_all_reactions(self):             # <<<<<<<<<<<<<<
@@ -3036,7 +3069,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_22get_all_reactions(struct __py
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("get_all_reactions", 0);
 
-  /* "chemplay.pyx":182
+  /* "chemplay.pyx":183
  * 
  *   def get_all_reactions(self):
  *     return self._get_all_reactions()             # <<<<<<<<<<<<<<
@@ -3044,13 +3077,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_22get_all_reactions(struct __py
  *   def assort_reactions(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = ((struct __pyx_vtabstruct_8chemplay_pyUserData *)__pyx_v_self->__pyx_vtab)->_get_all_reactions(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 182, __pyx_L1_error)
+  __pyx_t_1 = ((struct __pyx_vtabstruct_8chemplay_pyUserData *)__pyx_v_self->__pyx_vtab)->_get_all_reactions(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":181
+  /* "chemplay.pyx":182
  *     return self.user_data.get_all_phy_params()
  * 
  *   def get_all_reactions(self):             # <<<<<<<<<<<<<<
@@ -3069,7 +3102,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_22get_all_reactions(struct __py
   return __pyx_r;
 }
 
-/* "chemplay.pyx":184
+/* "chemplay.pyx":185
  *     return self._get_all_reactions()
  * 
  *   def assort_reactions(self):             # <<<<<<<<<<<<<<
@@ -3096,7 +3129,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_24assort_reactions(struct __pyx
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("assort_reactions", 0);
 
-  /* "chemplay.pyx":185
+  /* "chemplay.pyx":186
  * 
  *   def assort_reactions(self):
  *     return self.user_data.assort_reactions()             # <<<<<<<<<<<<<<
@@ -3104,13 +3137,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_24assort_reactions(struct __pyx
  *   def assignElementsToSpecies(self, elements=None):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_void_to_None(__pyx_v_self->user_data.assort_reactions()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 185, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_void_to_None(__pyx_v_self->user_data.assort_reactions()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 186, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":184
+  /* "chemplay.pyx":185
  *     return self._get_all_reactions()
  * 
  *   def assort_reactions(self):             # <<<<<<<<<<<<<<
@@ -3129,7 +3162,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_24assort_reactions(struct __pyx
   return __pyx_r;
 }
 
-/* "chemplay.pyx":187
+/* "chemplay.pyx":188
  *     return self.user_data.assort_reactions()
  * 
  *   def assignElementsToSpecies(self, elements=None):             # <<<<<<<<<<<<<<
@@ -3166,7 +3199,7 @@ static PyObject *__pyx_pw_8chemplay_10pyUserData_27assignElementsToSpecies(PyObj
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "assignElementsToSpecies") < 0)) __PYX_ERR(0, 187, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "assignElementsToSpecies") < 0)) __PYX_ERR(0, 188, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -3180,7 +3213,7 @@ static PyObject *__pyx_pw_8chemplay_10pyUserData_27assignElementsToSpecies(PyObj
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("assignElementsToSpecies", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 187, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("assignElementsToSpecies", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 188, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("chemplay.pyUserData.assignElementsToSpecies", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -3200,27 +3233,27 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_26assignElementsToSpecies(struc
   TYPES::Elements __pyx_t_2;
   __Pyx_RefNannySetupContext("assignElementsToSpecies", 0);
 
-  /* "chemplay.pyx":188
+  /* "chemplay.pyx":189
  * 
  *   def assignElementsToSpecies(self, elements=None):
  *     if elements:             # <<<<<<<<<<<<<<
  *       self.user_data.assignElementsToSpecies(elements)
  *     else:
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_elements); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 188, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_elements); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 189, __pyx_L1_error)
   if (__pyx_t_1) {
 
-    /* "chemplay.pyx":189
+    /* "chemplay.pyx":190
  *   def assignElementsToSpecies(self, elements=None):
  *     if elements:
  *       self.user_data.assignElementsToSpecies(elements)             # <<<<<<<<<<<<<<
  *     else:
  *       self.user_data.assignElementsToSpecies()
  */
-    __pyx_t_2 = __pyx_convert_map_from_py_std_3a__3a_string__and_double(__pyx_v_elements); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 189, __pyx_L1_error)
+    __pyx_t_2 = __pyx_convert_map_from_py_std_3a__3a_string__and_double(__pyx_v_elements); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 190, __pyx_L1_error)
     __pyx_v_self->user_data.assignElementsToSpecies(__pyx_t_2);
 
-    /* "chemplay.pyx":188
+    /* "chemplay.pyx":189
  * 
  *   def assignElementsToSpecies(self, elements=None):
  *     if elements:             # <<<<<<<<<<<<<<
@@ -3230,7 +3263,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_26assignElementsToSpecies(struc
     goto __pyx_L3;
   }
 
-  /* "chemplay.pyx":191
+  /* "chemplay.pyx":192
  *       self.user_data.assignElementsToSpecies(elements)
  *     else:
  *       self.user_data.assignElementsToSpecies()             # <<<<<<<<<<<<<<
@@ -3242,7 +3275,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_26assignElementsToSpecies(struc
   }
   __pyx_L3:;
 
-  /* "chemplay.pyx":187
+  /* "chemplay.pyx":188
  *     return self.user_data.assort_reactions()
  * 
  *   def assignElementsToSpecies(self, elements=None):             # <<<<<<<<<<<<<<
@@ -3262,7 +3295,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_26assignElementsToSpecies(struc
   return __pyx_r;
 }
 
-/* "chemplay.pyx":193
+/* "chemplay.pyx":194
  *       self.user_data.assignElementsToSpecies()
  * 
  *   def calculateSpeciesMasses(self, elements=None):             # <<<<<<<<<<<<<<
@@ -3299,7 +3332,7 @@ static PyObject *__pyx_pw_8chemplay_10pyUserData_29calculateSpeciesMasses(PyObje
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "calculateSpeciesMasses") < 0)) __PYX_ERR(0, 193, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "calculateSpeciesMasses") < 0)) __PYX_ERR(0, 194, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -3313,7 +3346,7 @@ static PyObject *__pyx_pw_8chemplay_10pyUserData_29calculateSpeciesMasses(PyObje
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("calculateSpeciesMasses", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 193, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("calculateSpeciesMasses", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 194, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("chemplay.pyUserData.calculateSpeciesMasses", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -3333,27 +3366,27 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_28calculateSpeciesMasses(struct
   TYPES::Elements __pyx_t_2;
   __Pyx_RefNannySetupContext("calculateSpeciesMasses", 0);
 
-  /* "chemplay.pyx":194
+  /* "chemplay.pyx":195
  * 
  *   def calculateSpeciesMasses(self, elements=None):
  *     if elements:             # <<<<<<<<<<<<<<
  *       self.user_data.calculateSpeciesMasses(elements)
  *     else:
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_elements); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 194, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_elements); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 195, __pyx_L1_error)
   if (__pyx_t_1) {
 
-    /* "chemplay.pyx":195
+    /* "chemplay.pyx":196
  *   def calculateSpeciesMasses(self, elements=None):
  *     if elements:
  *       self.user_data.calculateSpeciesMasses(elements)             # <<<<<<<<<<<<<<
  *     else:
  *       self.user_data.calculateSpeciesMasses()
  */
-    __pyx_t_2 = __pyx_convert_map_from_py_std_3a__3a_string__and_double(__pyx_v_elements); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 195, __pyx_L1_error)
+    __pyx_t_2 = __pyx_convert_map_from_py_std_3a__3a_string__and_double(__pyx_v_elements); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 196, __pyx_L1_error)
     __pyx_v_self->user_data.calculateSpeciesMasses(__pyx_t_2);
 
-    /* "chemplay.pyx":194
+    /* "chemplay.pyx":195
  * 
  *   def calculateSpeciesMasses(self, elements=None):
  *     if elements:             # <<<<<<<<<<<<<<
@@ -3363,7 +3396,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_28calculateSpeciesMasses(struct
     goto __pyx_L3;
   }
 
-  /* "chemplay.pyx":197
+  /* "chemplay.pyx":198
  *       self.user_data.calculateSpeciesMasses(elements)
  *     else:
  *       self.user_data.calculateSpeciesMasses()             # <<<<<<<<<<<<<<
@@ -3375,7 +3408,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_28calculateSpeciesMasses(struct
   }
   __pyx_L3:;
 
-  /* "chemplay.pyx":193
+  /* "chemplay.pyx":194
  *       self.user_data.assignElementsToSpecies()
  * 
  *   def calculateSpeciesMasses(self, elements=None):             # <<<<<<<<<<<<<<
@@ -3395,7 +3428,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_28calculateSpeciesMasses(struct
   return __pyx_r;
 }
 
-/* "chemplay.pyx":199
+/* "chemplay.pyx":200
  *       self.user_data.calculateSpeciesMasses()
  * 
  *   def calculateSpeciesVibFreqs(self):             # <<<<<<<<<<<<<<
@@ -3421,7 +3454,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_30calculateSpeciesVibFreqs(stru
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("calculateSpeciesVibFreqs", 0);
 
-  /* "chemplay.pyx":200
+  /* "chemplay.pyx":201
  * 
  *   def calculateSpeciesVibFreqs(self):
  *     self.user_data.calculateSpeciesVibFreqs()             # <<<<<<<<<<<<<<
@@ -3430,7 +3463,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_30calculateSpeciesVibFreqs(stru
  */
   __pyx_v_self->user_data.calculateSpeciesVibFreqs();
 
-  /* "chemplay.pyx":199
+  /* "chemplay.pyx":200
  *       self.user_data.calculateSpeciesMasses()
  * 
  *   def calculateSpeciesVibFreqs(self):             # <<<<<<<<<<<<<<
@@ -3445,7 +3478,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_30calculateSpeciesVibFreqs(stru
   return __pyx_r;
 }
 
-/* "chemplay.pyx":202
+/* "chemplay.pyx":203
  *     self.user_data.calculateSpeciesVibFreqs()
  * 
  *   def calculateSpeciesDiffBarriers(self):             # <<<<<<<<<<<<<<
@@ -3471,7 +3504,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_32calculateSpeciesDiffBarriers(
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("calculateSpeciesDiffBarriers", 0);
 
-  /* "chemplay.pyx":203
+  /* "chemplay.pyx":204
  * 
  *   def calculateSpeciesDiffBarriers(self):
  *     self.user_data.calculateSpeciesDiffBarriers()             # <<<<<<<<<<<<<<
@@ -3480,7 +3513,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_32calculateSpeciesDiffBarriers(
  */
   __pyx_v_self->user_data.calculateSpeciesDiffBarriers();
 
-  /* "chemplay.pyx":202
+  /* "chemplay.pyx":203
  *     self.user_data.calculateSpeciesVibFreqs()
  * 
  *   def calculateSpeciesDiffBarriers(self):             # <<<<<<<<<<<<<<
@@ -3495,7 +3528,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_32calculateSpeciesDiffBarriers(
   return __pyx_r;
 }
 
-/* "chemplay.pyx":205
+/* "chemplay.pyx":206
  *     self.user_data.calculateSpeciesDiffBarriers()
  * 
  *   def calculateSpeciesQuantumMobilities(self):             # <<<<<<<<<<<<<<
@@ -3521,7 +3554,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_34calculateSpeciesQuantumMobili
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("calculateSpeciesQuantumMobilities", 0);
 
-  /* "chemplay.pyx":206
+  /* "chemplay.pyx":207
  * 
  *   def calculateSpeciesQuantumMobilities(self):
  *     self.user_data.calculateSpeciesQuantumMobilities()             # <<<<<<<<<<<<<<
@@ -3530,7 +3563,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_34calculateSpeciesQuantumMobili
  */
   __pyx_v_self->user_data.calculateSpeciesQuantumMobilities();
 
-  /* "chemplay.pyx":205
+  /* "chemplay.pyx":206
  *     self.user_data.calculateSpeciesDiffBarriers()
  * 
  *   def calculateSpeciesQuantumMobilities(self):             # <<<<<<<<<<<<<<
@@ -3545,7 +3578,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_34calculateSpeciesQuantumMobili
   return __pyx_r;
 }
 
-/* "chemplay.pyx":208
+/* "chemplay.pyx":209
  *     self.user_data.calculateSpeciesQuantumMobilities()
  * 
  *   def classifySpeciesByPhase(self):             # <<<<<<<<<<<<<<
@@ -3571,7 +3604,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_36classifySpeciesByPhase(struct
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("classifySpeciesByPhase", 0);
 
-  /* "chemplay.pyx":209
+  /* "chemplay.pyx":210
  * 
  *   def classifySpeciesByPhase(self):
  *     self.user_data.classifySpeciesByPhase()             # <<<<<<<<<<<<<<
@@ -3580,7 +3613,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_36classifySpeciesByPhase(struct
  */
   __pyx_v_self->user_data.classifySpeciesByPhase();
 
-  /* "chemplay.pyx":208
+  /* "chemplay.pyx":209
  *     self.user_data.calculateSpeciesQuantumMobilities()
  * 
  *   def classifySpeciesByPhase(self):             # <<<<<<<<<<<<<<
@@ -3595,7 +3628,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_36classifySpeciesByPhase(struct
   return __pyx_r;
 }
 
-/* "chemplay.pyx":212
+/* "chemplay.pyx":213
  * 
  *   @property
  *   def reactions(self):             # <<<<<<<<<<<<<<
@@ -3622,7 +3655,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_9reactions___get__(struct __pyx
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "chemplay.pyx":213
+  /* "chemplay.pyx":214
  *   @property
  *   def reactions(self):
  *     return self._get_all_reactions()             # <<<<<<<<<<<<<<
@@ -3630,13 +3663,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_9reactions___get__(struct __pyx
  *   @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = ((struct __pyx_vtabstruct_8chemplay_pyUserData *)__pyx_v_self->__pyx_vtab)->_get_all_reactions(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_1 = ((struct __pyx_vtabstruct_8chemplay_pyUserData *)__pyx_v_self->__pyx_vtab)->_get_all_reactions(__pyx_v_self); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 214, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":212
+  /* "chemplay.pyx":213
  * 
  *   @property
  *   def reactions(self):             # <<<<<<<<<<<<<<
@@ -3655,7 +3688,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_9reactions___get__(struct __pyx
   return __pyx_r;
 }
 
-/* "chemplay.pyx":216
+/* "chemplay.pyx":217
  * 
  *   @property
  *   def reaction_types(self):             # <<<<<<<<<<<<<<
@@ -3682,7 +3715,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_14reaction_types___get__(struct
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "chemplay.pyx":217
+  /* "chemplay.pyx":218
  *   @property
  *   def reaction_types(self):
  *     return self.user_data.reaction_types             # <<<<<<<<<<<<<<
@@ -3690,13 +3723,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_14reaction_types___get__(struct
  *   @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert_map_to_py_int____int(__pyx_v_self->user_data.reaction_types); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 217, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_map_to_py_int____int(__pyx_v_self->user_data.reaction_types); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 218, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":216
+  /* "chemplay.pyx":217
  * 
  *   @property
  *   def reaction_types(self):             # <<<<<<<<<<<<<<
@@ -3715,7 +3748,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_14reaction_types___get__(struct
   return __pyx_r;
 }
 
-/* "chemplay.pyx":220
+/* "chemplay.pyx":221
  * 
  *   @property
  *   def physical_params(self):             # <<<<<<<<<<<<<<
@@ -3744,7 +3777,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_15physical_params___get__(struc
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "chemplay.pyx":221
+  /* "chemplay.pyx":222
  *   @property
  *   def physical_params(self):
  *     return self.get_all_phy_params()             # <<<<<<<<<<<<<<
@@ -3752,7 +3785,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_15physical_params___get__(struc
  *   @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_all_phy_params); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_all_phy_params); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 222, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -3766,14 +3799,14 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_15physical_params___get__(struc
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 221, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 222, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":220
+  /* "chemplay.pyx":221
  * 
  *   @property
  *   def physical_params(self):             # <<<<<<<<<<<<<<
@@ -3794,7 +3827,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_15physical_params___get__(struc
   return __pyx_r;
 }
 
-/* "chemplay.pyx":224
+/* "chemplay.pyx":225
  * 
  *   @property
  *   def name2idx(self):             # <<<<<<<<<<<<<<
@@ -3821,7 +3854,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8name2idx___get__(struct __pyx_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "chemplay.pyx":225
+  /* "chemplay.pyx":226
  *   @property
  *   def name2idx(self):
  *     return self.user_data.species.name2idx             # <<<<<<<<<<<<<<
@@ -3829,13 +3862,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8name2idx___get__(struct __pyx_
  *   @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert_map_to_py_std_3a__3a_string____int(__pyx_v_self->user_data.species.name2idx); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 225, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_map_to_py_std_3a__3a_string____int(__pyx_v_self->user_data.species.name2idx); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 226, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":224
+  /* "chemplay.pyx":225
  * 
  *   @property
  *   def name2idx(self):             # <<<<<<<<<<<<<<
@@ -3854,7 +3887,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8name2idx___get__(struct __pyx_
   return __pyx_r;
 }
 
-/* "chemplay.pyx":228
+/* "chemplay.pyx":229
  * 
  *   @property
  *   def idx2name(self):             # <<<<<<<<<<<<<<
@@ -3881,7 +3914,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8idx2name___get__(struct __pyx_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "chemplay.pyx":229
+  /* "chemplay.pyx":230
  *   @property
  *   def idx2name(self):
  *     return self.user_data.species.idx2name             # <<<<<<<<<<<<<<
@@ -3889,13 +3922,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8idx2name___get__(struct __pyx_
  *   @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert_vector_to_py_std_3a__3a_string(__pyx_v_self->user_data.species.idx2name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 229, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_vector_to_py_std_3a__3a_string(__pyx_v_self->user_data.species.idx2name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 230, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":228
+  /* "chemplay.pyx":229
  * 
  *   @property
  *   def idx2name(self):             # <<<<<<<<<<<<<<
@@ -3914,7 +3947,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8idx2name___get__(struct __pyx_
   return __pyx_r;
 }
 
-/* "chemplay.pyx":232
+/* "chemplay.pyx":233
  * 
  *   @property
  *   def elementsSpecies(self):             # <<<<<<<<<<<<<<
@@ -3941,7 +3974,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_15elementsSpecies___get__(struc
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "chemplay.pyx":233
+  /* "chemplay.pyx":234
  *   @property
  *   def elementsSpecies(self):
  *     return self.user_data.species.elementsSpecies             # <<<<<<<<<<<<<<
@@ -3949,13 +3982,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_15elementsSpecies___get__(struc
  *   @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert_map_to_py_int____std_3a__3a_map_3c_std_3a__3a_string_2c_int_3e___(__pyx_v_self->user_data.species.elementsSpecies); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 233, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_map_to_py_int____std_3a__3a_map_3c_std_3a__3a_string_2c_int_3e___(__pyx_v_self->user_data.species.elementsSpecies); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 234, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":232
+  /* "chemplay.pyx":233
  * 
  *   @property
  *   def elementsSpecies(self):             # <<<<<<<<<<<<<<
@@ -3974,7 +4007,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_15elementsSpecies___get__(struc
   return __pyx_r;
 }
 
-/* "chemplay.pyx":236
+/* "chemplay.pyx":237
  * 
  *   @property
  *   def massSpecies(self):             # <<<<<<<<<<<<<<
@@ -4001,7 +4034,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_11massSpecies___get__(struct __
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "chemplay.pyx":237
+  /* "chemplay.pyx":238
  *   @property
  *   def massSpecies(self):
  *     return self.user_data.species.massSpecies             # <<<<<<<<<<<<<<
@@ -4009,13 +4042,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_11massSpecies___get__(struct __
  *   @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert_map_to_py_int____double(__pyx_v_self->user_data.species.massSpecies); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 237, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_map_to_py_int____double(__pyx_v_self->user_data.species.massSpecies); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 238, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":236
+  /* "chemplay.pyx":237
  * 
  *   @property
  *   def massSpecies(self):             # <<<<<<<<<<<<<<
@@ -4034,7 +4067,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_11massSpecies___get__(struct __
   return __pyx_r;
 }
 
-/* "chemplay.pyx":240
+/* "chemplay.pyx":241
  * 
  *   @property
  *   def enthalpies(self):             # <<<<<<<<<<<<<<
@@ -4061,7 +4094,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_10enthalpies___get__(struct __p
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "chemplay.pyx":241
+  /* "chemplay.pyx":242
  *   @property
  *   def enthalpies(self):
  *     return self.user_data.species.enthalpies             # <<<<<<<<<<<<<<
@@ -4069,13 +4102,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_10enthalpies___get__(struct __p
  *   @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert_map_to_py_int____double(__pyx_v_self->user_data.species.enthalpies); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 241, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_map_to_py_int____double(__pyx_v_self->user_data.species.enthalpies); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":240
+  /* "chemplay.pyx":241
  * 
  *   @property
  *   def enthalpies(self):             # <<<<<<<<<<<<<<
@@ -4094,7 +4127,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_10enthalpies___get__(struct __p
   return __pyx_r;
 }
 
-/* "chemplay.pyx":244
+/* "chemplay.pyx":245
  * 
  *   @property
  *   def vibFreqs(self):             # <<<<<<<<<<<<<<
@@ -4121,7 +4154,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8vibFreqs___get__(struct __pyx_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "chemplay.pyx":245
+  /* "chemplay.pyx":246
  *   @property
  *   def vibFreqs(self):
  *     return self.user_data.species.vibFreqs             # <<<<<<<<<<<<<<
@@ -4129,13 +4162,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8vibFreqs___get__(struct __pyx_
  *   @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert_map_to_py_int____double(__pyx_v_self->user_data.species.vibFreqs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 245, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_map_to_py_int____double(__pyx_v_self->user_data.species.vibFreqs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 246, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":244
+  /* "chemplay.pyx":245
  * 
  *   @property
  *   def vibFreqs(self):             # <<<<<<<<<<<<<<
@@ -4154,7 +4187,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_8vibFreqs___get__(struct __pyx_
   return __pyx_r;
 }
 
-/* "chemplay.pyx":248
+/* "chemplay.pyx":249
  * 
  *   @property
  *   def diffBarriers(self):             # <<<<<<<<<<<<<<
@@ -4181,7 +4214,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_12diffBarriers___get__(struct _
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "chemplay.pyx":249
+  /* "chemplay.pyx":250
  *   @property
  *   def diffBarriers(self):
  *     return self.user_data.species.diffBarriers             # <<<<<<<<<<<<<<
@@ -4189,13 +4222,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_12diffBarriers___get__(struct _
  *   @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert_map_to_py_int____double(__pyx_v_self->user_data.species.diffBarriers); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 249, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_map_to_py_int____double(__pyx_v_self->user_data.species.diffBarriers); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 250, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":248
+  /* "chemplay.pyx":249
  * 
  *   @property
  *   def diffBarriers(self):             # <<<<<<<<<<<<<<
@@ -4214,7 +4247,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_12diffBarriers___get__(struct _
   return __pyx_r;
 }
 
-/* "chemplay.pyx":252
+/* "chemplay.pyx":253
  * 
  *   @property
  *   def quantMobilities(self):             # <<<<<<<<<<<<<<
@@ -4241,7 +4274,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_15quantMobilities___get__(struc
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "chemplay.pyx":253
+  /* "chemplay.pyx":254
  *   @property
  *   def quantMobilities(self):
  *     return self.user_data.species.quantMobilities             # <<<<<<<<<<<<<<
@@ -4249,13 +4282,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_15quantMobilities___get__(struc
  *   @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert_map_to_py_int____double(__pyx_v_self->user_data.species.quantMobilities); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 253, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_map_to_py_int____double(__pyx_v_self->user_data.species.quantMobilities); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 254, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":252
+  /* "chemplay.pyx":253
  * 
  *   @property
  *   def quantMobilities(self):             # <<<<<<<<<<<<<<
@@ -4274,7 +4307,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_15quantMobilities___get__(struc
   return __pyx_r;
 }
 
-/* "chemplay.pyx":256
+/* "chemplay.pyx":257
  * 
  *   @property
  *   def gasSpecies(self):             # <<<<<<<<<<<<<<
@@ -4301,7 +4334,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_10gasSpecies___get__(struct __p
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "chemplay.pyx":257
+  /* "chemplay.pyx":258
  *   @property
  *   def gasSpecies(self):
  *     return self.user_data.species.gasSpecies             # <<<<<<<<<<<<<<
@@ -4309,13 +4342,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_10gasSpecies___get__(struct __p
  *   @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert_set_to_py_int(__pyx_v_self->user_data.species.gasSpecies); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 257, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_set_to_py_int(__pyx_v_self->user_data.species.gasSpecies); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 258, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":256
+  /* "chemplay.pyx":257
  * 
  *   @property
  *   def gasSpecies(self):             # <<<<<<<<<<<<<<
@@ -4334,7 +4367,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_10gasSpecies___get__(struct __p
   return __pyx_r;
 }
 
-/* "chemplay.pyx":260
+/* "chemplay.pyx":261
  * 
  *   @property
  *   def surfaceSpecies(self):             # <<<<<<<<<<<<<<
@@ -4361,7 +4394,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_14surfaceSpecies___get__(struct
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "chemplay.pyx":261
+  /* "chemplay.pyx":262
  *   @property
  *   def surfaceSpecies(self):
  *     return self.user_data.species.surfaceSpecies             # <<<<<<<<<<<<<<
@@ -4369,13 +4402,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_14surfaceSpecies___get__(struct
  *   @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert_set_to_py_int(__pyx_v_self->user_data.species.surfaceSpecies); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 261, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_set_to_py_int(__pyx_v_self->user_data.species.surfaceSpecies); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 262, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":260
+  /* "chemplay.pyx":261
  * 
  *   @property
  *   def surfaceSpecies(self):             # <<<<<<<<<<<<<<
@@ -4394,7 +4427,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_14surfaceSpecies___get__(struct
   return __pyx_r;
 }
 
-/* "chemplay.pyx":264
+/* "chemplay.pyx":265
  * 
  *   @property
  *   def mantleSpecies(self):             # <<<<<<<<<<<<<<
@@ -4421,7 +4454,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_13mantleSpecies___get__(struct 
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "chemplay.pyx":265
+  /* "chemplay.pyx":266
  *   @property
  *   def mantleSpecies(self):
  *     return self.user_data.species.mantleSpecies             # <<<<<<<<<<<<<<
@@ -4429,13 +4462,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_13mantleSpecies___get__(struct 
  *   @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert_set_to_py_int(__pyx_v_self->user_data.species.mantleSpecies); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 265, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_set_to_py_int(__pyx_v_self->user_data.species.mantleSpecies); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 266, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":264
+  /* "chemplay.pyx":265
  * 
  *   @property
  *   def mantleSpecies(self):             # <<<<<<<<<<<<<<
@@ -4454,7 +4487,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_13mantleSpecies___get__(struct 
   return __pyx_r;
 }
 
-/* "chemplay.pyx":268
+/* "chemplay.pyx":269
  * 
  *   @property
  *   def abundances(self):             # <<<<<<<<<<<<<<
@@ -4481,7 +4514,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_10abundances___get__(struct __p
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "chemplay.pyx":269
+  /* "chemplay.pyx":270
  *   @property
  *   def abundances(self):
  *     return self.user_data.species.abundances             # <<<<<<<<<<<<<<
@@ -4489,13 +4522,13 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_10abundances___get__(struct __p
  *   def load_reactions(self, fname, nReactants=3, nProducts=4, nABC=3,
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert_vector_to_py_double(__pyx_v_self->user_data.species.abundances); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 269, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_vector_to_py_double(__pyx_v_self->user_data.species.abundances); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 270, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "chemplay.pyx":268
+  /* "chemplay.pyx":269
  * 
  *   @property
  *   def abundances(self):             # <<<<<<<<<<<<<<
@@ -4514,7 +4547,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_10abundances___get__(struct __p
   return __pyx_r;
 }
 
-/* "chemplay.pyx":271
+/* "chemplay.pyx":272
  *     return self.user_data.species.abundances
  * 
  *   def load_reactions(self, fname, nReactants=3, nProducts=4, nABC=3,             # <<<<<<<<<<<<<<
@@ -4638,7 +4671,7 @@ static PyObject *__pyx_pw_8chemplay_10pyUserData_39load_reactions(PyObject *__py
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "load_reactions") < 0)) __PYX_ERR(0, 271, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "load_reactions") < 0)) __PYX_ERR(0, 272, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -4678,7 +4711,7 @@ static PyObject *__pyx_pw_8chemplay_10pyUserData_39load_reactions(PyObject *__py
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("load_reactions", 0, 1, 10, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 271, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("load_reactions", 0, 1, 10, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 272, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("chemplay.pyUserData.load_reactions", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -4706,33 +4739,33 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_38load_reactions(struct __pyx_o
   int __pyx_t_10;
   __Pyx_RefNannySetupContext("load_reactions", 0);
 
-  /* "chemplay.pyx":273
+  /* "chemplay.pyx":274
  *   def load_reactions(self, fname, nReactants=3, nProducts=4, nABC=3,
  *     lenSpeciesName=12, lenABC=9, nT=2, lenT=6, lenType=3, rowlen_min=126):
  *     load_reactions(fname, self.user_data, nReactants, nProducts,             # <<<<<<<<<<<<<<
  *     nABC, lenSpeciesName, lenABC, nT, lenT, lenType, rowlen_min)
  * 
  */
-  __pyx_t_1 = __pyx_convert_string_from_py_std__in_string(__pyx_v_fname); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 273, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_v_nReactants); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 273, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_v_nProducts); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 273, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_string_from_py_std__in_string(__pyx_v_fname); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 274, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_v_nReactants); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 274, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_v_nProducts); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 274, __pyx_L1_error)
 
-  /* "chemplay.pyx":274
+  /* "chemplay.pyx":275
  *     lenSpeciesName=12, lenABC=9, nT=2, lenT=6, lenType=3, rowlen_min=126):
  *     load_reactions(fname, self.user_data, nReactants, nProducts,
  *     nABC, lenSpeciesName, lenABC, nT, lenT, lenType, rowlen_min)             # <<<<<<<<<<<<<<
  * 
  *   def loadInitialAbundances(self, fname):
  */
-  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_nABC); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 274, __pyx_L1_error)
-  __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_v_lenSpeciesName); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 274, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_lenABC); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 274, __pyx_L1_error)
-  __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_nT); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 274, __pyx_L1_error)
-  __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_v_lenT); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 274, __pyx_L1_error)
-  __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_v_lenType); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 274, __pyx_L1_error)
-  __pyx_t_10 = __Pyx_PyInt_As_int(__pyx_v_rowlen_min); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 274, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_nABC); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 275, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_v_lenSpeciesName); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 275, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_lenABC); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 275, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_nT); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 275, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_v_lenT); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 275, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_v_lenType); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 275, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyInt_As_int(__pyx_v_rowlen_min); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 275, __pyx_L1_error)
 
-  /* "chemplay.pyx":273
+  /* "chemplay.pyx":274
  *   def load_reactions(self, fname, nReactants=3, nProducts=4, nABC=3,
  *     lenSpeciesName=12, lenABC=9, nT=2, lenT=6, lenType=3, rowlen_min=126):
  *     load_reactions(fname, self.user_data, nReactants, nProducts,             # <<<<<<<<<<<<<<
@@ -4741,7 +4774,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_38load_reactions(struct __pyx_o
  */
   LOGIS::load_reactions(__pyx_t_1, __pyx_v_self->user_data, __pyx_t_2, __pyx_t_3, __pyx_t_4, __pyx_t_5, __pyx_t_6, __pyx_t_7, __pyx_t_8, __pyx_t_9, __pyx_t_10);
 
-  /* "chemplay.pyx":271
+  /* "chemplay.pyx":272
  *     return self.user_data.species.abundances
  * 
  *   def load_reactions(self, fname, nReactants=3, nProducts=4, nABC=3,             # <<<<<<<<<<<<<<
@@ -4761,7 +4794,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_38load_reactions(struct __pyx_o
   return __pyx_r;
 }
 
-/* "chemplay.pyx":276
+/* "chemplay.pyx":277
  *     nABC, lenSpeciesName, lenABC, nT, lenT, lenType, rowlen_min)
  * 
  *   def loadInitialAbundances(self, fname):             # <<<<<<<<<<<<<<
@@ -4788,17 +4821,17 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_40loadInitialAbundances(struct 
   std::string __pyx_t_1;
   __Pyx_RefNannySetupContext("loadInitialAbundances", 0);
 
-  /* "chemplay.pyx":277
+  /* "chemplay.pyx":278
  * 
  *   def loadInitialAbundances(self, fname):
  *     loadInitialAbundances(self.user_data.species, fname)             # <<<<<<<<<<<<<<
  * 
  *   def loadSpeciesEnthalpies(self, fname):
  */
-  __pyx_t_1 = __pyx_convert_string_from_py_std__in_string(__pyx_v_fname); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 277, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_string_from_py_std__in_string(__pyx_v_fname); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 278, __pyx_L1_error)
   (void)(LOGIS::loadInitialAbundances(__pyx_v_self->user_data.species, __pyx_t_1));
 
-  /* "chemplay.pyx":276
+  /* "chemplay.pyx":277
  *     nABC, lenSpeciesName, lenABC, nT, lenT, lenType, rowlen_min)
  * 
  *   def loadInitialAbundances(self, fname):             # <<<<<<<<<<<<<<
@@ -4818,7 +4851,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_40loadInitialAbundances(struct 
   return __pyx_r;
 }
 
-/* "chemplay.pyx":279
+/* "chemplay.pyx":280
  *     loadInitialAbundances(self.user_data.species, fname)
  * 
  *   def loadSpeciesEnthalpies(self, fname):             # <<<<<<<<<<<<<<
@@ -4845,17 +4878,17 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_42loadSpeciesEnthalpies(struct 
   std::string __pyx_t_1;
   __Pyx_RefNannySetupContext("loadSpeciesEnthalpies", 0);
 
-  /* "chemplay.pyx":280
+  /* "chemplay.pyx":281
  * 
  *   def loadSpeciesEnthalpies(self, fname):
  *     loadSpeciesEnthalpies(self.user_data.species, fname)             # <<<<<<<<<<<<<<
  * 
  *   def assignReactionHandlers(self):
  */
-  __pyx_t_1 = __pyx_convert_string_from_py_std__in_string(__pyx_v_fname); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 280, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_string_from_py_std__in_string(__pyx_v_fname); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 281, __pyx_L1_error)
   (void)(LOGIS::loadSpeciesEnthalpies(__pyx_v_self->user_data.species, __pyx_t_1));
 
-  /* "chemplay.pyx":279
+  /* "chemplay.pyx":280
  *     loadInitialAbundances(self.user_data.species, fname)
  * 
  *   def loadSpeciesEnthalpies(self, fname):             # <<<<<<<<<<<<<<
@@ -4875,7 +4908,7 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_42loadSpeciesEnthalpies(struct 
   return __pyx_r;
 }
 
-/* "chemplay.pyx":282
+/* "chemplay.pyx":283
  *     loadSpeciesEnthalpies(self.user_data.species, fname)
  * 
  *   def assignReactionHandlers(self):             # <<<<<<<<<<<<<<
@@ -4900,14 +4933,14 @@ static PyObject *__pyx_pf_8chemplay_10pyUserData_44assignReactionHandlers(struct
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("assignReactionHandlers", 0);
 
-  /* "chemplay.pyx":283
+  /* "chemplay.pyx":284
  * 
  *   def assignReactionHandlers(self):
  *     assignReactionHandlers(self.user_data)             # <<<<<<<<<<<<<<
  */
   CALC_RATE::assignReactionHandlers(__pyx_v_self->user_data);
 
-  /* "chemplay.pyx":282
+  /* "chemplay.pyx":283
  *     loadSpeciesEnthalpies(self.user_data.species, fname)
  * 
  *   def assignReactionHandlers(self):             # <<<<<<<<<<<<<<
@@ -6960,6 +6993,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_lenType, __pyx_k_lenType, sizeof(__pyx_k_lenType), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_mf, __pyx_k_mf, sizeof(__pyx_k_mf), 0, 0, 1, 1},
+  {&__pyx_n_s_msglun, __pyx_k_msglun, sizeof(__pyx_k_msglun), 0, 0, 1, 1},
   {&__pyx_n_s_nABC, __pyx_k_nABC, sizeof(__pyx_k_nABC), 0, 0, 1, 1},
   {&__pyx_n_s_nProducts, __pyx_k_nProducts, sizeof(__pyx_k_nProducts), 0, 0, 1, 1},
   {&__pyx_n_s_nReactants, __pyx_k_nReactants, sizeof(__pyx_k_nReactants), 0, 0, 1, 1},
@@ -6984,6 +7018,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_set_phy_param, __pyx_k_set_phy_param, sizeof(__pyx_k_set_phy_param), 0, 0, 1, 1},
   {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
   {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
+  {&__pyx_n_s_showmsg, __pyx_k_showmsg, sizeof(__pyx_k_showmsg), 0, 0, 1, 1},
   {&__pyx_n_s_t, __pyx_k_t, sizeof(__pyx_k_t), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {&__pyx_n_s_val, __pyx_k_val, sizeof(__pyx_k_val), 0, 0, 1, 1},
@@ -6991,8 +7026,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 131, __pyx_L1_error)
-  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 138, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 132, __pyx_L1_error)
+  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 139, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
@@ -7032,6 +7067,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   __pyx_float_1eneg_6 = PyFloat_FromDouble(1e-6); if (unlikely(!__pyx_float_1eneg_6)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_float_1eneg_30 = PyFloat_FromDouble(1e-30); if (unlikely(!__pyx_float_1eneg_30)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_2 = PyInt_FromLong(2); if (unlikely(!__pyx_int_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_3 = PyInt_FromLong(3); if (unlikely(!__pyx_int_3)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_4 = PyInt_FromLong(4); if (unlikely(!__pyx_int_4)) __PYX_ERR(0, 1, __pyx_L1_error)

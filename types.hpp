@@ -22,69 +22,15 @@ typedef double* DTP_Y;
 
 class PhyParams {
 public:
-  inline DTP_FLOAT get_n_gas() const {return n_gas;}
-  inline DTP_FLOAT get_T_gas() const {return T_gas;}
-  inline DTP_FLOAT get_T_dust() const {return T_dust;}
-  inline DTP_FLOAT get_Av() const {return Av;}
-  inline DTP_FLOAT get_G0_UV() const {return G0_UV;}
-  inline DTP_FLOAT get_chi_Xray() const {return chi_Xray;}
-  inline DTP_FLOAT get_chi_cosmicray() const {return chi_cosmicray;}
-  inline DTP_FLOAT get_dust2gas_num() const {return dust2gas_num;}
-  inline DTP_FLOAT get_dust2gas_mass() const {return dust2gas_mass;}
-  inline DTP_FLOAT get_dust_material_density() const {return dust_material_density;}
-  inline DTP_FLOAT get_dust_site_density() const {return dust_site_density;}
-  inline DTP_FLOAT get_dust_radius() const {return dust_radius;}
-  inline DTP_FLOAT get_dust_crosssec() const {return dust_crosssec;}
-  inline DTP_FLOAT get_dust_albedo() const {return dust_albedo;}
-  inline DTP_FLOAT get_mean_mol_weight() const {return mean_mol_weight;}
-  inline DTP_FLOAT get_chemdesorption_factor() const {return chemdesorption_factor;}
-  inline DTP_FLOAT get_t_max_year() const {return t_max_year;}
-
-  DTP_FLOAT get_n_gas(DTP_FLOAT t) const;
-  DTP_FLOAT get_T_gas(DTP_FLOAT t) const;
-  DTP_FLOAT get_T_dust(DTP_FLOAT t) const;
-  inline DTP_FLOAT get_Av(DTP_FLOAT t) const;
-  inline DTP_FLOAT get_G0_UV(DTP_FLOAT t) const;
-  inline DTP_FLOAT get_chi_Xray(DTP_FLOAT t) const;
-  inline DTP_FLOAT get_chi_cosmicray(DTP_FLOAT t) const;
-  inline DTP_FLOAT get_dust2gas_num(DTP_FLOAT t) const;
-  inline DTP_FLOAT get_dust2gas_mass(DTP_FLOAT t) const;
-  inline DTP_FLOAT get_dust_material_density(DTP_FLOAT t) const;
-  inline DTP_FLOAT get_dust_site_density(DTP_FLOAT t) const;
-  inline DTP_FLOAT get_dust_radius(DTP_FLOAT t) const;
-  inline DTP_FLOAT get_dust_crosssec(DTP_FLOAT t) const;
-  inline DTP_FLOAT get_dust_albedo(DTP_FLOAT t) const;
-  inline DTP_FLOAT get_mean_mol_weight(DTP_FLOAT t) const;
-  inline DTP_FLOAT get_chemdesorption_factor(DTP_FLOAT t) const;
-
-  inline void set_n_gas(DTP_FLOAT _v);
-  inline void set_T_gas(DTP_FLOAT _v);
-  inline void set_T_dust(DTP_FLOAT _v);
-  inline void set_Av(DTP_FLOAT _v);
-  inline void set_G0_UV(DTP_FLOAT _v);
-  inline void set_chi_Xray(DTP_FLOAT _v);
-  inline void set_chi_cosmicray(DTP_FLOAT _v);
-  inline void set_dust2gas_num(DTP_FLOAT _v);
-  inline void set_dust2gas_mass(DTP_FLOAT _v);
-  inline void set_dust_material_density(DTP_FLOAT _v);
-  inline void set_dust_site_density(DTP_FLOAT _v);
-  inline void set_dust_radius(DTP_FLOAT _v);
-  inline void set_dust_crosssec(DTP_FLOAT _v);
-  inline void set_dust_albedo(DTP_FLOAT _v);
-  inline void set_mean_mol_weight(DTP_FLOAT _v);
-  inline void set_chemdesorption_factor(DTP_FLOAT _v);
-  inline void set_t_max_year(DTP_FLOAT _v);
-
   void prep_params();
 
   int from_file(std::string fname);
 
-private:
   DTP_FLOAT n_gas, T_gas, T_dust, Av, G0_UV, chi_Xray, chi_cosmicray,
     dust2gas_num, dust2gas_mass, dust_material_density,
     dust_site_density, dust_radius, dust_crosssec, dust_albedo,
-    mean_mol_weight, chemdesorption_factor;
-  double t_max_year;
+    mean_mol_weight, chemdesorption_factor, Ncol_H2, dv_km_s;
+  DTP_FLOAT t_max_year;
 };
 
 
@@ -252,11 +198,11 @@ class Recorder {
       ofs << std::setw(fwidth) << std::left << std::scientific
           << std::setprecision(prec) << t / CONST::phy_SecondsPerYear;
       ofs << std::setw(fwidth) << std::left << std::scientific
-        << std::setprecision(prec) << p.get_T_gas(t);
+        << std::setprecision(prec) << p.T_gas;
       ofs << std::setw(fwidth) << std::left << std::scientific
-        << std::setprecision(prec) << p.get_T_dust(t);
+        << std::setprecision(prec) << p.T_dust;
       ofs << std::setw(fwidth) << std::left << std::scientific
-        << std::setprecision(prec) << p.get_n_gas(t);
+        << std::setprecision(prec) << p.n_gas;
       for (int i=0; i<neq; ++i) {
         ofs << std::setw(fwidth) << std::left << std::scientific
           << std::setprecision(prec) << y[i];

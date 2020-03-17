@@ -10,14 +10,14 @@ subroutine fdlsodes_w( &
   RWORK, LRW, IWORK, LIW, jac, MF) bind(C, name="dlsodes_w")
   bind(C) f, jac
   EXTERNAL f, jac
-  double precision, intent(inout) :: t
-  double precision, intent(in) :: tout
-  double precision, intent(in) :: RTOL, ATOL
-  integer, intent(in) :: NEQ, ITOL, ITASK, IOPT, LRW, LIW, MF
-  integer, intent(inout) :: ISTATE
-  double precision, dimension(LRW), intent(inout) :: RWORK
-  integer, dimension(LIW), intent(inout) :: IWORK
-  double precision, dimension(NEQ), intent(inout) :: y
+  real(c_double), intent(inout) :: t
+  real(c_double), intent(in) :: tout
+  real(c_double), intent(in) :: RTOL, ATOL
+  integer(c_int), intent(in) :: NEQ, ITOL, ITASK, IOPT, LRW, LIW, MF
+  integer(c_int), intent(inout) :: ISTATE
+  real(c_double), dimension(LRW), intent(inout) :: RWORK
+  integer(c_int), dimension(LIW), intent(inout) :: IWORK
+  real(c_double), dimension(NEQ), intent(inout) :: y
   !integer i
   !write(*, "(A)") "Going to call DLSODES."
   !write(*,*) NEQ, ITOL, ITASK, ISTATE, IOPT, LRW, LIW, MF
@@ -31,12 +31,12 @@ end subroutine fdlsodes_w
 
 
 subroutine fxsetf_w(mflag) bind(C, name="xsetf_w")
-  integer, intent(in) :: mflag
+  integer(c_int), intent(in) :: mflag
   CALL XSETF(mflag)
 end subroutine fxsetf_w
 
 subroutine fxsetun_w(lun) bind(C, name="xsetun_w")
-  integer, intent(in) :: lun
+  integer(c_int), intent(in) :: lun
   CALL XSETUN(lun)
 end subroutine fxsetun_w
 

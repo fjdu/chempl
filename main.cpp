@@ -108,7 +108,7 @@ int main(int argc, char **argv)
 
   TYPES::DTP_FLOAT t = 0.0, dt=1e-4, t_ratio=1.05;
   int NMAX = 2000;
-  double t_max_seconds = user_data.physical_params.get_t_max_year() * CONST::phy_SecondsPerYear;
+  double t_max_seconds = user_data.physical_params.t_max_year * CONST::phy_SecondsPerYear;
   double *y = new double[updater_re.NEQ];
   for (int i=0; i<updater_re.NEQ; ++i) {
     y[i] = user_data.species.abundances[i];

@@ -11,66 +11,45 @@
 
 namespace TYPES {
 
-inline void PhyParams::set_n_gas(DTP_FLOAT v) {n_gas = v;}
-inline void PhyParams::set_T_gas(DTP_FLOAT v) {T_gas = v;}
-inline void PhyParams::set_T_dust(DTP_FLOAT v) {T_dust = v;}
-inline void PhyParams::set_Av(DTP_FLOAT v) {Av = v;}
-inline void PhyParams::set_G0_UV(DTP_FLOAT v) {G0_UV = v;}
-inline void PhyParams::set_chi_Xray(DTP_FLOAT v) {chi_Xray = v;}
-inline void PhyParams::set_chi_cosmicray(DTP_FLOAT v) {chi_cosmicray = v;}
-inline void PhyParams::set_dust2gas_num(DTP_FLOAT v) {dust2gas_num = v;}
-inline void PhyParams::set_dust2gas_mass(DTP_FLOAT v) {dust2gas_mass = v;}
-inline void PhyParams::set_dust_material_density(DTP_FLOAT v) {dust_material_density = v;}
-inline void PhyParams::set_dust_site_density(DTP_FLOAT v) {dust_site_density = v;}
-inline void PhyParams::set_dust_radius(DTP_FLOAT v) {dust_radius = v;}
-inline void PhyParams::set_dust_crosssec(DTP_FLOAT v) {dust_crosssec = v;}
-inline void PhyParams::set_dust_albedo(DTP_FLOAT v) {dust_albedo = v;}
-inline void PhyParams::set_mean_mol_weight(DTP_FLOAT v) {mean_mol_weight = v;}
-inline void PhyParams::set_chemdesorption_factor(DTP_FLOAT v) {chemdesorption_factor = v;}
-inline void PhyParams::set_t_max_year(DTP_FLOAT v) {t_max_year = v;}
+inline DTP_FLOAT get_n_gas(PhyParams& p) {return p.n_gas;}
+inline DTP_FLOAT get_T_gas(PhyParams& p) {return p.T_gas;}
+inline DTP_FLOAT get_T_dust(PhyParams& p) {return p.T_dust;}
+inline DTP_FLOAT get_Av(PhyParams& p) {return p.Av;}
+inline DTP_FLOAT get_G0_UV(PhyParams& p) {return p.G0_UV;}
+inline DTP_FLOAT get_chi_Xray(PhyParams& p) {return p.chi_Xray;}
+inline DTP_FLOAT get_chi_cosmicray(PhyParams& p) {return p.chi_cosmicray;}
+inline DTP_FLOAT get_dust2gas_num(PhyParams& p) {return p.dust2gas_num;}
+inline DTP_FLOAT get_dust2gas_mass(PhyParams& p) {return p.dust2gas_mass;}
+inline DTP_FLOAT get_dust_material_density(PhyParams& p) {return p.dust_material_density;}
+inline DTP_FLOAT get_dust_site_density(PhyParams& p) {return p.dust_site_density;}
+inline DTP_FLOAT get_dust_radius(PhyParams& p) {return p.dust_radius;}
+inline DTP_FLOAT get_dust_crosssec(PhyParams& p) {return p.dust_crosssec;}
+inline DTP_FLOAT get_dust_albedo(PhyParams& p) {return p.dust_albedo;}
+inline DTP_FLOAT get_mean_mol_weight(PhyParams& p) {return p.mean_mol_weight;}
+inline DTP_FLOAT get_chemdesorption_factor(PhyParams& p) {return p.chemdesorption_factor;}
+inline DTP_FLOAT get_Ncol_H2(PhyParams& p) {return p.Ncol_H2;}
+inline DTP_FLOAT get_dv_km_s(PhyParams& p) {return p.dv_km_s;}
+inline DTP_FLOAT get_t_max_year(PhyParams& p) {return p.t_max_year;}
 
-
-DTP_FLOAT PhyParams::get_T_gas(DTP_FLOAT t) const {return T_gas;}
-DTP_FLOAT PhyParams::get_T_dust(DTP_FLOAT t) const {return T_dust;}
-DTP_FLOAT PhyParams::get_n_gas(DTP_FLOAT t) const {return n_gas;}
-
-
-inline DTP_FLOAT get_n_gas(PhyParams& p) {return p.get_n_gas();}
-inline DTP_FLOAT get_T_gas(PhyParams& p) {return p.get_T_gas();}
-inline DTP_FLOAT get_T_dust(PhyParams& p) {return p.get_T_dust();}
-inline DTP_FLOAT get_Av(PhyParams& p) {return p.get_Av();}
-inline DTP_FLOAT get_G0_UV(PhyParams& p) {return p.get_G0_UV();}
-inline DTP_FLOAT get_chi_Xray(PhyParams& p) {return p.get_chi_Xray();}
-inline DTP_FLOAT get_chi_cosmicray(PhyParams& p) {return p.get_chi_cosmicray();}
-inline DTP_FLOAT get_dust2gas_num(PhyParams& p) {return p.get_dust2gas_num();}
-inline DTP_FLOAT get_dust2gas_mass(PhyParams& p) {return p.get_dust2gas_mass();}
-inline DTP_FLOAT get_dust_material_density(PhyParams& p) {return p.get_dust_material_density();}
-inline DTP_FLOAT get_dust_site_density(PhyParams& p) {return p.get_dust_site_density();}
-inline DTP_FLOAT get_dust_radius(PhyParams& p) {return p.get_dust_radius();}
-inline DTP_FLOAT get_dust_crosssec(PhyParams& p) {return p.get_dust_crosssec();}
-inline DTP_FLOAT get_dust_albedo(PhyParams& p) {return p.get_dust_albedo();}
-inline DTP_FLOAT get_mean_mol_weight(PhyParams& p) {return p.get_mean_mol_weight();}
-inline DTP_FLOAT get_chemdesorption_factor(PhyParams& p) {return p.get_chemdesorption_factor();}
-inline DTP_FLOAT get_t_max_year(PhyParams& p) {return p.get_t_max_year();}
-
-
-void set_n_gas(PhyParams& p, DTP_FLOAT v) {p.set_n_gas(v);}
-void set_T_gas(PhyParams& p, DTP_FLOAT v) {p.set_T_gas(v);}
-void set_T_dust(PhyParams& p, DTP_FLOAT v) {p.set_T_dust(v);}
-void set_Av(PhyParams& p, DTP_FLOAT v) {p.set_Av(v);}
-void set_G0_UV(PhyParams& p, DTP_FLOAT v) {p.set_G0_UV(v);}
-void set_chi_Xray(PhyParams& p, DTP_FLOAT v) {p.set_chi_Xray(v);}
-void set_chi_cosmicray(PhyParams& p, DTP_FLOAT v) {p.set_chi_cosmicray(v);}
-void set_dust2gas_num(PhyParams& p, DTP_FLOAT v) {p.set_dust2gas_num(v);}
-void set_dust2gas_mass(PhyParams& p, DTP_FLOAT v) {p.set_dust2gas_mass(v);}
-void set_dust_material_density(PhyParams& p, DTP_FLOAT v) {p.set_dust_material_density(v);}
-void set_dust_site_density(PhyParams& p, DTP_FLOAT v) {p.set_dust_site_density(v);}
-void set_dust_radius(PhyParams& p, DTP_FLOAT v) {p.set_dust_radius(v);}
-void set_dust_crosssec(PhyParams& p, DTP_FLOAT v) {p.set_dust_crosssec(v);}
-void set_dust_albedo(PhyParams& p, DTP_FLOAT v) {p.set_dust_albedo(v);}
-void set_mean_mol_weight(PhyParams& p, DTP_FLOAT v) {p.set_mean_mol_weight(v);}
-void set_chemdesorption_factor(PhyParams& p, DTP_FLOAT v) {p.set_chemdesorption_factor(v);}
-void set_t_max_year(PhyParams& p, DTP_FLOAT v) {p.set_t_max_year(v);}
+void set_n_gas(PhyParams& p, DTP_FLOAT v) {p.n_gas=v;}
+void set_T_gas(PhyParams& p, DTP_FLOAT v) {p.T_gas=v;}
+void set_T_dust(PhyParams& p, DTP_FLOAT v) {p.T_dust=v;}
+void set_Av(PhyParams& p, DTP_FLOAT v) {p.Av=v;}
+void set_G0_UV(PhyParams& p, DTP_FLOAT v) {p.G0_UV=v;}
+void set_chi_Xray(PhyParams& p, DTP_FLOAT v) {p.chi_Xray=v;}
+void set_chi_cosmicray(PhyParams& p, DTP_FLOAT v) {p.chi_cosmicray=v;}
+void set_dust2gas_num(PhyParams& p, DTP_FLOAT v) {p.dust2gas_num=v;}
+void set_dust2gas_mass(PhyParams& p, DTP_FLOAT v) {p.dust2gas_mass=v;}
+void set_dust_material_density(PhyParams& p, DTP_FLOAT v) {p.dust_material_density=v;}
+void set_dust_site_density(PhyParams& p, DTP_FLOAT v) {p.dust_site_density=v;}
+void set_dust_radius(PhyParams& p, DTP_FLOAT v) {p.dust_radius=v;}
+void set_dust_crosssec(PhyParams& p, DTP_FLOAT v) {p.dust_crosssec=v;}
+void set_dust_albedo(PhyParams& p, DTP_FLOAT v) {p.dust_albedo=v;}
+void set_mean_mol_weight(PhyParams& p, DTP_FLOAT v) {p.mean_mol_weight=v;}
+void set_chemdesorption_factor(PhyParams& p, DTP_FLOAT v) {p.chemdesorption_factor=v;}
+void set_Ncol_H2(PhyParams& p, DTP_FLOAT v) {p.Ncol_H2=v;}
+void set_dv_km_s(PhyParams& p, DTP_FLOAT v) {p.dv_km_s=v;}
+void set_t_max_year(PhyParams& p, DTP_FLOAT v) {p.t_max_year=v;}
 
 
 std::map<std::string, void (*)(PhyParams&, DTP_FLOAT)> phySetterDict = {
@@ -90,6 +69,8 @@ std::map<std::string, void (*)(PhyParams&, DTP_FLOAT)> phySetterDict = {
   {"dust_albedo", set_dust_albedo},
   {"mean_mol_weight", set_mean_mol_weight},
   {"chemdesorption_factor", set_chemdesorption_factor},
+  {"Ncol_H2", set_Ncol_H2},
+  {"dv_km_s", set_dv_km_s},
   {"t_max_year", set_t_max_year}
 };
 
@@ -111,6 +92,8 @@ std::map<std::string, DTP_FLOAT (*)(PhyParams&)> phyGetterDict = {
   {"dust_albedo", get_dust_albedo},
   {"mean_mol_weight", get_mean_mol_weight},
   {"chemdesorption_factor", get_chemdesorption_factor},
+  {"Ncol_H2", get_Ncol_H2},
+  {"dv_km_s", get_dv_km_s},
   {"t_max_year", get_t_max_year}
 };
 
