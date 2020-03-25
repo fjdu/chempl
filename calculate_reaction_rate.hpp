@@ -69,6 +69,15 @@ TYPES::DTP_FLOAT rate_photoionization(
     TYPES::AuxData& m);
 
 
+TYPES::DTP_FLOAT rate_photodissociation_H2(
+    const TYPES::DTP_FLOAT& t,
+    const TYPES::DTP_Y y,
+    TYPES::Reaction& r,
+    const TYPES::PhyParams& p,
+    const TYPES::Species& s,
+    TYPES::AuxData& m);
+
+
 inline TYPES::DTP_FLOAT calc_cross_surf_barrier_prob(
     const TYPES::PhyParams& p, TYPES::Reaction& r);
 
@@ -144,9 +153,9 @@ TYPES::DTP_FLOAT rate_dummy(
     TYPES::AuxData& m);
 
 
-void assignAReactionHandler(TYPES::RateCalculators rcs,
-                            TYPES::RateCalculator rc,
-                            int itype);
+void assignAReactionHandler(TYPES::RateCalculators& rcs,
+                            const TYPES::RateCalculator& rc,
+                            const int& itype);
 void assignReactionHandlers(TYPES::User_data& user_data);
 
 }

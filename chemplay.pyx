@@ -4,6 +4,7 @@ from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp.map cimport map as cppmap
 from libcpp.set cimport set as cppset
+from myconsts import Consts
 
 cdef extern from "types.hpp" namespace "TYPES":
 
@@ -29,13 +30,19 @@ cdef extern from "types.hpp" namespace "TYPES":
     cppset[int] gasSpecies, surfaceSpecies, mantleSpecies
     vector[double] abundances
 
+  cdef cppclass AuxData:
+    pass
+
+  cdef cppclass PhyParams:
+    void prep_params()
+    int from_file(string fname)
 
   ctypedef vector[Reaction] Reactions
   ctypedef cppmap[string, double] Elements
   ctypedef cppmap[int, int] ReactionTypes
-
-  cdef cppclass PhyParams:
-    void prep_params()
+  ctypedef double (*RateCalculator)(const double&, double *,
+           Reaction&, const PhyParams&, const Species&, AuxData&)
+  ctypedef cppmap[int, RateCalculator] RateCalculators
 
   cdef cppclass User_data:
     void add_reaction(Reaction& rs)
@@ -59,7 +66,9 @@ cdef extern from "types.hpp" namespace "TYPES":
     Species species
     ReactionTypes reaction_types
     User_data* ptr
+    RateCalculators rate_calculators
     double* y
+
 
 
 cdef extern from "logistics.hpp" namespace "LOGIS":
@@ -72,12 +81,25 @@ cdef extern from "logistics.hpp" namespace "LOGIS":
 
 cdef extern from "calculate_reaction_rate.hpp" namespace "CALC_RATE":
   void assignReactionHandlers(User_data&)
+  void assignAReactionHandler(RateCalculators& rcs,
+                              const RateCalculator& rc,
+                              const int& itype)
+  double rate_photodissociation_H2(
+    const double& t,
+    const double* y,
+    Reaction& r,
+    const PhyParams& p,
+    const Species& s,
+    AuxData& m)
 
 
 cdef extern from "rate_equation_lsode.hpp" namespace "RATE_EQ":
   cdef cppclass Updater_RE:
     void set_user_data(User_data* udata)
-    int initialize_solver(double reltol, double abstol, int mf, int LRW_F)
+    void set_sparse()
+    int initialize_solver(double reltol, double abstol, int mf, int LRW_F, int solver_id)
+    void allocate_rsav_isav()
+    void save_restore_common_block(int job)
     double update(double t, double dt, double* y)
     void set_solver_msg(int mflag)
     void set_solver_msg_lun(int lun)
@@ -99,13 +121,13 @@ cdef class pyUserData:
   cdef Updater_RE updater_re
 
   def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6,
-                 showmsg=1, msglun=6):
+                 showmsg=1, msglun=6, solver_id=0):
     self.updater_re.set_user_data(self.user_data.ptr)
-    self.updater_re.initialize_solver(rtol, atol, mf, LRW_F)
+    self.updater_re.set_sparse()
+    self.updater_re.initialize_solver(rtol, atol, mf, LRW_F, solver_id)
     self.updater_re.set_solver_msg(showmsg);
     self.updater_re.set_solver_msg_lun(msglun);
-
-  def allocate_y(self):
+    self.updater_re.allocate_rsav_isav()
     self.user_data.allocate_y()
 
   def deallocate_y(self):
@@ -125,19 +147,36 @@ cdef class pyUserData:
       'RTOL':   self.updater_re.RTOL,
       'ATOL':   self.updater_re.ATOL}
 
-
-  def update(self, vector[double] y, double t, double dt):
+  def save_common_block(self):
+    self.updater_re.save_restore_common_block(job=1)
+    
+  def restore_common_block(self):
+    self.updater_re.save_restore_common_block(job=2)
+    
+  def update(self, vector[double] y, double t, double dt, int istate=0):
     cdef int i
     cdef double t1
+
+    self.updater_re.set_user_data(self.user_data.ptr)
+
     for i in range(self.updater_re.NEQ):
       self.user_data.y[i] = y[i]
-    t1 = self.updater_re.update(t, dt, self.user_data.y)
-    if self.updater_re.ISTATE != 2:
+
+    if istate != 0:
+      self.updater_re.set_ISTATE(istate)
+    if self.updater_re.ISTATE not in [0,1]:
+      self.restore_common_block()
+    if self.updater_re.ISTATE < 0:
       if self.updater_re.ISTATE in [-1, -4, -5]:
         self.updater_re.set_ISTATE(3)
       else:
         print('Unrecoverable error: ISTATE = ', self.updater_re.ISTATE)
         return
+
+    t1 = self.updater_re.update(t, dt, self.user_data.y)
+
+    if istate != 1:
+      self.save_common_block()
     return t1, [self.user_data.y[i] for i in range(self.updater_re.NEQ)]
 
   cdef _get_all_reactions(self):
@@ -166,6 +205,10 @@ cdef class pyUserData:
 
   def set_phy_param(self, string name, double val):
     self.user_data.set_phy_param(name, val)
+    self.user_data.physical_params.prep_params()
+
+  def set_phy_param_from_file(self, string fname):
+    self.user_data.physical_params.from_file(fname)
     self.user_data.physical_params.prep_params()
 
   def get_phy_param(self, string name):

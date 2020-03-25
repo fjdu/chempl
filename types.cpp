@@ -207,6 +207,9 @@ void User_data::add_reaction(const Reaction& rs) {
 
 void User_data::clear_reactions() {
   this->reactions.clear();
+  this->reaction_types.clear();
+  this->auxdata.ads_reactions.clear();
+  this->auxdata.eva_reactions.clear();
 }
 
 

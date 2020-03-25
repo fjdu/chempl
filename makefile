@@ -41,7 +41,7 @@ OBJSWRAPPER=rate_equation_lsode.o ode_wrapper.o types.o constants.o logistics.o 
 LIB_DIR=.
 CHEMPLAYLIB=$(LIB_DIR)/libchemplay.a
 
-chemplay: setup.py chemplay.pyx $(CHEMPLAYLIB)
+chemplay: setup.py chemplay.pyx myconsts.pyx myconsts.pxd $(CHEMPLAYLIB)
 	python3 setup.py build_ext --inplace
 
 $(CHEMPLAYLIB): $(OBJSWRAPPER)

@@ -41,9 +41,9 @@ TYPES::DTP_FLOAT Updater_RE::update(double t, double dt, double *y)
             &ISTATE, &IOPT, RWORK, &LRW, IWORK, &LIW, jac, &MF);
 
   std::cout << (char)27 << "[A"
-            << std::setw(10) << std::setprecision(4) << std::left
+            << std::setw(9) << std::setprecision(3) << std::left
             << t0 << " -> "
-            << std::setw(10) << std::setprecision(4) << std::left
+            << std::setw(9) << std::setprecision(3) << std::left
             << t
             << " ISTATE=" << ISTATE
             << " #f="   << IWORK[11]
@@ -51,6 +51,7 @@ TYPES::DTP_FLOAT Updater_RE::update(double t, double dt, double *y)
             << " LRW=" << IWORK[16]
             << " LIW=" << IWORK[17]
             << " NNZ=" << IWORK[18]
+            << " SID=" << SOLVER_ID
             << std::endl;
   return t;
 }
@@ -58,12 +59,22 @@ TYPES::DTP_FLOAT Updater_RE::update(double t, double dt, double *y)
 void Updater_RE::set_user_data(TYPES::User_data *data_) {
   data = data_;
   NEQ = data->species.idx2name.size();
+  // std::cout << "Solver data pointer -> " << data << "\n" << std::endl;
+}
+
+void Updater_RE::set_sparse() {
   if (sparseMaskJac.size() != NEQ) {
     for (auto& s: sparseMaskJac) {std::vector<bool>().swap(s);}
     std::vector<std::vector<bool> >().swap(sparseMaskJac);
-  }
-  for (int i=0; i<NEQ; ++i) {
-    sparseMaskJac.push_back(std::vector<bool>(NEQ, false));
+    for (int i=0; i<NEQ; ++i) {
+      sparseMaskJac.push_back(std::vector<bool>(NEQ, false));
+    }
+  } else {
+    for (int i=0; i<NEQ; ++i) {
+      for (int j=0; j<NEQ; ++j) {
+        sparseMaskJac[i][j] = false;
+      }
+    }
   }
 }
 
@@ -71,7 +82,8 @@ int Updater_RE::initialize_solver(
     double reltol,
     double abstol,
     int mf, //021: use Jac; 022: not.
-    int LRW_F)
+    int LRW_F,
+    int solver_id)
 {
   MF = mf;
   IOPT = 1;
@@ -80,6 +92,7 @@ int Updater_RE::initialize_solver(
   ATOL = abstol;
   ITASK = 1;
   ISTATE = 1;
+  SOLVER_ID = solver_id;
 
   NNZ = makeSparse(data->reactions, sparseMaskJac);
   std::cout << "NNZ = " << NNZ << " ("
@@ -96,8 +109,6 @@ int Updater_RE::initialize_solver(
   std::cout << "RWORK size = " << LRW << std::endl;
   std::cout << "IWORK size = " << LIW << std::endl;
 
-  // for (int i=0; i<LRW; ++i) {RWORK[i] = 0.0;}
-  // for (int i=0; i<LIW; ++i) {IWORK[i] = 0;}
   std::fill(IWORK, IWORK+LIW, 0);
   std::fill(RWORK, RWORK+LRW, 0.0);
   IWORK[4] = 5;
@@ -122,16 +133,26 @@ int Updater_RE::initialize_solver(
   return 0;
 }
 
-
 void Updater_RE::set_solver_msg(int mflag) {
   xsetf_w(&mflag);
 }
-
 
 void Updater_RE::set_solver_msg_lun(int lun) {
   xsetun_w(&lun);
 }
 
+void Updater_RE::allocate_rsav_isav() {
+  lrsav = 256;
+  lisav = 128;
+  if (RSAV != nullptr) {delete [] RSAV; RSAV = nullptr;}
+  if (ISAV != nullptr) {delete [] ISAV; ISAV = nullptr;}
+  RSAV = new double[lrsav];
+  ISAV = new int[lisav];
+}
+
+void Updater_RE::save_restore_common_block(int job) {
+  dsrcms_w(RSAV, &lrsav, ISAV, &lisav, &job);
+}
 
 void Updater_RE::f(int *neq, double *t, double *y, double *ydot)
 {
@@ -139,6 +160,7 @@ void Updater_RE::f(int *neq, double *t, double *y, double *ydot)
     ydot[i] = 0.0;
   }
 
+  // std::cout << "Solver data points to: " << data << "\n" << std::endl;
   CALC_RATE::update_surfmant(
       *t, y, data->physical_params,
       data->species, data->auxdata);
@@ -188,8 +210,6 @@ void Updater_RE::jac(int *neq, double *t, double *y, int *j, double *ian, double
 // dlsodes_w.
 // The static variables have to be initialized here.
 TYPES::User_data *Updater_RE::data;
-int *Updater_RE::IWORK;
-double *Updater_RE::RWORK;
 
 
 }

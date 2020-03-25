@@ -1,7 +1,7 @@
 n_gas = 5e4
 T_gas =  15.0
 T_dust = 15.0
-Av = 2.0
+Av = 10.0
 G0_UV = 1.0e0
 chi_cosmicray = 1.0e0
 chi_Xray = 0.0
@@ -12,4 +12,6 @@ dust_radius = 0.1e-4
 dust_albedo = 0.6
 mean_mol_weight = 1.4
 chemdesorption_factor = 0.01
+Ncol_H2 = 2e22
+dv_km_s = 1.0
 t_max_year = 1.0e7

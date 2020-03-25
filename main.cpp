@@ -102,12 +102,13 @@ int main(int argc, char **argv)
 
   RATE_EQ::Updater_RE updater_re;
   updater_re.set_user_data(&user_data);
+  updater_re.set_sparse();
   updater_re.initialize_solver(1e-6, 1e-30);
   updater_re.set_solver_msg(1);
   //updater_re.set_solver_msg_lun(79);
 
-  TYPES::DTP_FLOAT t = 0.0, dt=1e-4, t_ratio=1.05;
-  int NMAX = 2000;
+  TYPES::DTP_FLOAT t=0.0, dt=1e-1, t_ratio=1.08;
+  int NMAX = 5000;
   double t_max_seconds = user_data.physical_params.t_max_year * CONST::phy_SecondsPerYear;
   double *y = new double[updater_re.NEQ];
   for (int i=0; i<updater_re.NEQ; ++i) {

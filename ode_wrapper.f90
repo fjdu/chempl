@@ -40,4 +40,11 @@ subroutine fxsetun_w(lun) bind(C, name="xsetun_w")
   CALL XSETUN(lun)
 end subroutine fxsetun_w
 
+subroutine fdsrcms_w(rsav, lrsav, isav, lisav, job) bind(C, name="dsrcms_w")
+  real(c_double), dimension(lrsav), intent(inout) :: rsav
+  integer(c_int), dimension(lisav), intent(inout) :: isav
+  integer(c_int), intent(in) :: job, lrsav, lisav
+  CALL DSRCMS(rsav, isav, job)
+end subroutine fdsrcms_w
+
 end module ode_wrapper

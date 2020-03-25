@@ -4,7 +4,7 @@ from Cython.Build import cythonize
 from Cython.Compiler import Options
 Options.docstrings = True
 
-extension = Extension(
+extension1 = Extension(
     name="chemplay",
     sources=["chemplay.pyx"],
     libraries=["chemplay", "gfortran"],
@@ -14,12 +14,22 @@ extension = Extension(
     extra_compile_args=["-std=c++11"],
 )
 
+extension2 = Extension(
+    name="myconsts",
+    sources=["myconsts.pyx"],
+    libraries=[],
+    library_dirs=["./"],
+    include_dirs=["./"],
+    depends=['setup.py', 'makefile'],
+    extra_compile_args=["-std=c++11"],
+)
+
 setup(
     name="chemplay",
     version='0.0',
     description='A playable astrochemical code',
     author='Fujun Du',
     author_email='fjdu@pmo.ac.cn fujun.du@gmail.com',
-    ext_modules=cythonize([extension], language_level = "3",
+    ext_modules=cythonize([extension1, extension2], language_level = "3",
     gdb_debug=True)
 )
