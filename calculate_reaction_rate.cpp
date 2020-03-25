@@ -136,7 +136,7 @@ TYPES::DTP_FLOAT rate_photodissociation_H2(
   double x = p.Ncol_H2/5e14;
   double t1 = 1.0 + x/p.dv_km_s, t2 = sqrt(1.0+x);
   double f_SS;
-  if (s.idx2name[r.idxReactants[0]] != "H2") {
+  if (s.idx2name[r.idxReactants[0]] == "H2") {
     f_SS = 0.965/(t1*t1)
          + 0.035/t2 * exp(-8.5e-4*t2);
   } else {f_SS = 1.0;}
