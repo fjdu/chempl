@@ -410,4 +410,35 @@ void User_data::classifySpeciesByPhase() {
   }
 }
 
+
+inline void calculateOneReactionHeat(Reaction& r,
+    const std::map<int, DTP_FLOAT>& enths) {
+  double h = 0.0;
+  for (auto const& i: r.idxReactants) {
+    if (enths.find(i) != enths.end()) {
+      h += enths.at(i);
+    } else {
+      r.heat = 0.0;
+      return;
+    }
+  }
+  for (auto const& i: r.idxProducts) {
+    if (enths.find(i) != enths.end()) {
+      h -= enths.at(i);
+    } else {
+      r.heat = 0.0;
+      return;
+    }
+  }
+  r.heat = h;
+}
+
+
+void User_data::calculateReactionHeat() {
+  for (auto& r: this->reactions) {
+    calculateOneReactionHeat(r, this->species.enthalpies);
+  }
+}
+
+
 }

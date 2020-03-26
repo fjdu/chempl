@@ -100,6 +100,24 @@ TYPES::DTP_FLOAT rate_surface_AB(
     TYPES::AuxData& m);
 
 
+TYPES::DTP_FLOAT rate_surface_AA_desorption(
+    const TYPES::DTP_FLOAT& t,
+    const TYPES::DTP_Y y,
+    TYPES::Reaction& r,
+    const TYPES::PhyParams& p,
+    const TYPES::Species& s,
+    TYPES::AuxData& m);
+
+
+TYPES::DTP_FLOAT rate_surface_AB_desorption(
+    const TYPES::DTP_FLOAT& t,
+    const TYPES::DTP_Y y,
+    TYPES::Reaction& r,
+    const TYPES::PhyParams& p,
+    const TYPES::Species& s,
+    TYPES::AuxData& m);
+
+
 TYPES::DTP_FLOAT rate_surf2mant(
     const TYPES::DTP_FLOAT& t,
     const TYPES::DTP_Y y,

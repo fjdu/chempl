@@ -45,7 +45,7 @@ class Reaction {
     std::vector<int> idxReactants, idxProducts;
     std::vector<DTP_FLOAT> abc;
     std::vector<DTP_FLOAT> Trange;
-    double drdy[2], rate;
+    double drdy[2], rate, heat;
     Reaction() {
       drdy[0] = NAN;
       drdy[1] = NAN;
@@ -151,6 +151,7 @@ class User_data {
     void calculateSpeciesDiffBarriers();
     void calculateSpeciesQuantumMobilities();
     void classifySpeciesByPhase();
+    void calculateReactionHeat();
     User_data() {
       ptr = this;
       y = nullptr;

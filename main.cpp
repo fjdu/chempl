@@ -88,6 +88,8 @@ int main(int argc, char **argv)
   //            << " " << s.second << std::endl;
   //}
 
+  user_data.calculateReactionHeat();
+
   CALC_RATE::assignReactionHandlers(user_data);
   for (auto const& i: user_data.reaction_types) {
     if (user_data.rate_calculators.find(i.first) ==
@@ -107,7 +109,7 @@ int main(int argc, char **argv)
   updater_re.set_solver_msg(1);
   //updater_re.set_solver_msg_lun(79);
 
-  TYPES::DTP_FLOAT t=0.0, dt=1e-1, t_ratio=1.08;
+  TYPES::DTP_FLOAT t=0.0, dt=1e-4, t_ratio=1.05;
   int NMAX = 5000;
   double t_max_seconds = user_data.physical_params.t_max_year * CONST::phy_SecondsPerYear;
   double *y = new double[updater_re.NEQ];

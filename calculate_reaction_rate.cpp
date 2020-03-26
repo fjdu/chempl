@@ -208,6 +208,40 @@ TYPES::DTP_FLOAT rate_surface_AB(
 }
 
 
+TYPES::DTP_FLOAT rate_surface_AA_desorption(
+    const TYPES::DTP_FLOAT& t,
+    double *y,
+    TYPES::Reaction& r,
+    const TYPES::PhyParams& p,
+    const TYPES::Species& s,
+    TYPES::AuxData& m)
+{
+  double f = p.chemdesorption_factor;
+  rate_surface_AA(t, y, r, p, s, m);
+  r.drdy[0] *= f;
+  r.drdy[1] *= f;
+  r.rate *= f;
+  return r.rate;
+}
+
+
+TYPES::DTP_FLOAT rate_surface_AB_desorption(
+    const TYPES::DTP_FLOAT& t,
+    double *y,
+    TYPES::Reaction& r,
+    const TYPES::PhyParams& p,
+    const TYPES::Species& s,
+    TYPES::AuxData& m)
+{
+  double f = p.chemdesorption_factor;
+  rate_surface_AB(t, y, r, p, s, m);
+  r.drdy[0] *= f;
+  r.drdy[1] *= f;
+  r.rate *= f;
+  return r.rate;
+}
+
+
 void update_surfmant(
     const TYPES::DTP_FLOAT& t,
     double *y,
@@ -367,6 +401,7 @@ void assignReactionHandlers(TYPES::User_data& user_data) {
   (user_data.rate_calculators)[71] = rate_cosmicray_ionization;
   (user_data.rate_calculators)[2]  = rate_cosmicray_induced_ionization;
   (user_data.rate_calculators)[72] = rate_cosmicray_induced_ionization;
+  (user_data.rate_calculators)[4] = rate_photodissociation_H2;
   (user_data.rate_calculators)[5]  = rate_ion_neutral;
   (user_data.rate_calculators)[61] = rate_adsorption;
   (user_data.rate_calculators)[62] = rate_desorption;
@@ -374,18 +409,16 @@ void assignReactionHandlers(TYPES::User_data& user_data) {
   (user_data.rate_calculators)[64] = rate_surface_AB;
   (user_data.rate_calculators)[65] = rate_mant2surf;
   (user_data.rate_calculators)[66] = rate_surf2mant;
+  (user_data.rate_calculators)[68] = rate_surface_AA_desorption;
+  (user_data.rate_calculators)[69] = rate_surface_AB_desorption;
   (user_data.rate_calculators)[3]  = rate_photoionization;
   (user_data.rate_calculators)[20] = rate_cosmicray_induced_ionization;
   (user_data.rate_calculators)[21] = rate_iongrain;
-  //(user_data.rate_calculators)[53] = rate_ion_neutral;
   (user_data.rate_calculators)[75] = rate_photodesorption;
-  (user_data.rate_calculators)[4] = rate_photodissociation_H2;
-  //
   (user_data.rate_calculators)[53] = rate_dummy;
-  //(user_data.rate_calculators)[65] = rate_dummy;
-  //(user_data.rate_calculators)[66] = rate_dummy;
   (user_data.rate_calculators)[13] = rate_dummy;
   (user_data.rate_calculators)[67] = rate_dummy;
+  //(user_data.rate_calculators)[53] = rate_ion_neutral;
 }
 
 }

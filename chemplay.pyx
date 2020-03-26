@@ -14,6 +14,7 @@ cdef extern from "types.hpp" namespace "TYPES":
     vector[double] abc, Trange
     double drdy[2]
     double rate
+    double heat
     Reaction() except +
     Reaction(vector[string] sReactants,
                 vector[string] sProducts,
@@ -186,7 +187,8 @@ cdef class pyUserData:
              'Trange': _.Trange,
              'itype': _.itype,
              'drdy': _.drdy,
-             'rate': _.rate
+             'rate': _.rate,
+             'heat': _.heat
             }
             for _ in self.user_data.reactions]
 
