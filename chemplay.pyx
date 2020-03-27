@@ -59,6 +59,7 @@ cdef extern from "types.hpp" namespace "TYPES":
     void calculateSpeciesVibFreqs()
     void calculateSpeciesDiffBarriers()
     void calculateSpeciesQuantumMobilities()
+    void calculateReactionHeat()
     void classifySpeciesByPhase()
     void allocate_y()
     void deallocate_y()
@@ -251,6 +252,9 @@ cdef class pyUserData:
   def calculateSpeciesQuantumMobilities(self):
     self.user_data.calculateSpeciesQuantumMobilities()
 
+  def calculateReactionHeat(self):
+    self.user_data.calculateReactionHeat()
+
   def classifySpeciesByPhase(self):
     self.user_data.classifySpeciesByPhase()
 
@@ -327,3 +331,7 @@ cdef class pyUserData:
 
   def assignReactionHandlers(self):
     assignReactionHandlers(self.user_data)
+
+  def setAbundanceByName(self, name, val):
+    idx = self.user_data.species.name2idx[name]
+    self.user_data.species.abundances[idx] = val
