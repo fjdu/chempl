@@ -109,7 +109,7 @@ int main(int argc, char **argv)
   updater_re.set_solver_msg(1);
   //updater_re.set_solver_msg_lun(79);
 
-  TYPES::DTP_FLOAT t=0.0, dt=1e-4, t_ratio=1.05;
+  TYPES::DTP_FLOAT t=0.0, dt=1e-1, t_ratio=1.08;
   int NMAX = 5000;
   double t_max_seconds = user_data.physical_params.t_max_year * CONST::phy_SecondsPerYear;
   double *y = new double[updater_re.NEQ];

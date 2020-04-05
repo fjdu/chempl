@@ -214,5 +214,8 @@ class Recorder {
 };
 
 
+std::map<std::string, int> assignElementsToOneSpecies(
+    const std::string& name, const Elements& elements);
+
 }
 #endif //TYPES_H

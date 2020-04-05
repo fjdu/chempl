@@ -184,24 +184,24 @@ void User_data::add_reaction(const Reaction& rs) {
 
   this->reactions.push_back(reaction);
 
-  int n=this->reactions.size();
-  if (n > 0) {
-    std::cout << "Reaction " << n << " added: ";
-    for (int i=0; i<nReactants; ++i) {
-      std::cout << this->reactions[n-1].sReactants[i];
-      if (i<nReactants-1) {
-        std::cout << " + ";
-      }
-    }
-    std::cout << " -> ";
-    for (int i=0; i<nProducts; ++i) {
-      std::cout << this->reactions[n-1].sProducts[i];
-      if (i<nProducts-1) {
-        std::cout << " + ";
-      }
-    }
-    std::cout << std::endl;
-  }
+  // int n=this->reactions.size();
+  // if (n > 0) {
+  //   std::cout << "Reaction " << n << " added: ";
+  //   for (int i=0; i<nReactants; ++i) {
+  //     std::cout << this->reactions[n-1].sReactants[i];
+  //     if (i<nReactants-1) {
+  //       std::cout << " + ";
+  //     }
+  //   }
+  //   std::cout << " -> ";
+  //   for (int i=0; i<nProducts; ++i) {
+  //     std::cout << this->reactions[n-1].sProducts[i];
+  //     if (i<nProducts-1) {
+  //       std::cout << " + ";
+  //     }
+  //   }
+  //   std::cout << std::endl;
+  // }
 }
 
 

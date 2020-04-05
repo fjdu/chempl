@@ -71,6 +71,8 @@ cdef extern from "types.hpp" namespace "TYPES":
     RateCalculators rate_calculators
     double* y
 
+  cppmap[string, int] assignElementsToOneSpecies(string name, const Elements& elements)
+
 
 
 cdef extern from "logistics.hpp" namespace "LOGIS":
@@ -201,6 +203,11 @@ cdef class pyUserData:
                    int itype):
     cdef Reaction rs
     rs = Reaction(sReactants, sProducts, abc, Trange, itype)
+    self.user_data.add_reaction(rs)
+
+  def add_reaction_by_dict(self, r):
+    cdef Reaction rs
+    rs = Reaction(r['reactants'], r['products'], r['abc'], r['Trange'], r['itype'])
     self.user_data.add_reaction(rs)
 
   def clear_reactions(self):
@@ -335,3 +342,10 @@ cdef class pyUserData:
   def setAbundanceByName(self, name, val):
     idx = self.user_data.species.name2idx[name]
     self.user_data.species.abundances[idx] = val
+
+  def setAbundances(self, vals):
+    for i in range(len(self.user_data.species.idx2name)):
+      self.user_data.species.abundances[i] = vals[i]
+
+  def assignElementsToOneSpecies(self, name, elements):
+    return assignElementsToOneSpecies(name, elements)

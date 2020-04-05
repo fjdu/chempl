@@ -135,6 +135,12 @@ void update_surfmant(
     TYPES::AuxData& m);
 
 
+void update_phy_params(
+    const TYPES::DTP_FLOAT& t,
+    double *y,
+    TYPES::PhyParams& p);
+
+
 TYPES::DTP_FLOAT rate_mant2surf(
     const TYPES::DTP_FLOAT& t,
     const TYPES::DTP_Y y,
