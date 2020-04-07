@@ -6526,10 +6526,6 @@ CH3+        Grain-                  CH2         H           Grain0              
 CH3+        Grain-                  CH          H2          Grain0                   1.0                                    21 A GR C 1
 CH3+        Grain-                  CH          H           H           Grain0       1.0                                    21 A GR C 1
 NH2+        Grain-                  N           H           H           Grain0       1.0                                    21 A GR C 1
-NH2+        Grain-                  N           H           H           Grain0       1.0                                    21 A GR C 1
-NH2+        Grain-                  N           H           H           Grain0       1.0                                    21 A GR C 1
-NH2+        Grain-                  NH          H           Grain0                   1.0                                    21 A GR C 1
-NH2+        Grain-                  NH          H           Grain0                   1.0                                    21 A GR C 1
 NH2+        Grain-                  NH          H           Grain0                   1.0                                    21 A GR C 1
 CH4+        Grain-                  CH3         H           Grain0                   1.0                                    21 A GR C 1
 CH4+        Grain-                  CH2         H           H           Grain0       1.0                                    21 A GR C 1
@@ -6545,13 +6541,7 @@ H2O+        Grain-                  O           H           H           Grain0  
 H2O+        Grain-                  O           H2          Grain0                   1.0                                    21 A GR C 1
 H2O+        Grain-                  OH          H           Grain0                   1.0                                    21 A GR C 1
 NH4+        Grain-                  NH2         H           H           Grain0       1.0                                    21 A GR C 1
-NH4+        Grain-                  NH2         H           H           Grain0       1.0                                    21 A GR C 1
-NH4+        Grain-                  NH2         H           H           Grain0       1.0                                    21 A GR C 1
 NH4+        Grain-                  NH2         H2          Grain0                   1.0                                    21 A GR C 1
-NH4+        Grain-                  NH2         H2          Grain0                   1.0                                    21 A GR C 1
-NH4+        Grain-                  NH2         H2          Grain0                   1.0                                    21 A GR C 1
-NH4+        Grain-                  NH3         H           Grain0                   1.0                                    21 A GR C 1
-NH4+        Grain-                  NH3         H           Grain0                   1.0                                    21 A GR C 1
 NH4+        Grain-                  NH3         H           Grain0                   1.0                                    21 A GR C 1
 H3O+        Grain-                  O           H2          H           Grain0       1.0                                    21 A GR C 1
 H3O+        Grain-                  OH          H           H           Grain0       1.0                                    21 A GR C 1
@@ -6568,12 +6558,6 @@ C2H2+       Grain-                  CH          CH          Grain0              
 C2H2+       Grain-                  C2          H           H           Grain0       1.0                                    21 A GR C 1
 C2H2+       Grain-                  C2H         H           Grain0                   1.0                                    21 A GR C 1
 HCN+        Grain-                  CN          H           Grain0                   1.0                                    21 C GR C 1
-C2H3+       Grain-                  C2H2        H           Grain0                   1.0                                    21 A GR C 1
-C2H3+       Grain-                  C2H         H2          Grain0                   1.0                                    21 A GR C 1
-C2H3+       Grain-                  C2H         H           H           Grain0       1.0                                    21 A GR C 1
-C2H3+       Grain-                  C2          H           H2          Grain0       1.0                                    21 A GR C 1
-C2H3+       Grain-                  CH3         C           Grain0                   1.0                                    21 A GR C 1
-C2H3+       Grain-                  CH2         CH          Grain0                   1.0                                    21 A GR C 1
 C2H3+       Grain-                  C2H2        H           Grain0                   1.0                                    21 A GR C 1
 C2H3+       Grain-                  C2H         H2          Grain0                   1.0                                    21 A GR C 1
 C2H3+       Grain-                  C2H         H           H           Grain0       1.0                                    21 A GR C 1
@@ -7028,10 +7012,6 @@ CH3+        Grain0                  CH2         H           Grain+              
 CH3+        Grain0                  CH          H2          Grain+                                                          21 A GR C 1
 CH3+        Grain0                  CH          H           H           Grain+                                              21 A GR C 1
 NH2+        Grain0                  N           H           H           Grain+                                              21 A GR C 1
-NH2+        Grain0                  N           H           H           Grain+                                              21 A GR C 1
-NH2+        Grain0                  N           H           H           Grain+                                              21 A GR C 1
-NH2+        Grain0                  NH          H           Grain+                                                          21 A GR C 1
-NH2+        Grain0                  NH          H           Grain+                                                          21 A GR C 1
 NH2+        Grain0                  NH          H           Grain+                                                          21 A GR C 1
 CH4+        Grain0                  CH3         H           Grain+                                                          21 A GR C 1
 CH4+        Grain0                  CH2         H           H           Grain+                                              21 A GR C 1
@@ -7047,13 +7027,7 @@ H2O+        Grain0                  O           H           H           Grain+  
 H2O+        Grain0                  O           H2          Grain+                                                          21 A GR C 1
 H2O+        Grain0                  OH          H           Grain+                                                          21 A GR C 1
 NH4+        Grain0                  NH2         H           H           Grain+                                              21 A GR C 1
-NH4+        Grain0                  NH2         H           H           Grain+                                              21 A GR C 1
-NH4+        Grain0                  NH2         H           H           Grain+                                              21 A GR C 1
 NH4+        Grain0                  NH2         H2          Grain+                                                          21 A GR C 1
-NH4+        Grain0                  NH2         H2          Grain+                                                          21 A GR C 1
-NH4+        Grain0                  NH2         H2          Grain+                                                          21 A GR C 1
-NH4+        Grain0                  NH3         H           Grain+                                                          21 A GR C 1
-NH4+        Grain0                  NH3         H           Grain+                                                          21 A GR C 1
 NH4+        Grain0                  NH3         H           Grain+                                                          21 A GR C 1
 H3O+        Grain0                  O           H2          H           Grain+                                              21 A GR C 1
 H3O+        Grain0                  OH          H           H           Grain+                                              21 A GR C 1
@@ -7070,12 +7044,6 @@ C2H2+       Grain0                  CH          CH          Grain+              
 C2H2+       Grain0                  C2          H           H           Grain+                                              21 A GR C 1
 C2H2+       Grain0                  C2H         H           Grain+                                                          21 A GR C 1
 HCN+        Grain0                  CN          H           Grain+                                                          21 C GR C 1
-C2H3+       Grain0                  C2H2        H           Grain+                                                          21 A GR C 1
-C2H3+       Grain0                  C2H         H2          Grain+                                                          21 A GR C 1
-C2H3+       Grain0                  C2H         H           H           Grain+                                              21 A GR C 1
-C2H3+       Grain0                  C2          H           H2          Grain+                                              21 A GR C 1
-C2H3+       Grain0                  CH3         C           Grain+                                                          21 A GR C 1
-C2H3+       Grain0                  CH2         CH          Grain+                                                          21 A GR C 1
 C2H3+       Grain0                  C2H2        H           Grain+                                                          21 A GR C 1
 C2H3+       Grain0                  C2H         H2          Grain+                                                          21 A GR C 1
 C2H3+       Grain0                  C2H         H           H           Grain+                                              21 A GR C 1
