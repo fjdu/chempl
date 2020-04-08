@@ -139,6 +139,40 @@ int PhyParams::from_file(std::string fname)
 }
 
 
+void PhyParams::add_a_timedependency(std::string name,
+    std::vector<double> ts, std::vector<double> vs) {
+  if (phySetterDict.find(name) == phySetterDict.end()) {
+    std::cout << "In add_a_timedependency: key does not exist: "
+              << name << std::endl;
+    return;
+  }
+  this->timeDependencies.push_back(TimeDependency(name, ts, vs));
+}
+
+
+void PhyParams::remove_a_timedependency(std::string name) {
+  int ifound = -1;
+  for (int i=0; i < this->timeDependencies.size(); ++i) {
+    if (this->timeDependencies[i].name == name) {
+      ifound = i;
+      break;
+    }
+  }
+  if (ifound >= 0) {
+    this->timeDependencies.erase(this->timeDependencies.begin()+ifound);
+  }
+}
+
+
+std::vector<std::string> PhyParams::get_timeDependency_names() {
+  std::vector<std::string> names;
+  for (auto t: this->timeDependencies) {
+    names.push_back(t.name);
+  }
+  return names;
+}
+
+
 void User_data::add_reaction(const Reaction& rs) {
   Species& species = this->species;
   ReactionTypes& r_types = this->reaction_types;
@@ -202,6 +236,67 @@ void User_data::add_reaction(const Reaction& rs) {
   //   }
   //   std::cout << std::endl;
   // }
+}
+
+
+void User_data::find_duplicate_reactions() {
+  for (int i=0; i < this->reactions.size(); ++i) {
+    bool already = false;
+    for (auto & r: dupli) {
+      if (std::find(r.begin(), r.end(), i) != r.end()) {
+        already = true;
+        break;
+      }
+    }
+    if (already) {
+      continue;
+    }
+    std::vector<int> tmp;
+    for (int j=i+1; j < this->reactions.size(); ++j) {
+      if ((reactions[i].sReactants == reactions[j].sReactants) &&
+          (reactions[i].sProducts == reactions[j].sProducts) &&
+          (reactions[i].itype == reactions[j].itype)) {
+        tmp.push_back(j);
+      }
+    }
+    if (tmp.size() > 0) {
+      tmp.push_back(i);
+      dupli.push_back(tmp);
+    }
+  }
+  for (auto & r: dupli) {
+    std::sort(r.begin(), r.end(), [this](int a, int b) {
+        return reactions[a].Trange[0] <= reactions[b].Trange[0];
+      });
+  }
+}
+
+
+void User_data::handle_duplicate_reactions() {
+  const double Trange_min=0.0, Trange_max = 1e20;
+  for (auto & r: dupli) {
+    std::cout << "Duplicate reactions: ";
+    for (auto & i: r) {
+      std::cout << i << " ";
+    }
+    for (auto & s: reactions[r[0]].sReactants) {
+      std::cout << s << " ";
+    }
+    std::cout << " -> ";
+    for (auto & s: reactions[r[0]].sProducts) {
+      std::cout << s << " ";
+    }
+    for (auto & i: r) {
+      std::cout << "(" << reactions[i].Trange[0] << ","
+                << reactions[i].Trange[1] << ") ";
+    }
+    std::cout << reactions[r[0]].itype << std::endl;
+
+    reactions[r[0]].Trange[0] = Trange_min;
+    reactions[r.back()].Trange[1] = Trange_max;
+    std::cout << "\t" << r[0] << " " << Trange_min << " "
+              << r.back() << " " << Trange_max << std::endl;
+  }
 }
 
 
@@ -438,6 +533,15 @@ void User_data::calculateReactionHeat() {
   for (auto& r: this->reactions) {
     calculateOneReactionHeat(r, this->species.enthalpies);
   }
+}
+
+
+double User_data::calculate_a_rate(
+    const double& t,
+    double *y,
+    TYPES::Reaction& r) {
+  return rate_calculators[r.itype](t, y, r,
+    physical_params, species, auxdata);
 }
 
 

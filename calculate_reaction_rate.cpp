@@ -1,5 +1,6 @@
 #include "math.h"
 #include <algorithm>
+#include <vector>
 #include "types.hpp"
 #include "constants.hpp"
 
@@ -64,14 +65,14 @@ TYPES::DTP_FLOAT rate_ion_neutral(
     TYPES::AuxData& m)
 {
   double Tgas = p.T_gas, tmp;
-  if (((Tgas < r.Trange[0]) || (Tgas > r.Trange[1])) &&
-      (r.Trange[1] > 0.0)) {
-    tmp = 0.0;
-  } else {
+  //if (((Tgas < r.Trange[0]) || (Tgas > r.Trange[1])) &&
+  //    (r.Trange[1] > 0.0)) {
+  //  tmp = 0.0;
+  //} else {
     tmp = p.n_gas * r.abc[0]
         * pow(p.T_gas/3e2, r.abc[1])
         * exp(-r.abc[2] / p.T_gas);
-  }
+  //}
   r.drdy[0] = tmp * NV_Ith_S(y, r.idxReactants[1]);
   r.drdy[1] = tmp * NV_Ith_S(y, r.idxReactants[0]);
   r.rate = NV_Ith_S(y, r.idxReactants[0])
@@ -268,11 +269,28 @@ void update_surfmant(
 }
 
 
+double interpol(const std::vector<double>& ts,
+                const std::vector<double>& vs, const double& t) {
+  if (t <= ts[0]) {
+    return vs[0];
+  }
+  if (t >= ts.back()) {
+    return vs.back();
+  }
+
+  auto up = std::upper_bound(ts.begin(), ts.end(), t);
+  int i = up - ts.begin() - 1;
+  double k = (vs[i+1] - vs[i]) / (ts[i+1] - ts[i]);
+  return vs[i] + k * (t - ts[i]);
+}
+
+
 void update_phy_params(
     const TYPES::DTP_FLOAT& t,
-    double *y,
     TYPES::PhyParams& p) {
-  return;
+  for (auto& s: p.timeDependencies) {
+    TYPES::phySetterDict[s.name](p, interpol(s.ts, s.vs, t));
+  }
 }
 
 

@@ -137,7 +137,6 @@ void update_surfmant(
 
 void update_phy_params(
     const TYPES::DTP_FLOAT& t,
-    double *y,
     TYPES::PhyParams& p);
 
 
@@ -182,6 +181,8 @@ void assignAReactionHandler(TYPES::RateCalculators& rcs,
                             const int& itype);
 void assignReactionHandlers(TYPES::User_data& user_data);
 
+double interpol(const std::vector<double>& ts,
+                const std::vector<double>& vs, const double& t);
 }
 
 #endif //CALC_RATE_H

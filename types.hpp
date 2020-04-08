@@ -19,6 +19,21 @@ namespace TYPES {
 typedef double DTP_FLOAT;
 typedef double* DTP_Y;
 
+class TimeDependency {
+  public:
+    std::string name;
+    std::vector<double> ts, vs;
+    TimeDependency(std::string name_,
+      std::vector<double> ts_,
+      std::vector<double> vs_) {
+      name = name_;
+      ts = ts_;
+      vs = vs_;
+    }
+};
+
+typedef std::vector<TimeDependency> TimeDependencies;
+
 
 class PhyParams {
 public:
@@ -31,6 +46,12 @@ public:
     dust_site_density, dust_radius, dust_crosssec, dust_albedo,
     mean_mol_weight, chemdesorption_factor, Ncol_H2, dv_km_s;
   DTP_FLOAT t_max_year;
+  TimeDependencies timeDependencies;
+
+  void add_a_timedependency(std::string name, std::vector<double> ts,
+    std::vector<double> vs);
+  void remove_a_timedependency(std::string name);
+  std::vector<std::string> get_timeDependency_names();
 };
 
 
@@ -120,11 +141,14 @@ class User_data {
     Species species;
     RateCalculators rate_calculators;
     AuxData auxdata;
+    std::vector<std::vector<int> > dupli;
     User_data* ptr;
     DTP_FLOAT* y;
 
     void add_reaction(const Reaction&);
     void remove_reaction(const Reaction&);
+    void find_duplicate_reactions();
+    void handle_duplicate_reactions();
     void clear_reactions();
     void allocate_y() {
       if (y != nullptr) {
@@ -152,6 +176,7 @@ class User_data {
     void calculateSpeciesQuantumMobilities();
     void classifySpeciesByPhase();
     void calculateReactionHeat();
+    double calculate_a_rate(const double& t, double *y, Reaction& r);
     User_data() {
       ptr = this;
       y = nullptr;

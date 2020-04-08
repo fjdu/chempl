@@ -37,6 +37,10 @@ cdef extern from "types.hpp" namespace "TYPES":
   cdef cppclass PhyParams:
     void prep_params()
     int from_file(string fname)
+    void add_a_timedependency(string name,
+        vector[double] ts, vector[double] vs)
+    void remove_a_timedependency(string name)
+    vector[string] get_timeDependency_names()
 
   ctypedef vector[Reaction] Reactions
   ctypedef cppmap[string, double] Elements
@@ -48,6 +52,8 @@ cdef extern from "types.hpp" namespace "TYPES":
   cdef cppclass User_data:
     void add_reaction(Reaction& rs)
     void clear_reactions()
+    void find_duplicate_reactions()
+    void handle_duplicate_reactions()
     void set_phy_param(string name, double v)
     double get_phy_param(string name)
     cppmap[string, double] get_all_phy_params()
@@ -63,12 +69,14 @@ cdef extern from "types.hpp" namespace "TYPES":
     void classifySpeciesByPhase()
     void allocate_y()
     void deallocate_y()
+    double calculate_a_rate(const double& t, double *y, Reaction& r)
     Reactions reactions
     PhyParams physical_params
     Species species
     ReactionTypes reaction_types
     User_data* ptr
     RateCalculators rate_calculators
+    vector[vector[int]] dupli
     double* y
 
   cppmap[string, int] assignElementsToOneSpecies(string name, const Elements& elements)
@@ -95,7 +103,8 @@ cdef extern from "calculate_reaction_rate.hpp" namespace "CALC_RATE":
     const PhyParams& p,
     const Species& s,
     AuxData& m)
-
+  double interpol(const vector[double]& ts, const vector[double]& vs, const double& t)
+  void update_phy_params(const double t, PhyParams& p)
 
 cdef extern from "rate_equation_lsode.hpp" namespace "RATE_EQ":
   cdef cppclass Updater_RE:
@@ -157,7 +166,7 @@ cdef class pyUserData:
   def restore_common_block(self):
     self.updater_re.save_restore_common_block(job=2)
     
-  def update(self, vector[double] y, double t, double dt, int istate=0):
+  def update(self, vector[double] y, double t, double dt, int istate=0, interruptMode=False):
     cdef int i
     cdef double t1
 
@@ -168,7 +177,7 @@ cdef class pyUserData:
 
     if istate != 0:
       self.updater_re.set_ISTATE(istate)
-    if self.updater_re.ISTATE not in [0,1]:
+    if interruptMode and self.updater_re.ISTATE not in [0,1]:
       self.restore_common_block()
     if self.updater_re.ISTATE < 0:
       if self.updater_re.ISTATE in [-1, -4, -5]:
@@ -179,7 +188,7 @@ cdef class pyUserData:
 
     t1 = self.updater_re.update(t, dt, self.user_data.y)
 
-    if istate != 1:
+    if interruptMode and istate != 1:
       self.save_common_block()
     return t1, [self.user_data.y[i] for i in range(self.updater_re.NEQ)]
 
@@ -213,6 +222,17 @@ cdef class pyUserData:
   def clear_reactions(self):
     self.user_data.clear_reactions()
 
+  def find_duplicate_reactions(self):
+    self.user_data.find_duplicate_reactions()
+
+  def handle_duplicate_reactions(self):
+    self.user_data.handle_duplicate_reactions()
+
+  def calculate_a_rate(self, double t, vector[double] y, int iReac):
+    for i in range(len(y)):
+      self.user_data.y[i] = y[i]
+    return self.user_data.calculate_a_rate(t, self.user_data.y, self.user_data.reactions[iReac])
+
   def set_phy_param(self, string name, double val):
     self.user_data.set_phy_param(name, val)
     self.user_data.physical_params.prep_params()
@@ -232,6 +252,21 @@ cdef class pyUserData:
   def get_all_phy_params(self):
     return self.user_data.get_all_phy_params()
 
+  def add_time_dependency(self, name, ts, vs):
+    """add_phy_param_time_dependency(name, ts, vs)"""
+    self.user_data.physical_params.add_a_timedependency(name, ts, vs)
+
+  def remove_time_dependency(self, name):
+    """remove_phy_param_time_dependency(name)"""
+    self.user_data.physical_params.remove_a_timedependency(name)
+
+  def get_time_dependency_names(self):
+    """get_timeDependency_names()"""
+    return self.user_data.physical_params.get_timeDependency_names()
+
+  def update_phy_params(self, t):
+    update_phy_params(t, self.user_data.physical_params)
+    
   def get_all_reactions(self):
     return self._get_all_reactions()
 
@@ -325,6 +360,10 @@ cdef class pyUserData:
   def abundances(self):
     return self.user_data.species.abundances
 
+  @property
+  def duplicate_reactions(self):
+    return self.user_data.dupli
+
   def load_reactions(self, fname, nReactants=3, nProducts=4, nABC=3,
     lenSpeciesName=12, lenABC=9, nT=2, lenT=6, lenType=3, rowlen_min=126):
     load_reactions(fname, self.user_data, nReactants, nProducts,
@@ -349,3 +388,7 @@ cdef class pyUserData:
 
   def assignElementsToOneSpecies(self, name, elements):
     return assignElementsToOneSpecies(name, elements)
+
+
+def simpleInterpol(ts, vs, t):
+    return interpol(ts, vs, t)
