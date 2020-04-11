@@ -56,6 +56,23 @@ TYPES::DTP_FLOAT rate_desorption(
 }
 
 
+double rateArrhenius(const double &T,
+    const std::vector<double> &abc, const int &iS) {
+  return abc[iS] * pow(T/3e2, abc[iS+1]) * exp(-abc[iS+2] / T);
+}
+
+
+inline double interval(const double t, const double t0, const double t1,
+    const double width0=0.1, const double width1=0.1,
+    const double expOverflow=50.0) {
+    double x0 = std::min((t0-t) / width0, expOverflow);
+    double x1 = std::min((t-t1) / width1, expOverflow);
+    double y0 = exp(x0);
+    double y1 = exp(x1);
+    return 1.0 / ((1.0+y0)*(1.0+y1));
+}
+
+
 TYPES::DTP_FLOAT rate_ion_neutral(
     const TYPES::DTP_FLOAT& t,
     double *y,
@@ -64,15 +81,41 @@ TYPES::DTP_FLOAT rate_ion_neutral(
     const TYPES::Species& s,
     TYPES::AuxData& m)
 {
-  double Tgas = p.T_gas, tmp;
-  //if (((Tgas < r.Trange[0]) || (Tgas > r.Trange[1])) &&
-  //    (r.Trange[1] > 0.0)) {
-  //  tmp = 0.0;
-  //} else {
-    tmp = p.n_gas * r.abc[0]
-        * pow(p.T_gas/3e2, r.abc[1])
-        * exp(-r.abc[2] / p.T_gas);
-  //}
+  double T = p.T_gas, tmp, dfTmin = 1e20, dfTmin2 = 1e20;
+  int iIntvmin = 0, iIntvmin2, iTrgmin = 0, iTrgmin2 = 0;
+  const double TTol = 5.0;
+
+  for (int i=0; i<r.Trange.size(); ++i) {
+    double dfthis = abs(T - r.Trange[i]);
+    if (dfTmin > dfthis) {
+      dfTmin2 = dfTmin;
+      iTrgmin2 = iTrgmin;
+      dfTmin = dfthis;
+      iTrgmin = i;
+    } else if (dfTmin2 > dfthis) {
+      dfTmin2 = dfthis;
+      iTrgmin2 = i;
+    }
+  }
+
+  iIntvmin = iTrgmin / 2;
+  iIntvmin2 = iTrgmin2 / 2;
+  if ((iIntvmin == iIntvmin2) ||
+      (dfTmin > TTol)) {
+    tmp = p.n_gas * rateArrhenius(T, r.abc, iIntvmin*3);
+  } else {
+    double dT = 0.5 * abs(r.Trange[iTrgmin] - r.Trange[iTrgmin2]);
+    double w = 0.1 + dT, f1, f2;
+    if (r.Trange[iIntvmin*2+1] <= r.Trange[iIntvmin2*2]) {
+      f1 = interval(T, r.Trange[iIntvmin*2], r.Trange[iIntvmin*2+1]+dT, w, w);
+      f2 = interval(T, r.Trange[iIntvmin2*2]-dT, r.Trange[iIntvmin2*2+1], w, w);
+    } else {
+      f1 = interval(T, r.Trange[iIntvmin*2]-dT, r.Trange[iIntvmin*2+1], w, w);
+      f2 = interval(T, r.Trange[iIntvmin2*2], r.Trange[iIntvmin2*2+1]+dT, w, w);
+    }
+    tmp = p.n_gas * (rateArrhenius(T, r.abc, iIntvmin*3) * f1 +
+                     rateArrhenius(T, r.abc, iIntvmin2*3) * f2);
+  }
   r.drdy[0] = tmp * NV_Ith_S(y, r.idxReactants[1]);
   r.drdy[1] = tmp * NV_Ith_S(y, r.idxReactants[0]);
   r.rate = NV_Ith_S(y, r.idxReactants[0])

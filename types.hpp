@@ -141,14 +141,13 @@ class User_data {
     Species species;
     RateCalculators rate_calculators;
     AuxData auxdata;
-    std::vector<std::vector<int> > dupli;
+    std::vector<int> dupli;
     User_data* ptr;
     DTP_FLOAT* y;
 
     void add_reaction(const Reaction&);
     void remove_reaction(const Reaction&);
     void find_duplicate_reactions();
-    void handle_duplicate_reactions();
     void clear_reactions();
     void allocate_y() {
       if (y != nullptr) {

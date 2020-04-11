@@ -183,6 +183,13 @@ void assignReactionHandlers(TYPES::User_data& user_data);
 
 double interpol(const std::vector<double>& ts,
                 const std::vector<double>& vs, const double& t);
+
+double rateArrhenius(const double &T,
+    const std::vector<double> &abc, const int &iS);
+
+inline double interval(const double t, const double t0, const double t1,
+    const double width0=0.1, const double width1=0.1,
+    const double expOverflow=50.0);
 }
 
 #endif //CALC_RATE_H

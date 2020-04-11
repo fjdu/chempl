@@ -240,62 +240,12 @@ void User_data::add_reaction(const Reaction& rs) {
 
 
 void User_data::find_duplicate_reactions() {
-  for (int i=0; i < this->reactions.size(); ++i) {
-    bool already = false;
-    for (auto & r: dupli) {
-      if (std::find(r.begin(), r.end(), i) != r.end()) {
-        already = true;
-        break;
+  for (int i=0; i < reactions.size(); ++i) {
+    if (reactions[i].abc.size() > 3) {
+      if (std::find(dupli.begin(), dupli.end(), i) == dupli.end()) {
+        dupli.push_back(i);
       }
     }
-    if (already) {
-      continue;
-    }
-    std::vector<int> tmp;
-    for (int j=i+1; j < this->reactions.size(); ++j) {
-      if ((reactions[i].sReactants == reactions[j].sReactants) &&
-          (reactions[i].sProducts == reactions[j].sProducts) &&
-          (reactions[i].itype == reactions[j].itype)) {
-        tmp.push_back(j);
-      }
-    }
-    if (tmp.size() > 0) {
-      tmp.push_back(i);
-      dupli.push_back(tmp);
-    }
-  }
-  for (auto & r: dupli) {
-    std::sort(r.begin(), r.end(), [this](int a, int b) {
-        return reactions[a].Trange[0] <= reactions[b].Trange[0];
-      });
-  }
-}
-
-
-void User_data::handle_duplicate_reactions() {
-  const double Trange_min=0.0, Trange_max = 1e20;
-  for (auto & r: dupli) {
-    std::cout << "Duplicate reactions: ";
-    for (auto & i: r) {
-      std::cout << i << " ";
-    }
-    for (auto & s: reactions[r[0]].sReactants) {
-      std::cout << s << " ";
-    }
-    std::cout << " -> ";
-    for (auto & s: reactions[r[0]].sProducts) {
-      std::cout << s << " ";
-    }
-    for (auto & i: r) {
-      std::cout << "(" << reactions[i].Trange[0] << ","
-                << reactions[i].Trange[1] << ") ";
-    }
-    std::cout << reactions[r[0]].itype << std::endl;
-
-    reactions[r[0]].Trange[0] = Trange_min;
-    reactions[r.back()].Trange[1] = Trange_max;
-    std::cout << "\t" << r[0] << " " << Trange_min << " "
-              << r.back() << " " << Trange_max << std::endl;
   }
 }
 

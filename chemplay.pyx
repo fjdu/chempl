@@ -53,7 +53,6 @@ cdef extern from "types.hpp" namespace "TYPES":
     void add_reaction(Reaction& rs)
     void clear_reactions()
     void find_duplicate_reactions()
-    void handle_duplicate_reactions()
     void set_phy_param(string name, double v)
     double get_phy_param(string name)
     cppmap[string, double] get_all_phy_params()
@@ -76,7 +75,7 @@ cdef extern from "types.hpp" namespace "TYPES":
     ReactionTypes reaction_types
     User_data* ptr
     RateCalculators rate_calculators
-    vector[vector[int]] dupli
+    vector[int] dupli
     double* y
 
   cppmap[string, int] assignElementsToOneSpecies(string name, const Elements& elements)
@@ -105,6 +104,8 @@ cdef extern from "calculate_reaction_rate.hpp" namespace "CALC_RATE":
     AuxData& m)
   double interpol(const vector[double]& ts, const vector[double]& vs, const double& t)
   void update_phy_params(const double t, PhyParams& p)
+  double rateArrhenius(const double &T, const vector[double] &abc,
+                       const int &iS)
 
 cdef extern from "rate_equation_lsode.hpp" namespace "RATE_EQ":
   cdef cppclass Updater_RE:
@@ -132,6 +133,7 @@ cdef class pyUserData:
 
   cdef User_data user_data
   cdef Updater_RE updater_re
+  cdef public all_reactions
 
   def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6,
                  showmsg=1, msglun=6, solver_id=0):
@@ -225,10 +227,8 @@ cdef class pyUserData:
   def find_duplicate_reactions(self):
     self.user_data.find_duplicate_reactions()
 
-  def handle_duplicate_reactions(self):
-    self.user_data.handle_duplicate_reactions()
-
   def calculate_a_rate(self, double t, vector[double] y, int iReac):
+    """calculate_a_rate(t, y, iReac)"""
     for i in range(len(y)):
       self.user_data.y[i] = y[i]
     return self.user_data.calculate_a_rate(t, self.user_data.y, self.user_data.reactions[iReac])
@@ -302,7 +302,10 @@ cdef class pyUserData:
 
   @property
   def reactions(self):
-    return self._get_all_reactions()
+    if self.all_reactions is not None:
+      return self.all_reactions
+    self.all_reactions = self._get_all_reactions()
+    return self.all_reactions
 
   @property
   def reaction_types(self):
@@ -389,6 +392,12 @@ cdef class pyUserData:
   def assignElementsToOneSpecies(self, name, elements):
     return assignElementsToOneSpecies(name, elements)
 
+  def __init__(self):
+    self.all_reactions = None
+
 
 def simpleInterpol(ts, vs, t):
     return interpol(ts, vs, t)
+
+def rate_Arrhenius(T, abc, iS=0):
+    return rateArrhenius(T, abc, iS)
