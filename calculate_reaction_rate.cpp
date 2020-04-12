@@ -102,7 +102,11 @@ TYPES::DTP_FLOAT rate_ion_neutral(
   iIntvmin2 = iTrgmin2 / 2;
   if ((iIntvmin == iIntvmin2) ||
       (dfTmin > TTol)) {
-    tmp = p.n_gas * rateArrhenius(T, r.abc, iIntvmin*3);
+    if ((r.Trange[iIntvmin*2] <= T) && (T <= r.Trange[iIntvmin*2+1])) {
+      tmp = p.n_gas * rateArrhenius(T, r.abc, iIntvmin*3);
+    } else {
+      tmp = p.n_gas * rateArrhenius(T, r.abc, iIntvmin2*3);
+    }
   } else {
     double dT = 0.5 * abs(r.Trange[iTrgmin] - r.Trange[iTrgmin2]);
     double w = 0.1 + dT, f1, f2;
