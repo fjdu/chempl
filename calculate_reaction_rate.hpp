@@ -33,7 +33,7 @@ TYPES::DTP_FLOAT rate_desorption(
     TYPES::AuxData& m);
 
 
-TYPES::DTP_FLOAT rate_ion_neutral(
+TYPES::DTP_FLOAT rateArrhenius(
     const TYPES::DTP_FLOAT& t,
     const TYPES::DTP_Y y,
     TYPES::Reaction& r,
@@ -184,7 +184,7 @@ void assignReactionHandlers(TYPES::User_data& user_data);
 double interpol(const std::vector<double>& ts,
                 const std::vector<double>& vs, const double& t);
 
-double rateArrhenius(const double &T,
+double arrhenius(const double &T,
     const std::vector<double> &abc, const int &iS);
 
 inline double interval(const double t, const double t0, const double t1,

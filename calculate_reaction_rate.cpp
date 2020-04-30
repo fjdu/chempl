@@ -56,7 +56,7 @@ TYPES::DTP_FLOAT rate_desorption(
 }
 
 
-double rateArrhenius(const double &T,
+double arrhenius(const double &T,
     const std::vector<double> &abc, const int &iS) {
   return abc[iS] * pow(T/3e2, abc[iS+1]) * exp(-abc[iS+2] / T);
 }
@@ -73,7 +73,7 @@ inline double interval(const double t, const double t0, const double t1,
 }
 
 
-TYPES::DTP_FLOAT rate_ion_neutral(
+TYPES::DTP_FLOAT rateArrhenius(
     const TYPES::DTP_FLOAT& t,
     double *y,
     TYPES::Reaction& r,
@@ -103,9 +103,9 @@ TYPES::DTP_FLOAT rate_ion_neutral(
   if ((iIntvmin == iIntvmin2) ||
       (dfTmin > TTol)) {
     if ((r.Trange[iIntvmin*2] <= T) && (T <= r.Trange[iIntvmin*2+1])) {
-      tmp = p.n_gas * rateArrhenius(T, r.abc, iIntvmin*3);
+      tmp = p.n_gas * arrhenius(T, r.abc, iIntvmin*3);
     } else {
-      tmp = p.n_gas * rateArrhenius(T, r.abc, iIntvmin2*3);
+      tmp = p.n_gas * arrhenius(T, r.abc, iIntvmin2*3);
     }
   } else {
     double dT = 0.5 * abs(r.Trange[iTrgmin] - r.Trange[iTrgmin2]);
@@ -117,8 +117,8 @@ TYPES::DTP_FLOAT rate_ion_neutral(
       f1 = interval(T, r.Trange[iIntvmin*2]-dT, r.Trange[iIntvmin*2+1], w, w);
       f2 = interval(T, r.Trange[iIntvmin2*2], r.Trange[iIntvmin2*2+1]+dT, w, w);
     }
-    tmp = p.n_gas * (rateArrhenius(T, r.abc, iIntvmin*3) * f1 +
-                     rateArrhenius(T, r.abc, iIntvmin2*3) * f2);
+    tmp = p.n_gas * (arrhenius(T, r.abc, iIntvmin*3) * f1 +
+                     arrhenius(T, r.abc, iIntvmin2*3) * f2);
   }
   r.drdy[0] = tmp * NV_Ith_S(y, r.idxReactants[1]);
   r.drdy[1] = tmp * NV_Ith_S(y, r.idxReactants[0]);
@@ -475,7 +475,7 @@ void assignReactionHandlers(TYPES::User_data& user_data) {
   (user_data.rate_calculators)[2]  = rate_cosmicray_induced_ionization;
   (user_data.rate_calculators)[72] = rate_cosmicray_induced_ionization;
   (user_data.rate_calculators)[4] = rate_photodissociation_H2;
-  (user_data.rate_calculators)[5]  = rate_ion_neutral;
+  (user_data.rate_calculators)[5]  = rateArrhenius;
   (user_data.rate_calculators)[61] = rate_adsorption;
   (user_data.rate_calculators)[62] = rate_desorption;
   (user_data.rate_calculators)[63] = rate_surface_AA;
@@ -491,7 +491,7 @@ void assignReactionHandlers(TYPES::User_data& user_data) {
   (user_data.rate_calculators)[53] = rate_dummy;
   (user_data.rate_calculators)[13] = rate_dummy;
   (user_data.rate_calculators)[67] = rate_dummy;
-  //(user_data.rate_calculators)[53] = rate_ion_neutral;
+  //(user_data.rate_calculators)[53] = rateArrhenius;
 }
 
 }

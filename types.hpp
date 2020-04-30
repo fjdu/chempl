@@ -146,7 +146,8 @@ class User_data {
     DTP_FLOAT* y;
 
     void add_reaction(const Reaction&);
-    void remove_reaction(const Reaction&);
+    void modify_reaction(const int&,
+      const std::map<std::string, std::vector<double> > &);
     void find_duplicate_reactions();
     void clear_reactions();
     void allocate_y() {

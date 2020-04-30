@@ -239,6 +239,19 @@ void User_data::add_reaction(const Reaction& rs) {
 }
 
 
+void User_data::modify_reaction(const int& iReact, const std::map<std::string, std::vector<double> > &par) {
+  if ((iReact < 0) || (iReact >= reactions.size())) {return;}
+  for (auto &p: par) {
+    if (p.first == "abc") {
+      reactions[iReact].abc = p.second;
+    }
+    if (p.first == "Trange") {
+      reactions[iReact].Trange = p.second;
+    }
+  }
+}
+
+
 void User_data::find_duplicate_reactions() {
   for (int i=0; i < reactions.size(); ++i) {
     if (reactions[i].abc.size() > 3) {

@@ -51,6 +51,7 @@ cdef extern from "types.hpp" namespace "TYPES":
 
   cdef cppclass User_data:
     void add_reaction(Reaction& rs)
+    void modify_reaction(const int& iReact, const cppmap[string, vector[double]] &par)
     void clear_reactions()
     void find_duplicate_reactions()
     void set_phy_param(string name, double v)
@@ -104,7 +105,7 @@ cdef extern from "calculate_reaction_rate.hpp" namespace "CALC_RATE":
     AuxData& m)
   double interpol(const vector[double]& ts, const vector[double]& vs, const double& t)
   void update_phy_params(const double t, PhyParams& p)
-  double rateArrhenius(const double &T, const vector[double] &abc,
+  double arrhenius(const double &T, const vector[double] &abc,
                        const int &iS)
 
 cdef extern from "rate_equation_lsode.hpp" namespace "RATE_EQ":
@@ -216,6 +217,12 @@ cdef class pyUserData:
     rs = Reaction(sReactants, sProducts, abc, Trange, itype)
     self.user_data.add_reaction(rs)
 
+  def modify_reaction(self, const int& iReact, const cppmap[string, vector[double]] &par):
+    """modify_reaction(iReact, map[string, vector[double]])
+    string: b"abc" or b"Trange"
+    """
+    self.user_data.modify_reaction(iReact, par)
+
   def add_reaction_by_dict(self, r):
     cdef Reaction rs
     rs = Reaction(r['reactants'], r['products'], r['abc'], r['Trange'], r['itype'])
@@ -299,6 +306,10 @@ cdef class pyUserData:
 
   def classifySpeciesByPhase(self):
     self.user_data.classifySpeciesByPhase()
+
+  def get_all_reactions(self):
+    self.all_reactions = self._get_all_reactions()
+    return self.all_reactions
 
   @property
   def reactions(self):
@@ -397,7 +408,11 @@ cdef class pyUserData:
 
 
 def simpleInterpol(ts, vs, t):
+    """simpleInterpol(ts, vs, t)
+    ts: t values
+    vs: values
+    t: t value to be interpolated"""
     return interpol(ts, vs, t)
 
 def rate_Arrhenius(T, abc, iS=0):
-    return rateArrhenius(T, abc, iS)
+    return arrhenius(T, abc, iS)
