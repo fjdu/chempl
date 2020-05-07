@@ -5,12 +5,12 @@ from Cython.Compiler import Options
 Options.docstrings = True
 
 extension1 = Extension(
-    name="chemplay",
-    sources=["chemplay.pyx"],
-    libraries=["chemplay", "gfortran"],
+    name="chempl",
+    sources=["chempl.pyx"],
+    libraries=["chempl", "gfortran"],
     library_dirs=["./", "/usr/local/Cellar/gcc/9.2.0_1/lib/gcc/9/"],
     include_dirs=["./"],
-    depends=['libchemplay.a', 'setup.py', 'makefile'],
+    depends=['libchempl.a', 'setup.py', 'makefile'],
     extra_compile_args=["-std=c++11"],
 )
 
@@ -25,7 +25,7 @@ extension2 = Extension(
 )
 
 setup(
-    name="chemplay",
+    name="chempl",
     version='0.0',
     description='A playable astrochemical code',
     author='Fujun Du',

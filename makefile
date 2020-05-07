@@ -39,9 +39,9 @@ OBJS=main.o rate_equation_lsode.o ode_wrapper.o types.o constants.o opkdmain.o o
 OBJSWRAPPER=rate_equation_lsode.o ode_wrapper.o types.o constants.o logistics.o calculate_reaction_rate.o utils.o opkdmain.o opkda1.o opkda2.o
 
 LIB_DIR=.
-CHEMPLAYLIB=$(LIB_DIR)/libchemplay.a
+CHEMPLAYLIB=$(LIB_DIR)/libchempl.a
 
-chemplay: setup.py chemplay.pyx myconsts.pyx myconsts.pxd $(CHEMPLAYLIB)
+chempl: setup.py chempl.pyx myconsts.pyx myconsts.pxd $(CHEMPLAYLIB)
 	python3 setup.py build_ext --inplace
 
 $(CHEMPLAYLIB): $(OBJSWRAPPER)

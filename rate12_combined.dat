@@ -7796,3 +7796,67 @@ gO2                                 gO          gO                              
 gOCN                                gCN         gO                                   1.30E-17             750.0    10 41000 72 A CR
 gCO2                                gCO         gO                                   1.30E-17             854.0    10 41000 72 C CR
 gNO2                                gNO         gO                                   1.30E-17             750.0    10 41000 72 A CR
+! Chemical desorption reactions
+gH          gH                      H2                                               1.0                                    68
+gH          gO                      OH                                               1.0                                    69
+gH          gO2                     O2H                                              1.0                                    69
+gH          gO3                     O2          OH                                   1.0                                    69
+gH          gOH                     H2O                                              1.0                                    69
+gH          gO2H                    H2O2                                             0.38                                   69
+gH          gO2H                    OH          OH                                   0.62                                   69
+gH          gH2O2                   H2O         OH                                   1.0        0.42     1800.0 0.5         69
+gH          gCO                     HCO                                              1.0        0.6      2740.0 1.0         69
+gH          gHCO                    H2CO                                             1.0                                    69
+gH          gCH3O                   CH3OH                                            1.00                                   69
+gH          gH2CO                   CH3O                                             1.00       0.70     2104.0 1.01        69
+gH          gH2CO                   H2          HCO                                  1.00       0.47     2959.0 1.01        69
+gH          gCH3OH                  H2          CH2OH                                1.00       1.00     3224.0 1.01        69
+gH          gCH2OH                  CH3OH                                            1.00                                   69
+gH2         gOH                     H2O         H                                    1.00       0.78     2959.0 0.47        69
+gH          gC                      CH                                               1.0                                    69
+gH          gCH                     CH2                                              1.0                                    69
+gH          gCH2                    CH3                                              1.0                                    69
+gH          gCH3                    CH4                                              1.0                                    69
+gH          gN                      NH                                               1.0                                    69
+gH          gNH                     NH2                                              1.0                                    69
+gH          gNH2                    NH3                                              1.0                                    69
+gH          gHCOO                   HCOOH                                            1.0                                    69
+gH          gS                      HS                                               1.0                                    69
+gH          gHS                     H2S                                              1.0                                    69
+gH          gH2S                    HS          H2                                   1.0        1.0       860.0 1.0         69
+gH          gCN                     HCN                                              1.0                                    69
+gH          gNO                     HNO                                              1.0                                    69
+gOH         gCO                     CO2         H                                    1.0        1.0        80.010.6         69
+gO          gCO                     CO2                                              1.0        1.0      1580.010.2         69
+gO          gO                      O2                                               1.0                                    68
+gO          gO2                     O3                                               1.0                                    69
+gO          gOH                     O2H                                              1.0                                    69
+gOH         gOH                     H2O2                                             1.0                                    68
+gO          gHCO                    HCOO                                             0.5                                    69
+gO          gHCO                    CO2         H                                    0.5                                    69
+gO          gC                      CO                                               1.0                                    69
+gO          gCH                     HCO                                              1.0                                    69
+gO          gCH2                    H2CO                                             1.0                                    69
+gO          gN                      NO                                               1.0                                    69
+gO          gNO                     NO2                                              1.0                                    69
+gO          gCN                     OCN                                              1.0                                    69
+gO          gNH                     HNO                                              1.0                                    69
+gC          gOH                     HOC                                              0.5                                    69
+gC          gOH                     CO          H                                    0.5                                    69
+gH          gHOC                    CHOH                                             1.0                                    69
+gH          gCHOH                   CH2OH                                            1.0                                    69
+gC          gO2                     CO          O                                    1.0                                    69
+gCH         gOH                     CHOH                                             1.0                                    69
+gC          gN                      CN                                               1.0                                    69
+gC          gNH                     HNC                                              1.0                                    69
+gC          gNH2                    HNC         H                                    1.0                                    69
+gC          gCH                     C2H                                              1.0                                    69
+gC          gCH2                    C2H2                                             1.0                                    69
+gH          gC2H                    C2H2                                             1.0                                    69
+gN          gN                      N2                                               1.0                                    68
+gN          gCH                     HCN                                              1.0                                    69
+gN          gNH                     N2H                                              1.0                                    69
+gN          gNH2                    N2H2                                             1.0                                    69
+gH          gN2H                    N2H2                                             1.0                                    69
+gH          gN2H2                   N2H         H2                                   1.0        1.0       650.0 1.0         69
+gCH3        gCN                     CH3CN                                            1.0                                    69

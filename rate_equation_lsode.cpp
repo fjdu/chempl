@@ -32,6 +32,24 @@ int Updater_RE::makeSparse(
 }
 
 
+Updater_RE::Updater_RE() {
+  data = nullptr;
+  RWORK = nullptr;
+  IWORK = nullptr;
+  RSAV = nullptr;
+  ISAV = nullptr;
+}
+
+
+Updater_RE::~Updater_RE() {
+  data = nullptr;
+  if (IWORK != nullptr) {delete [] IWORK; IWORK = nullptr;}
+  if (RWORK != nullptr) {delete [] RWORK; RWORK = nullptr;}
+  if (RSAV != nullptr) {delete [] RSAV; RSAV = nullptr;}
+  if (ISAV != nullptr) {delete [] ISAV; ISAV = nullptr;}
+}
+
+
 TYPES::DTP_FLOAT Updater_RE::update(double t, double dt, double *y)
 {
   double t0 = t;
@@ -56,7 +74,7 @@ TYPES::DTP_FLOAT Updater_RE::update(double t, double dt, double *y)
   return t;
 }
 
-void Updater_RE::set_user_data(TYPES::User_data *data_) {
+void Updater_RE::set_user_data(TYPES::Chem_data *data_) {
   data = data_;
   NEQ = data->species.idx2name.size();
   // std::cout << "Solver data pointer -> " << data << "\n" << std::endl;
@@ -210,7 +228,7 @@ void Updater_RE::jac(int *neq, double *t, double *y, int *j, double *ian, double
 // which themselves have to be static because they are used by the external
 // dlsodes_w.
 // The static variables have to be initialized here.
-TYPES::User_data *Updater_RE::data;
+TYPES::Chem_data *Updater_RE::data;
 
 
 }

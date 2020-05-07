@@ -84,7 +84,7 @@ TYPES::Reaction str2reaction(const std::string& str,
 }
 
 
-void load_reactions(const std::string& fname, TYPES::User_data& user_data,
+void load_reactions(const std::string& fname, TYPES::Chem_data& user_data,
     int nReactants=3, int nProducts=4, int nABC=3, int lenSpeciesName=12,
     int lenABC=9, int nT=2, int lenT=6, int lenType=3, int rowlen_min=126)
 {

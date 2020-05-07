@@ -469,7 +469,7 @@ void assignAReactionHandler(TYPES::RateCalculators& rcs,
 }
 
 
-void assignReactionHandlers(TYPES::User_data& user_data) {
+void assignReactionHandlers(TYPES::Chem_data& user_data) {
   (user_data.rate_calculators)[1]  = rate_cosmicray_ionization;
   (user_data.rate_calculators)[71] = rate_cosmicray_ionization;
   (user_data.rate_calculators)[2]  = rate_cosmicray_induced_ionization;

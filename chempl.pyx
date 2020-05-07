@@ -49,7 +49,7 @@ cdef extern from "types.hpp" namespace "TYPES":
            Reaction&, const PhyParams&, const Species&, AuxData&)
   ctypedef cppmap[int, RateCalculator] RateCalculators
 
-  cdef cppclass User_data:
+  cdef cppclass Chem_data:
     void add_reaction(Reaction& rs)
     void modify_reaction(const int& iReact, const cppmap[string, vector[double]] &par)
     void clear_reactions()
@@ -74,7 +74,7 @@ cdef extern from "types.hpp" namespace "TYPES":
     PhyParams physical_params
     Species species
     ReactionTypes reaction_types
-    User_data* ptr
+    Chem_data* ptr
     RateCalculators rate_calculators
     vector[int] dupli
     double* y
@@ -84,7 +84,7 @@ cdef extern from "types.hpp" namespace "TYPES":
 
 
 cdef extern from "logistics.hpp" namespace "LOGIS":
-  void load_reactions(const string& fname, User_data& user_data,
+  void load_reactions(const string& fname, Chem_data& cdata,
     int nReactants, int nProducts, int nABC, int lenSpeciesName,
     int lenABC, int nT, int lenT, int lenType, int rowlen_min)
   int loadInitialAbundances(Species& species, string fname)
@@ -92,7 +92,7 @@ cdef extern from "logistics.hpp" namespace "LOGIS":
 
 
 cdef extern from "calculate_reaction_rate.hpp" namespace "CALC_RATE":
-  void assignReactionHandlers(User_data&)
+  void assignReactionHandlers(Chem_data&)
   void assignAReactionHandler(RateCalculators& rcs,
                               const RateCalculator& rc,
                               const int& itype)
@@ -110,7 +110,7 @@ cdef extern from "calculate_reaction_rate.hpp" namespace "CALC_RATE":
 
 cdef extern from "rate_equation_lsode.hpp" namespace "RATE_EQ":
   cdef cppclass Updater_RE:
-    void set_user_data(User_data* udata)
+    void set_user_data(Chem_data* udata)
     void set_sparse()
     int initialize_solver(double reltol, double abstol, int mf, int LRW_F, int solver_id)
     void allocate_rsav_isav()
@@ -130,24 +130,24 @@ cdef extern from "rate_equation_lsode.hpp" namespace "RATE_EQ":
     double RTOL, ATOL
 
 
-cdef class pyUserData:
+cdef class ChemModel:
 
-  cdef User_data user_data
+  cdef Chem_data cdata
   cdef Updater_RE updater_re
   cdef public all_reactions
 
   def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6,
                  showmsg=1, msglun=6, solver_id=0):
-    self.updater_re.set_user_data(self.user_data.ptr)
+    self.updater_re.set_user_data(self.cdata.ptr)
     self.updater_re.set_sparse()
     self.updater_re.initialize_solver(rtol, atol, mf, LRW_F, solver_id)
     self.updater_re.set_solver_msg(showmsg);
     self.updater_re.set_solver_msg_lun(msglun);
     self.updater_re.allocate_rsav_isav()
-    self.user_data.allocate_y()
+    self.cdata.allocate_y()
 
   def deallocate_y(self):
-    self.user_data.deallocate_y()
+    self.cdata.deallocate_y()
 
   def get_solver_internals(self):
     return {
@@ -173,10 +173,10 @@ cdef class pyUserData:
     cdef int i
     cdef double t1
 
-    self.updater_re.set_user_data(self.user_data.ptr)
+    self.updater_re.set_user_data(self.cdata.ptr)
 
     for i in range(self.updater_re.NEQ):
-      self.user_data.y[i] = y[i]
+      self.cdata.y[i] = y[i]
 
     if istate != 0:
       self.updater_re.set_ISTATE(istate)
@@ -189,11 +189,11 @@ cdef class pyUserData:
         print('Unrecoverable error: ISTATE = ', self.updater_re.ISTATE)
         return
 
-    t1 = self.updater_re.update(t, dt, self.user_data.y)
+    t1 = self.updater_re.update(t, dt, self.cdata.y)
 
     if interruptMode and istate != 1:
       self.save_common_block()
-    return t1, [self.user_data.y[i] for i in range(self.updater_re.NEQ)]
+    return t1, [self.cdata.y[i] for i in range(self.updater_re.NEQ)]
 
   cdef _get_all_reactions(self):
     return [{'reactants': _.sReactants,
@@ -205,7 +205,7 @@ cdef class pyUserData:
              'rate': _.rate,
              'heat': _.heat
             }
-            for _ in self.user_data.reactions]
+            for _ in self.cdata.reactions]
 
   def add_reaction(self,
                    vector[string] sReactants,
@@ -215,97 +215,97 @@ cdef class pyUserData:
                    int itype):
     cdef Reaction rs
     rs = Reaction(sReactants, sProducts, abc, Trange, itype)
-    self.user_data.add_reaction(rs)
+    self.cdata.add_reaction(rs)
 
   def modify_reaction(self, const int& iReact, const cppmap[string, vector[double]] &par):
     """modify_reaction(iReact, map[string, vector[double]])
     string: b"abc" or b"Trange"
     """
-    self.user_data.modify_reaction(iReact, par)
+    self.cdata.modify_reaction(iReact, par)
 
   def add_reaction_by_dict(self, r):
     cdef Reaction rs
     rs = Reaction(r['reactants'], r['products'], r['abc'], r['Trange'], r['itype'])
-    self.user_data.add_reaction(rs)
+    self.cdata.add_reaction(rs)
 
   def clear_reactions(self):
-    self.user_data.clear_reactions()
+    self.cdata.clear_reactions()
 
   def find_duplicate_reactions(self):
-    self.user_data.find_duplicate_reactions()
+    self.cdata.find_duplicate_reactions()
 
   def calculate_a_rate(self, double t, vector[double] y, int iReac):
     """calculate_a_rate(t, y, iReac)"""
     for i in range(len(y)):
-      self.user_data.y[i] = y[i]
-    return self.user_data.calculate_a_rate(t, self.user_data.y, self.user_data.reactions[iReac])
+      self.cdata.y[i] = y[i]
+    return self.cdata.calculate_a_rate(t, self.cdata.y, self.cdata.reactions[iReac])
 
   def set_phy_param(self, string name, double val):
-    self.user_data.set_phy_param(name, val)
-    self.user_data.physical_params.prep_params()
+    self.cdata.set_phy_param(name, val)
+    self.cdata.physical_params.prep_params()
 
   def set_phy_param_from_file(self, string fname):
-    self.user_data.physical_params.from_file(fname)
-    self.user_data.physical_params.prep_params()
+    self.cdata.physical_params.from_file(fname)
+    self.cdata.physical_params.prep_params()
 
   def get_phy_param(self, string name):
-    return self.user_data.get_phy_param(name)
+    return self.cdata.get_phy_param(name)
 
   def set_phy_params_by_dict(self, d):
     for k in d:
       self.set_phy_param(k, d[k])
-    self.user_data.physical_params.prep_params()
+    self.cdata.physical_params.prep_params()
 
   def get_all_phy_params(self):
-    return self.user_data.get_all_phy_params()
+    return self.cdata.get_all_phy_params()
 
   def add_time_dependency(self, name, ts, vs):
     """add_phy_param_time_dependency(name, ts, vs)"""
-    self.user_data.physical_params.add_a_timedependency(name, ts, vs)
+    self.cdata.physical_params.add_a_timedependency(name, ts, vs)
 
   def remove_time_dependency(self, name):
     """remove_phy_param_time_dependency(name)"""
-    self.user_data.physical_params.remove_a_timedependency(name)
+    self.cdata.physical_params.remove_a_timedependency(name)
 
   def get_time_dependency_names(self):
     """get_timeDependency_names()"""
-    return self.user_data.physical_params.get_timeDependency_names()
+    return self.cdata.physical_params.get_timeDependency_names()
 
   def update_phy_params(self, t):
-    update_phy_params(t, self.user_data.physical_params)
+    update_phy_params(t, self.cdata.physical_params)
     
   def get_all_reactions(self):
     return self._get_all_reactions()
 
   def assort_reactions(self):
-    return self.user_data.assort_reactions()
+    return self.cdata.assort_reactions()
 
   def assignElementsToSpecies(self, elements=None):
     if elements:
-      self.user_data.assignElementsToSpecies(elements)
+      self.cdata.assignElementsToSpecies(elements)
     else:
-      self.user_data.assignElementsToSpecies()
+      self.cdata.assignElementsToSpecies()
 
   def calculateSpeciesMasses(self, elements=None):
     if elements:
-      self.user_data.calculateSpeciesMasses(elements)
+      self.cdata.calculateSpeciesMasses(elements)
     else:
-      self.user_data.calculateSpeciesMasses()
+      self.cdata.calculateSpeciesMasses()
 
   def calculateSpeciesVibFreqs(self):
-    self.user_data.calculateSpeciesVibFreqs()
+    self.cdata.calculateSpeciesVibFreqs()
 
   def calculateSpeciesDiffBarriers(self):
-    self.user_data.calculateSpeciesDiffBarriers()
+    self.cdata.calculateSpeciesDiffBarriers()
 
   def calculateSpeciesQuantumMobilities(self):
-    self.user_data.calculateSpeciesQuantumMobilities()
+    self.cdata.calculateSpeciesQuantumMobilities()
 
   def calculateReactionHeat(self):
-    self.user_data.calculateReactionHeat()
+    self.cdata.calculateReactionHeat()
 
   def classifySpeciesByPhase(self):
-    self.user_data.classifySpeciesByPhase()
+    self.cdata.classifySpeciesByPhase()
 
   def get_all_reactions(self):
     self.all_reactions = self._get_all_reactions()
@@ -320,7 +320,7 @@ cdef class pyUserData:
 
   @property
   def reaction_types(self):
-    return self.user_data.reaction_types
+    return self.cdata.reaction_types
 
   @property
   def physical_params(self):
@@ -328,83 +328,111 @@ cdef class pyUserData:
 
   @property
   def name2idx(self):
-    return self.user_data.species.name2idx
+    return self.cdata.species.name2idx
 
   @property
   def idx2name(self):
-    return self.user_data.species.idx2name
+    return self.cdata.species.idx2name
 
   @property
   def elementsSpecies(self):
-    return self.user_data.species.elementsSpecies
+    return self.cdata.species.elementsSpecies
 
   @property
   def massSpecies(self):
-    return self.user_data.species.massSpecies
+    return self.cdata.species.massSpecies
 
   @property
   def enthalpies(self):
-    return self.user_data.species.enthalpies
+    return self.cdata.species.enthalpies
 
   @property
   def vibFreqs(self):
-    return self.user_data.species.vibFreqs
+    return self.cdata.species.vibFreqs
 
   @property
   def diffBarriers(self):
-    return self.user_data.species.diffBarriers
+    return self.cdata.species.diffBarriers
 
   @property
   def quantMobilities(self):
-    return self.user_data.species.quantMobilities
+    return self.cdata.species.quantMobilities
 
   @property
   def gasSpecies(self):
-    return self.user_data.species.gasSpecies
+    return self.cdata.species.gasSpecies
 
   @property
   def surfaceSpecies(self):
-    return self.user_data.species.surfaceSpecies
+    return self.cdata.species.surfaceSpecies
 
   @property
   def mantleSpecies(self):
-    return self.user_data.species.mantleSpecies
+    return self.cdata.species.mantleSpecies
 
   @property
   def abundances(self):
-    return self.user_data.species.abundances
+    return self.cdata.species.abundances
 
   @property
   def duplicate_reactions(self):
-    return self.user_data.dupli
+    return self.cdata.dupli
 
   def load_reactions(self, fname, nReactants=3, nProducts=4, nABC=3,
     lenSpeciesName=12, lenABC=9, nT=2, lenT=6, lenType=3, rowlen_min=126):
-    load_reactions(fname, self.user_data, nReactants, nProducts,
+    load_reactions(fname, self.cdata, nReactants, nProducts,
     nABC, lenSpeciesName, lenABC, nT, lenT, lenType, rowlen_min)
 
   def loadInitialAbundances(self, fname):
-    loadInitialAbundances(self.user_data.species, fname)
+    loadInitialAbundances(self.cdata.species, fname)
 
   def loadSpeciesEnthalpies(self, fname):
-    loadSpeciesEnthalpies(self.user_data.species, fname)
+    loadSpeciesEnthalpies(self.cdata.species, fname)
 
   def assignReactionHandlers(self):
-    assignReactionHandlers(self.user_data)
+    assignReactionHandlers(self.cdata)
 
   def setAbundanceByName(self, name, val):
-    idx = self.user_data.species.name2idx[name]
-    self.user_data.species.abundances[idx] = val
+    idx = self.cdata.species.name2idx[name]
+    self.cdata.species.abundances[idx] = val
+
+  def setAbundanceByDict(self, a):
+    for k in a:
+      idx = self.cdata.species.name2idx[k]
+      self.cdata.species.abundances[idx] = a[k]
 
   def setAbundances(self, vals):
-    for i in range(len(self.user_data.species.idx2name)):
-      self.user_data.species.abundances[i] = vals[i]
+    for i in range(len(self.cdata.species.idx2name)):
+      self.cdata.species.abundances[i] = vals[i]
 
   def assignElementsToOneSpecies(self, name, elements):
     return assignElementsToOneSpecies(name, elements)
 
-  def __init__(self):
+  def __init__(self, fReactions=None, fInitialAbundances=None,
+               fSpeciesEnthalpies=None):
+    """
+  __init__(self, fReactions=None, fInitialAbundances=None,
+           fSpeciesEnthalpies=None)
+    """
     self.all_reactions = None
+
+    if fReactions is not None:
+      self.load_reactions(fReactions)
+    if fInitialAbundances is not None:
+      self.loadInitialAbundances(fInitialAbundances)
+    if fSpeciesEnthalpies is not None:
+      self.loadSpeciesEnthalpies(fSpeciesEnthalpies)
+
+  def prepare(self):
+    self.assort_reactions()
+    self.assignElementsToSpecies()
+    self.calculateSpeciesMasses()
+    self.calculateSpeciesVibFreqs()
+    self.calculateSpeciesDiffBarriers()
+    self.calculateSpeciesQuantumMobilities()
+    self.calculateReactionHeat()
+    self.classifySpeciesByPhase()
+    self.assignReactionHandlers()
 
 
 def simpleInterpol(ts, vs, t):

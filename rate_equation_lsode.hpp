@@ -31,14 +31,14 @@ class Updater_RE {
     TYPES::DTP_FLOAT update(double t, double dt, double *y);
     int initialize_solver(double reltol=1e-6, double abstol=1e-30, int mf=21, int LRW_F=6, int solver_id=0);
     int makeSparse(const TYPES::Reactions& reactions, std::vector<std::vector<bool> >& sps);
-    void set_user_data(TYPES::User_data *data_);
+    void set_user_data(TYPES::Chem_data *data_);
     void set_sparse();
     void set_solver_msg(int mflag);
     void set_solver_msg_lun(int lun);
     void save_restore_common_block(int job);
     void allocate_rsav_isav();
 
-    static TYPES::User_data *data;
+    static TYPES::Chem_data *data;
     int *IWORK;
     double *RWORK;
     int NEQ, ITOL, ITASK, ISTATE, IOPT, LRW, LIW, MF, NNZ;
@@ -56,15 +56,8 @@ class Updater_RE {
     void set_RTOL(double i_) {RTOL = i_;}
     void set_ATOL(double i_) {ATOL = i_;}
 
-    Updater_RE() {data = nullptr; RWORK = nullptr; IWORK = nullptr; RSAV=nullptr; ISAV=nullptr;}
-
-    ~Updater_RE() {
-      data = nullptr;
-      if (IWORK != nullptr) {delete [] IWORK; IWORK = nullptr;}
-      if (RWORK != nullptr) {delete [] RWORK; RWORK = nullptr;}
-      if (RSAV != nullptr) {delete [] RSAV; RSAV = nullptr;}
-      if (ISAV != nullptr) {delete [] ISAV; ISAV = nullptr;}
-    }
+    Updater_RE();
+    ~Updater_RE();
 
 };
 

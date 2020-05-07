@@ -11,6 +11,16 @@
 
 namespace TYPES {
 
+
+TimeDependency::TimeDependency(std::string name_,
+      std::vector<double> ts_,
+      std::vector<double> vs_) {
+      name = name_;
+      ts = ts_;
+      vs = vs_;
+}
+
+
 inline DTP_FLOAT get_n_gas(PhyParams& p) {return p.n_gas;}
 inline DTP_FLOAT get_T_gas(PhyParams& p) {return p.T_gas;}
 inline DTP_FLOAT get_T_dust(PhyParams& p) {return p.T_dust;}
@@ -172,8 +182,62 @@ std::vector<std::string> PhyParams::get_timeDependency_names() {
   return names;
 }
 
+AuxData::AuxData():
+  t_calc(NAN), k_eva_tot(0.0), k_ads_tot(0.0), mant_tot(0.0), surf_tot(0.0) {}
 
-void User_data::add_reaction(const Reaction& rs) {
+
+Reaction::Reaction() {
+  drdy[0] = NAN;
+  drdy[1] = NAN;
+  rate = 0.0;
+}
+
+
+Reaction::Reaction(
+  std::vector<std::string> sR,
+  std::vector<std::string> sP,
+  std::vector<DTP_FLOAT> a_,
+  std::vector<DTP_FLOAT> Tr,
+  int it) {
+  sReactants = sR;
+  sProducts = sP;
+  abc = a_;
+  Trange = Tr;
+  itype = it;
+  drdy[0] = NAN;
+  drdy[1] = NAN;
+  rate = 0.0;
+}
+
+
+void Chem_data::allocate_y() {
+  if (y != nullptr) {
+    delete [] y;
+  }
+  y = new DTP_FLOAT[species.idx2name.size()];
+}
+
+
+void Chem_data::deallocate_y() {
+  if (y != nullptr) {
+    delete [] y;
+    y = nullptr;
+  }
+}
+
+
+Chem_data::Chem_data() {
+  ptr = this;
+  y = nullptr;
+}
+
+
+Chem_data::~Chem_data() {
+  deallocate_y();
+}
+
+
+void Chem_data::add_reaction(const Reaction& rs) {
   Species& species = this->species;
   ReactionTypes& r_types = this->reaction_types;
   Reaction reaction = rs;
@@ -239,7 +303,7 @@ void User_data::add_reaction(const Reaction& rs) {
 }
 
 
-void User_data::modify_reaction(const int& iReact, const std::map<std::string, std::vector<double> > &par) {
+void Chem_data::modify_reaction(const int& iReact, const std::map<std::string, std::vector<double> > &par) {
   if ((iReact < 0) || (iReact >= reactions.size())) {return;}
   for (auto &p: par) {
     if (p.first == "abc") {
@@ -252,7 +316,7 @@ void User_data::modify_reaction(const int& iReact, const std::map<std::string, s
 }
 
 
-void User_data::find_duplicate_reactions() {
+void Chem_data::find_duplicate_reactions() {
   for (int i=0; i < reactions.size(); ++i) {
     if (reactions[i].abc.size() > 3) {
       if (std::find(dupli.begin(), dupli.end(), i) == dupli.end()) {
@@ -263,7 +327,7 @@ void User_data::find_duplicate_reactions() {
 }
 
 
-void User_data::clear_reactions() {
+void Chem_data::clear_reactions() {
   this->reactions.clear();
   this->reaction_types.clear();
   this->auxdata.ads_reactions.clear();
@@ -271,7 +335,7 @@ void User_data::clear_reactions() {
 }
 
 
-void User_data::set_phy_param(std::string pname, DTP_FLOAT val) {
+void Chem_data::set_phy_param(std::string pname, DTP_FLOAT val) {
   if (phySetterDict.find(pname) != phySetterDict.end()) {
     phySetterDict[pname](this->physical_params, val);
   } else {
@@ -280,7 +344,7 @@ void User_data::set_phy_param(std::string pname, DTP_FLOAT val) {
   }
 }
 
-DTP_FLOAT User_data::get_phy_param(std::string pname) {
+DTP_FLOAT Chem_data::get_phy_param(std::string pname) {
   if (phyGetterDict.find(pname) != phyGetterDict.end()) {
     return phyGetterDict[pname](this->physical_params);
   } else {
@@ -290,7 +354,7 @@ DTP_FLOAT User_data::get_phy_param(std::string pname) {
   }
 }
 
-std::map<std::string, DTP_FLOAT> User_data::get_all_phy_params() {
+std::map<std::string, DTP_FLOAT> Chem_data::get_all_phy_params() {
   std::map<std::string, DTP_FLOAT> res;
   for (auto const& p: phyGetterDict) {
     res[p.first] = p.second(this->physical_params);
@@ -298,7 +362,7 @@ std::map<std::string, DTP_FLOAT> User_data::get_all_phy_params() {
   return res;
 }
 
-void User_data::assort_reactions()
+void Chem_data::assort_reactions()
 {
   for (auto const& r: this->reactions) {
     if (r.itype == 61) {
@@ -361,7 +425,7 @@ std::map<std::string, int> assignElementsToOneSpecies(
 }
 
 
-void User_data::assignElementsToSpecies(const Elements& elements) {
+void Chem_data::assignElementsToSpecies(const Elements& elements) {
   for (auto const& s: this->species.name2idx) {
     this->species.elementsSpecies[s.second] =
     assignElementsToOneSpecies(s.first, elements);
@@ -369,12 +433,12 @@ void User_data::assignElementsToSpecies(const Elements& elements) {
 }
 
 
-void User_data::assignElementsToSpecies() {
+void Chem_data::assignElementsToSpecies() {
   assignElementsToSpecies(CONST::element_masses);
 }
 
 
-void User_data::calculateSpeciesMasses(const Elements& elements) {
+void Chem_data::calculateSpeciesMasses(const Elements& elements) {
   for (auto const& s: this->species.name2idx) {
     this->species.massSpecies[s.second] = 0.0;
     auto const& eleDict = this->species.elementsSpecies[s.second];
@@ -385,11 +449,11 @@ void User_data::calculateSpeciesMasses(const Elements& elements) {
   }
 }
 
-void User_data::calculateSpeciesMasses() {
+void Chem_data::calculateSpeciesMasses() {
   calculateSpeciesMasses(CONST::element_masses);
 }
 
-void User_data::calculateSpeciesVibFreqs() {
+void Chem_data::calculateSpeciesVibFreqs() {
   for (auto const& r: this->reactions) {
     if (r.itype == 62) {
       this->species.vibFreqs[r.idxReactants[0]] =
@@ -410,7 +474,7 @@ void User_data::calculateSpeciesVibFreqs() {
   }
 }
 
-void User_data::calculateSpeciesDiffBarriers() {
+void Chem_data::calculateSpeciesDiffBarriers() {
   for (auto const& r: this->reactions) {
     if (r.itype == 62) {
       this->species.diffBarriers[r.idxReactants[0]] =
@@ -430,7 +494,7 @@ void User_data::calculateSpeciesDiffBarriers() {
 }
 
 
-void User_data::calculateSpeciesQuantumMobilities() {
+void Chem_data::calculateSpeciesQuantumMobilities() {
   for (auto const& r: this->reactions) {
     if (r.itype == 62) {
       this->species.quantMobilities[r.idxReactants[0]] =
@@ -456,7 +520,7 @@ void User_data::calculateSpeciesQuantumMobilities() {
 }
 
 
-void User_data::classifySpeciesByPhase() {
+void Chem_data::classifySpeciesByPhase() {
   for (auto const& s: this->species.name2idx) {
     if (s.first[0] == 'm') {
       this->species.mantleSpecies.insert(s.second);
@@ -492,19 +556,68 @@ inline void calculateOneReactionHeat(Reaction& r,
 }
 
 
-void User_data::calculateReactionHeat() {
+void Chem_data::calculateReactionHeat() {
   for (auto& r: this->reactions) {
     calculateOneReactionHeat(r, this->species.enthalpies);
   }
 }
 
 
-double User_data::calculate_a_rate(
+double Chem_data::calculate_a_rate(
     const double& t,
     double *y,
     TYPES::Reaction& r) {
   return rate_calculators[r.itype](t, y, r,
     physical_params, species, auxdata);
+}
+
+
+Recorder::Recorder(std::string fname_): fname(fname_) {
+  ofs.open(fname);
+  if (ofs.fail()) {
+    std::cerr << "Fail to open file: "
+              << fname << std::endl;
+    throw std::runtime_error(std::strerror(errno));
+  }
+}
+
+
+Recorder::~Recorder() {
+  ofs.close();
+}
+
+
+int Recorder::write_header(std::vector<std::string> names,
+                     int fwidth) {
+  ofs << std::setw(fwidth) << std::left << "Time";
+  ofs << std::setw(fwidth) << std::left << "T_gas";
+  ofs << std::setw(fwidth) << std::left << "T_dust";
+  ofs << std::setw(fwidth) << std::left << "n_gas";
+  for (std::string const& n: names) {
+    ofs << std::setw(fwidth) << std::left << n;
+  }
+  ofs << std::endl;
+  return 0;
+}
+
+
+int Recorder::write_row(double t, int neq, double *y,
+              const TYPES::PhyParams& p,
+              int fwidth, int prec) {
+  ofs << std::setw(fwidth) << std::left << std::scientific
+      << std::setprecision(prec) << t / CONST::phy_SecondsPerYear;
+  ofs << std::setw(fwidth) << std::left << std::scientific
+    << std::setprecision(prec) << p.T_gas;
+  ofs << std::setw(fwidth) << std::left << std::scientific
+    << std::setprecision(prec) << p.T_dust;
+  ofs << std::setw(fwidth) << std::left << std::scientific
+    << std::setprecision(prec) << p.n_gas;
+  for (int i=0; i<neq; ++i) {
+    ofs << std::setw(fwidth) << std::left << std::scientific
+      << std::setprecision(prec) << y[i];
+  }
+  ofs << std::endl;
+  return 0;
 }
 
 

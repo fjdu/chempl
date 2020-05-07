@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     std::cout << p.first << " = " << p.second << std::endl;
   }
 
-  TYPES::User_data user_data;
+  TYPES::Chem_data user_data;
 
   user_data.physical_params.from_file(pdict["f_phy_params"]);
   user_data.physical_params.prep_params();

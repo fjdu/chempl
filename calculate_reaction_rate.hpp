@@ -179,7 +179,7 @@ TYPES::DTP_FLOAT rate_dummy(
 void assignAReactionHandler(TYPES::RateCalculators& rcs,
                             const TYPES::RateCalculator& rc,
                             const int& itype);
-void assignReactionHandlers(TYPES::User_data& user_data);
+void assignReactionHandlers(TYPES::Chem_data& user_data);
 
 double interpol(const std::vector<double>& ts,
                 const std::vector<double>& vs, const double& t);
