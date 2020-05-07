@@ -1,0 +1,10 @@
+.*.sw*
+.*.un~
+*.o
+*.a
+*.so
+*.mod
+.ipynb_checkpoints/
+fort.*
+*.log
+*.pdf
