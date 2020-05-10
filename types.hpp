@@ -8,11 +8,12 @@
 #include <iostream>
 #include <fstream>
 #include <regex>
-#include "math.h"
-#include "constants.hpp"
 #include <iomanip>
 #include <cerrno>
 #include <stdexcept>
+#include <utility>
+#include "constants.hpp"
+#include "math.h"
 
 namespace TYPES {
 
@@ -40,7 +41,8 @@ public:
   DTP_FLOAT n_gas, T_gas, T_dust, Av, G0_UV, chi_Xray, chi_cosmicray,
     dust2gas_num, dust2gas_mass, dust_material_density,
     dust_site_density, dust_radius, dust_crosssec, dust_albedo,
-    mean_mol_weight, chemdesorption_factor, Ncol_H2, dv_km_s;
+    mean_mol_weight, chemdesorption_factor, Ncol_H2, Ncol_H,
+    dv_km_s, v_km_s;
   DTP_FLOAT t_max_year;
   TimeDependencies timeDependencies;
 
@@ -87,6 +89,7 @@ class Species {
                              vibFreqs, diffBarriers, quantMobilities;
     std::set<int> gasSpecies, surfaceSpecies, mantleSpecies;
     std::vector<DTP_FLOAT> abundances;
+    void allocate_abundances();
 };
 
 
@@ -144,10 +147,19 @@ class Chem_data {
     void calculateSpeciesQuantumMobilities();
     void classifySpeciesByPhase();
     void calculateReactionHeat();
-    double calculate_a_rate(const double& t, double *y, Reaction& r);
+    double calculate_a_rate(double t, double *y, Reaction& r, bool updatePhyParams=false);
+    std::vector<int> getFormationReactions(int iSpecies);
+    std::vector<int> getDestructionReactions(int iSpecies);
+    std::vector<std::pair<int, double> > getFormationReactionsWithRates(int iSpecies, double t, double* y);
+    std::vector<std::pair<int, double> > getDestructionReactionsWithRates(int iSpecies, double t, double* y);
     Chem_data();
     ~Chem_data();
 };
+
+
+void update_phy_params(
+    TYPES::DTP_FLOAT t,
+    TYPES::PhyParams& p);
 
 
 class Recorder {
@@ -169,6 +181,7 @@ class Recorder {
 
 std::map<std::string, int> assignElementsToOneSpecies(
     const std::string& name, const Elements& elements);
+
 
 }
 #endif //TYPES_H

@@ -82,6 +82,7 @@ extern const double phy_Habing_energy_density_CGS;
 extern const double phy_Habing_photon_flux_CGS;
 extern const double phy_Habing_energy_flux_CGS;
 extern const double phy_UVext2Av;
+extern const double phy_EUVext2Av;
 
 extern const double phy_LyAlpha_nu0;
 extern const double phy_LyAlpha_l0;
@@ -105,6 +106,7 @@ extern const double phy_vibFreqDefault;
 
 extern const double colDen2Av_coeff;
 extern const double phy_colDen2Av_coeff;
+extern const double phy_colDen2AUV_1000A;
 
 }
 

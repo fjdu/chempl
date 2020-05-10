@@ -105,6 +105,7 @@ double phy_Habing_energy_density_CGS = 5.29e-14; // Draine 2011 book, equation 1
 double phy_Habing_photon_flux_CGS = 6e7; // cm-2 s-1
 double phy_Habing_energy_flux_CGS = 1.194e-3; // erg cm-2 s-1
 double phy_UVext2Av = 2.6e0; // Tielens 2005, eq 3.19
+double phy_EUVext2Av = 4.65e0; // Tielens 2005, eq 3.19
 
 double phy_LyAlpha_nu0 = 2.4660718e15;
 double phy_LyAlpha_l0 = 1215.668e0;
@@ -126,6 +127,7 @@ double phy_Diff2DesorRatio = 0.5;
 double phy_DiffBarrierDefault = 1e4;
 double phy_vibFreqDefault = 1e12;
 
-double colDen2Av_coeff = 1e-21; // Sun Kwok, eq 10.21
-double phy_colDen2Av_coeff = 5.3e-22; // Draine 2011, eq 21.7
+double colDen2Av_coeff = 1e-21; // Sun Kwok, eq 10.21; relative to N_H2
+double phy_colDen2Av_coeff = 5.3e-22; // Relative to N_H; Draine 2011, eq 21.7
+double phy_colDen2AUV_1000A = 2.3e-21; // Relative to N_H; Morris 1983, eq 1
 }

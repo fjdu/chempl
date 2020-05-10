@@ -4,6 +4,7 @@ from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp.map cimport map as cppmap
 from libcpp.set cimport set as cppset
+from libcpp.utility cimport pair
 from myconsts import Consts
 
 cdef extern from "types.hpp" namespace "TYPES":
@@ -17,10 +18,10 @@ cdef extern from "types.hpp" namespace "TYPES":
     double heat
     Reaction() except +
     Reaction(vector[string] sReactants,
-                vector[string] sProducts,
-                vector[double] abc,
-                vector[double] Trange,
-                int itype)
+             vector[string] sProducts,
+             vector[double] abc,
+             vector[double] Trange,
+             int itype)
     
   cdef cppclass Species:
     cppmap[string, int] name2idx
@@ -30,6 +31,7 @@ cdef extern from "types.hpp" namespace "TYPES":
     cppmap[int, double] vibFreqs, diffBarriers, quantMobilities
     cppset[int] gasSpecies, surfaceSpecies, mantleSpecies
     vector[double] abundances
+    void allocate_abundances()
 
   cdef cppclass AuxData:
     pass
@@ -69,7 +71,9 @@ cdef extern from "types.hpp" namespace "TYPES":
     void classifySpeciesByPhase()
     void allocate_y()
     void deallocate_y()
-    double calculate_a_rate(const double& t, double *y, Reaction& r)
+    double calculate_a_rate(double t, double *y, Reaction& r, int updatePhyParams)
+    vector[pair[int, double]] getFormationReactionsWithRates(int iSpecies, double t, double*y)
+    vector[pair[int, double]] getDestructionReactionsWithRates(int iSpecies, double t, double*y)
     Reactions reactions
     PhyParams physical_params
     Species species
@@ -79,8 +83,12 @@ cdef extern from "types.hpp" namespace "TYPES":
     vector[int] dupli
     double* y
 
+  void update_phy_params(double t, PhyParams& p)
   cppmap[string, int] assignElementsToOneSpecies(string name, const Elements& elements)
 
+
+cdef extern from "utils.hpp" namespace "UTILS":
+  double interpol(const vector[double]& ts, const vector[double]& vs, double t)
 
 
 cdef extern from "logistics.hpp" namespace "LOGIS":
@@ -103,8 +111,6 @@ cdef extern from "calculate_reaction_rate.hpp" namespace "CALC_RATE":
     const PhyParams& p,
     const Species& s,
     AuxData& m)
-  double interpol(const vector[double]& ts, const vector[double]& vs, const double& t)
-  void update_phy_params(const double t, PhyParams& p)
   double arrhenius(const double &T, const vector[double] &abc,
                        const int &iS)
 
@@ -144,6 +150,9 @@ cdef class ChemModel:
     self.updater_re.set_solver_msg(showmsg);
     self.updater_re.set_solver_msg_lun(msglun);
     self.updater_re.allocate_rsav_isav()
+    self.cdata.allocate_y()
+
+  def allocate_y(self):
     self.cdata.allocate_y()
 
   def deallocate_y(self):
@@ -234,11 +243,21 @@ cdef class ChemModel:
   def find_duplicate_reactions(self):
     self.cdata.find_duplicate_reactions()
 
-  def calculate_a_rate(self, double t, vector[double] y, int iReac):
-    """calculate_a_rate(t, y, iReac)"""
+  def calculate_a_rate(self, double t, vector[double] y, int iReac, int updatePhyParams=False):
+    """calculate_a_rate(t, y, iReac, updatePhyParams=False)"""
     for i in range(len(y)):
       self.cdata.y[i] = y[i]
-    return self.cdata.calculate_a_rate(t, self.cdata.y, self.cdata.reactions[iReac])
+    return self.cdata.calculate_a_rate(t, self.cdata.y, self.cdata.reactions[iReac], updatePhyParams)
+
+  def getFormationReactionsWithRates(self, int iSpecies, double t, vector[double] y):
+    for i in range(len(y)):
+      self.cdata.y[i] = y[i]
+    return self.cdata.getFormationReactionsWithRates(iSpecies, t, self.cdata.y)
+
+  def getDestructionReactionsWithRates(self, int iSpecies, double t, vector[double] y):
+    for i in range(len(y)):
+      self.cdata.y[i] = y[i]
+    return self.cdata.getDestructionReactionsWithRates(iSpecies, t, self.cdata.y)
 
   def set_phy_param(self, string name, double val):
     self.cdata.set_phy_param(name, val)
@@ -274,9 +293,6 @@ cdef class ChemModel:
   def update_phy_params(self, t):
     update_phy_params(t, self.cdata.physical_params)
     
-  def get_all_reactions(self):
-    return self._get_all_reactions()
-
   def assort_reactions(self):
     return self.cdata.assort_reactions()
 
@@ -393,15 +409,21 @@ cdef class ChemModel:
     assignReactionHandlers(self.cdata)
 
   def setAbundanceByName(self, name, val):
+    if len(self.cdata.species.abundances) == 0:
+      self.cdata.species.allocate_abundances()
     idx = self.cdata.species.name2idx[name]
     self.cdata.species.abundances[idx] = val
 
   def setAbundanceByDict(self, a):
+    if len(self.cdata.species.abundances) == 0:
+      self.cdata.species.allocate_abundances()
     for k in a:
       idx = self.cdata.species.name2idx[k]
       self.cdata.species.abundances[idx] = a[k]
 
   def setAbundances(self, vals):
+    if len(self.cdata.species.abundances) == 0:
+      self.cdata.species.allocate_abundances()
     for i in range(len(self.cdata.species.idx2name)):
       self.cdata.species.abundances[i] = vals[i]
 

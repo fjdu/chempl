@@ -2,7 +2,6 @@
 #define CALC_RATE_H
 
 #include "math.h"
-#include <algorithm>
 #include "types.hpp"
 #include "constants.hpp"
 
@@ -135,11 +134,6 @@ void update_surfmant(
     TYPES::AuxData& m);
 
 
-void update_phy_params(
-    const TYPES::DTP_FLOAT& t,
-    TYPES::PhyParams& p);
-
-
 TYPES::DTP_FLOAT rate_mant2surf(
     const TYPES::DTP_FLOAT& t,
     const TYPES::DTP_Y y,
@@ -167,6 +161,15 @@ TYPES::DTP_FLOAT rate_photodesorption(
     TYPES::AuxData& m);
 
 
+TYPES::DTP_FLOAT rate_CO_photodissociation(
+    const TYPES::DTP_FLOAT& t,
+    double *y,
+    TYPES::Reaction& r,
+    const TYPES::PhyParams& p,
+    const TYPES::Species& s,
+    TYPES::AuxData& m);
+
+
 TYPES::DTP_FLOAT rate_dummy(
     const TYPES::DTP_FLOAT& t,
     const TYPES::DTP_Y y,
@@ -180,9 +183,6 @@ void assignAReactionHandler(TYPES::RateCalculators& rcs,
                             const TYPES::RateCalculator& rc,
                             const int& itype);
 void assignReactionHandlers(TYPES::Chem_data& user_data);
-
-double interpol(const std::vector<double>& ts,
-                const std::vector<double>& vs, const double& t);
 
 double arrhenius(const double &T,
     const std::vector<double> &abc, const int &iS);

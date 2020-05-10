@@ -1,6 +1,4 @@
 #include "math.h"
-#include <algorithm>
-#include <vector>
 #include "types.hpp"
 #include "constants.hpp"
 
@@ -316,31 +314,6 @@ void update_surfmant(
 }
 
 
-double interpol(const std::vector<double>& ts,
-                const std::vector<double>& vs, const double& t) {
-  if (t <= ts[0]) {
-    return vs[0];
-  }
-  if (t >= ts.back()) {
-    return vs.back();
-  }
-
-  auto up = std::upper_bound(ts.begin(), ts.end(), t);
-  int i = up - ts.begin() - 1;
-  double k = (vs[i+1] - vs[i]) / (ts[i+1] - ts[i]);
-  return vs[i] + k * (t - ts[i]);
-}
-
-
-void update_phy_params(
-    const TYPES::DTP_FLOAT& t,
-    TYPES::PhyParams& p) {
-  for (auto& s: p.timeDependencies) {
-    TYPES::phySetterDict[s.name](p, interpol(s.ts, s.vs, t));
-  }
-}
-
-
 TYPES::DTP_FLOAT rate_surf2mant(
     const TYPES::DTP_FLOAT& t,
     double *y,
@@ -447,6 +420,37 @@ TYPES::DTP_FLOAT rate_photodesorption(
 }
 
 
+TYPES::DTP_FLOAT rate_CO_photodissociation(
+    const TYPES::DTP_FLOAT& t,
+    double *y,
+    TYPES::Reaction& r,
+    const TYPES::PhyParams& p,
+    const TYPES::Species& s,
+    TYPES::AuxData& m)
+{ // Adapted from: udfa_rate12/rate13_cse_code/cssubs.f
+  const double FRACE = 1.0/3.0, LAMDAE = 1000.0*1.0E-08,
+    FOSCE = 0.017, BANDS = 1.0, smallnum=1e-6;
+  double XCO = y[r.idxReactants[0]];
+  double AUV = p.Ncol_H * CONST::phy_colDen2AUV_1000A;
+  double GAMMAD = exp(-1.644*pow(AUV, 0.86));
+  double c0 = 1.5 * 0.0265 * FRACE * FOSCE * LAMDAE
+            / (p.v_km_s*1e5) * p.Ncol_H;
+  double c1 = r.abc[0] * BANDS * GAMMAD;
+  double TAUE = c0 * XCO;
+  double BETAE, dBdX;
+  if (abs(TAUE) >= smallnum) {
+    BETAE = (1.0 - exp(-TAUE)) / TAUE;
+    dBdX = (-BETAE + (1.0-BETAE)/TAUE) * c0;
+  } else {
+    BETAE = 1.0 - TAUE * 0.5;
+    dBdX = -0.5 * c0;
+  }
+  r.rate = c1 * BETAE * XCO;
+  r.drdy[0] = c1 * (BETAE + XCO * dBdX);
+  return r.rate;
+}
+
+
 TYPES::DTP_FLOAT rate_dummy(
     const TYPES::DTP_FLOAT& t,
     double *y,
@@ -474,7 +478,7 @@ void assignReactionHandlers(TYPES::Chem_data& user_data) {
   (user_data.rate_calculators)[71] = rate_cosmicray_ionization;
   (user_data.rate_calculators)[2]  = rate_cosmicray_induced_ionization;
   (user_data.rate_calculators)[72] = rate_cosmicray_induced_ionization;
-  (user_data.rate_calculators)[4] = rate_photodissociation_H2;
+  (user_data.rate_calculators)[4]  = rate_photodissociation_H2;
   (user_data.rate_calculators)[5]  = rateArrhenius;
   (user_data.rate_calculators)[61] = rate_adsorption;
   (user_data.rate_calculators)[62] = rate_desorption;
@@ -488,6 +492,7 @@ void assignReactionHandlers(TYPES::Chem_data& user_data) {
   (user_data.rate_calculators)[20] = rate_cosmicray_induced_ionization;
   (user_data.rate_calculators)[21] = rate_iongrain;
   (user_data.rate_calculators)[75] = rate_photodesorption;
+  (user_data.rate_calculators)[6]  = rate_CO_photodissociation;
   (user_data.rate_calculators)[53] = rate_dummy;
   (user_data.rate_calculators)[13] = rate_dummy;
   (user_data.rate_calculators)[67] = rate_dummy;

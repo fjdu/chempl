@@ -182,7 +182,7 @@ void Updater_RE::f(int *neq, double *t, double *y, double *ydot)
   CALC_RATE::update_surfmant(
       *t, y, data->physical_params,
       data->species, data->auxdata);
-  CALC_RATE::update_phy_params(*t, data->physical_params);
+  TYPES::update_phy_params(*t, data->physical_params);
 
   for (auto &reaction: data->reactions) {
     if (reaction.itype == 67) {

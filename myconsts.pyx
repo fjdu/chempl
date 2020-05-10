@@ -355,3 +355,7 @@ class Consts:
   @property
   def phy_colDen2Av_coeff(self):
     return myconsts.phy_colDen2Av_coeff
+
+  @property
+  def phy_colDen2AUV_1000A(self):
+    return myconsts.phy_colDen2AUV_1000A

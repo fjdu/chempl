@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <regex>
+#include <utility>
 #include "constants.hpp"
 #include "types.hpp"
 #include "utils.hpp"
@@ -38,7 +39,9 @@ inline DTP_FLOAT get_dust_albedo(PhyParams& p) {return p.dust_albedo;}
 inline DTP_FLOAT get_mean_mol_weight(PhyParams& p) {return p.mean_mol_weight;}
 inline DTP_FLOAT get_chemdesorption_factor(PhyParams& p) {return p.chemdesorption_factor;}
 inline DTP_FLOAT get_Ncol_H2(PhyParams& p) {return p.Ncol_H2;}
+inline DTP_FLOAT get_Ncol_H(PhyParams& p) {return p.Ncol_H;}
 inline DTP_FLOAT get_dv_km_s(PhyParams& p) {return p.dv_km_s;}
+inline DTP_FLOAT get_v_km_s(PhyParams& p) {return p.v_km_s;}
 inline DTP_FLOAT get_t_max_year(PhyParams& p) {return p.t_max_year;}
 
 void set_n_gas(PhyParams& p, DTP_FLOAT v) {p.n_gas=v;}
@@ -58,7 +61,9 @@ void set_dust_albedo(PhyParams& p, DTP_FLOAT v) {p.dust_albedo=v;}
 void set_mean_mol_weight(PhyParams& p, DTP_FLOAT v) {p.mean_mol_weight=v;}
 void set_chemdesorption_factor(PhyParams& p, DTP_FLOAT v) {p.chemdesorption_factor=v;}
 void set_Ncol_H2(PhyParams& p, DTP_FLOAT v) {p.Ncol_H2=v;}
+void set_Ncol_H(PhyParams& p, DTP_FLOAT v) {p.Ncol_H=v;}
 void set_dv_km_s(PhyParams& p, DTP_FLOAT v) {p.dv_km_s=v;}
+void set_v_km_s(PhyParams& p, DTP_FLOAT v) {p.v_km_s=v;}
 void set_t_max_year(PhyParams& p, DTP_FLOAT v) {p.t_max_year=v;}
 
 
@@ -80,7 +85,9 @@ std::map<std::string, void (*)(PhyParams&, DTP_FLOAT)> phySetterDict = {
   {"mean_mol_weight", set_mean_mol_weight},
   {"chemdesorption_factor", set_chemdesorption_factor},
   {"Ncol_H2", set_Ncol_H2},
+  {"Ncol_H", set_Ncol_H},
   {"dv_km_s", set_dv_km_s},
+  {"v_km_s", set_v_km_s},
   {"t_max_year", set_t_max_year}
 };
 
@@ -103,7 +110,9 @@ std::map<std::string, DTP_FLOAT (*)(PhyParams&)> phyGetterDict = {
   {"mean_mol_weight", get_mean_mol_weight},
   {"chemdesorption_factor", get_chemdesorption_factor},
   {"Ncol_H2", get_Ncol_H2},
+  {"Ncol_H", get_Ncol_H},
   {"dv_km_s", get_dv_km_s},
+  {"v_km_s", get_v_km_s},
   {"t_max_year", get_t_max_year}
 };
 
@@ -311,6 +320,11 @@ void Chem_data::modify_reaction(const int& iReact, const std::map<std::string, s
     }
     if (p.first == "Trange") {
       reactions[iReact].Trange = p.second;
+    }
+    if (p.first == "itype") {
+      reaction_types[reactions[iReact].itype] -= 1;
+      reactions[iReact].itype = (int)p.second[0];
+      reaction_types[reactions[iReact].itype] += 1;
     }
   }
 }
@@ -564,11 +578,102 @@ void Chem_data::calculateReactionHeat() {
 
 
 double Chem_data::calculate_a_rate(
-    const double& t,
+    double t,
     double *y,
-    TYPES::Reaction& r) {
+    TYPES::Reaction& r, bool updatePhyParams) {
+  if (updatePhyParams) {
+    update_phy_params(t, physical_params);
+  }
   return rate_calculators[r.itype](t, y, r,
     physical_params, species, auxdata);
+}
+
+
+std::vector<int> Chem_data::getFormationReactions(int iSpecies) {
+  std::vector<int> res;
+  for (int i=0; i<reactions.size(); ++i) {
+    if (std::find(reactions[i].idxProducts.begin(),
+                  reactions[i].idxProducts.end(), iSpecies)
+        != reactions[i].idxProducts.end()) {
+      res.push_back(i);
+    }
+  }
+  return res;
+}
+
+
+std::vector<int> Chem_data::getDestructionReactions(int iSpecies) {
+  std::vector<int> res;
+  for (int i=0; i<reactions.size(); ++i) {
+    if (std::find(reactions[i].idxReactants.begin(),
+                  reactions[i].idxReactants.end(), iSpecies)
+        != reactions[i].idxReactants.end()) {
+      res.push_back(i);
+    }
+  }
+  return res;
+}
+
+
+std::vector<std::pair<int, double> >
+Chem_data::getFormationReactionsWithRates(
+  int iSpecies, double t, double* y) {
+  update_phy_params(t, physical_params);
+
+  std::vector<std::pair<int, double> > res;
+  for (int i=0; i<reactions.size(); ++i) {
+    if (std::find(reactions[i].idxProducts.begin(),
+                  reactions[i].idxProducts.end(), iSpecies)
+        != reactions[i].idxProducts.end()) {
+      std::pair<int, double> p;
+      p.first = i;
+      p.second = calculate_a_rate(t, y, reactions[i]);
+      res.push_back(p);
+    }
+  }
+  std::sort(res.begin(), res.end(),
+            [](std::pair<int, double> a,
+               std::pair<int, double> b) {
+                 return a.second > b.second;});
+  return res;
+}
+
+
+std::vector<std::pair<int, double> >
+Chem_data::getDestructionReactionsWithRates(
+  int iSpecies, double t, double* y) {
+  update_phy_params(t, physical_params);
+
+  std::vector<std::pair<int, double> > res;
+  for (int i=0; i<reactions.size(); ++i) {
+    if (std::find(reactions[i].idxReactants.begin(),
+                  reactions[i].idxReactants.end(), iSpecies)
+        != reactions[i].idxReactants.end()) {
+      std::pair<int, double> p;
+      p.first = i;
+      p.second = calculate_a_rate(t, y, reactions[i]);
+      res.push_back(p);
+    }
+  }
+  std::sort(res.begin(), res.end(),
+            [](std::pair<int, double> a,
+               std::pair<int, double> b) {
+                 return a.second > b.second;});
+  return res;
+}
+
+
+void update_phy_params(
+    TYPES::DTP_FLOAT t,
+    TYPES::PhyParams& p) {
+  for (auto& s: p.timeDependencies) {
+    TYPES::phySetterDict[s.name](p, UTILS::interpol(s.ts, s.vs, t));
+  }
+}
+
+
+void Species::allocate_abundances() {
+  this->abundances = std::vector<TYPES::DTP_FLOAT>(this->name2idx.size());
 }
 
 
