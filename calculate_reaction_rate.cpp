@@ -451,6 +451,34 @@ TYPES::DTP_FLOAT rate_CO_photodissociation(
 }
 
 
+TYPES::DTP_FLOAT rate_CO_photodissociation_better(
+    const TYPES::DTP_FLOAT& t,
+    double *y,
+    TYPES::Reaction& r,
+    const TYPES::PhyParams& p,
+    const TYPES::Species& s,
+    TYPES::AuxData& m)
+{
+  const double FRACE = 1.0/3.0, LAMDAE = 1000.0*1.0E-08,
+    FOSCE = 0.017, BANDS = 1.0, smallnum=1e-6;
+  double AUV = p.Ncol_H * CONST::phy_colDen2AUV_1000A;
+  double GAMMAD = exp(-1.644*pow(AUV, 0.86));
+  double c0 = 1.5 * 0.0265 * FRACE * FOSCE * LAMDAE
+            / (p.dv_km_s*1e5) * p.Ncol_CO;
+  double c1 = p.G0_UV * r.abc[0] * BANDS * GAMMAD;
+  double TAUE = c0;
+  double BETAE;
+  if (abs(TAUE) >= smallnum) {
+    BETAE = (1.0 - exp(-TAUE)) / TAUE;
+  } else {
+    BETAE = 1.0 - TAUE * 0.5;
+  }
+  r.drdy[0] = c1 * BETAE;
+  r.rate = c1 * BETAE * y[r.idxReactants[0]];
+  return r.rate;
+}
+
+
 TYPES::DTP_FLOAT rate_dummy(
     const TYPES::DTP_FLOAT& t,
     double *y,
@@ -493,6 +521,7 @@ void assignReactionHandlers(TYPES::Chem_data& user_data) {
   (user_data.rate_calculators)[21] = rate_iongrain;
   (user_data.rate_calculators)[75] = rate_photodesorption;
   (user_data.rate_calculators)[6]  = rate_CO_photodissociation;
+  (user_data.rate_calculators)[106]= rate_CO_photodissociation_better;
   (user_data.rate_calculators)[53] = rate_dummy;
   (user_data.rate_calculators)[13] = rate_dummy;
   (user_data.rate_calculators)[67] = rate_dummy;

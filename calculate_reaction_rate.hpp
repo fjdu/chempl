@@ -170,6 +170,15 @@ TYPES::DTP_FLOAT rate_CO_photodissociation(
     TYPES::AuxData& m);
 
 
+TYPES::DTP_FLOAT rate_CO_photodissociation_better(
+    const TYPES::DTP_FLOAT& t,
+    double *y,
+    TYPES::Reaction& r,
+    const TYPES::PhyParams& p,
+    const TYPES::Species& s,
+    TYPES::AuxData& m);
+
+
 TYPES::DTP_FLOAT rate_dummy(
     const TYPES::DTP_FLOAT& t,
     const TYPES::DTP_Y y,

@@ -38,6 +38,7 @@ inline DTP_FLOAT get_dust_crosssec(PhyParams& p) {return p.dust_crosssec;}
 inline DTP_FLOAT get_dust_albedo(PhyParams& p) {return p.dust_albedo;}
 inline DTP_FLOAT get_mean_mol_weight(PhyParams& p) {return p.mean_mol_weight;}
 inline DTP_FLOAT get_chemdesorption_factor(PhyParams& p) {return p.chemdesorption_factor;}
+inline DTP_FLOAT get_Ncol_CO(PhyParams& p) {return p.Ncol_CO;}
 inline DTP_FLOAT get_Ncol_H2(PhyParams& p) {return p.Ncol_H2;}
 inline DTP_FLOAT get_Ncol_H(PhyParams& p) {return p.Ncol_H;}
 inline DTP_FLOAT get_dv_km_s(PhyParams& p) {return p.dv_km_s;}
@@ -60,6 +61,7 @@ void set_dust_crosssec(PhyParams& p, DTP_FLOAT v) {p.dust_crosssec=v;}
 void set_dust_albedo(PhyParams& p, DTP_FLOAT v) {p.dust_albedo=v;}
 void set_mean_mol_weight(PhyParams& p, DTP_FLOAT v) {p.mean_mol_weight=v;}
 void set_chemdesorption_factor(PhyParams& p, DTP_FLOAT v) {p.chemdesorption_factor=v;}
+void set_Ncol_CO(PhyParams& p, DTP_FLOAT v) {p.Ncol_CO=v;}
 void set_Ncol_H2(PhyParams& p, DTP_FLOAT v) {p.Ncol_H2=v;}
 void set_Ncol_H(PhyParams& p, DTP_FLOAT v) {p.Ncol_H=v;}
 void set_dv_km_s(PhyParams& p, DTP_FLOAT v) {p.dv_km_s=v;}
@@ -84,6 +86,7 @@ std::map<std::string, void (*)(PhyParams&, DTP_FLOAT)> phySetterDict = {
   {"dust_albedo", set_dust_albedo},
   {"mean_mol_weight", set_mean_mol_weight},
   {"chemdesorption_factor", set_chemdesorption_factor},
+  {"Ncol_CO", set_Ncol_CO},
   {"Ncol_H2", set_Ncol_H2},
   {"Ncol_H", set_Ncol_H},
   {"dv_km_s", set_dv_km_s},
@@ -109,6 +112,7 @@ std::map<std::string, DTP_FLOAT (*)(PhyParams&)> phyGetterDict = {
   {"dust_albedo", get_dust_albedo},
   {"mean_mol_weight", get_mean_mol_weight},
   {"chemdesorption_factor", get_chemdesorption_factor},
+  {"Ncol_CO", get_Ncol_CO},
   {"Ncol_H2", get_Ncol_H2},
   {"Ncol_H", get_Ncol_H},
   {"dv_km_s", get_dv_km_s},

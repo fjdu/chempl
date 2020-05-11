@@ -41,7 +41,7 @@ public:
   DTP_FLOAT n_gas, T_gas, T_dust, Av, G0_UV, chi_Xray, chi_cosmicray,
     dust2gas_num, dust2gas_mass, dust_material_density,
     dust_site_density, dust_radius, dust_crosssec, dust_albedo,
-    mean_mol_weight, chemdesorption_factor, Ncol_H2, Ncol_H,
+    mean_mol_weight, chemdesorption_factor, Ncol_H2, Ncol_H, Ncol_CO,
     dv_km_s, v_km_s;
   DTP_FLOAT t_max_year;
   TimeDependencies timeDependencies;
