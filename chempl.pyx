@@ -34,7 +34,9 @@ cdef extern from "types.hpp" namespace "TYPES":
     void allocate_abundances()
 
   cdef cppclass AuxData:
-    pass
+    double t_calc, k_eva_tot, k_ads_tot, mant_tot, surf_tot
+    vector[Reaction] ads_reactions, eva_reactions
+
 
   cdef cppclass PhyParams:
     void prep_params()
@@ -81,6 +83,7 @@ cdef extern from "types.hpp" namespace "TYPES":
     Chem_data* ptr
     RateCalculators rate_calculators
     vector[int] dupli
+    AuxData auxdata
     double* y
 
   void update_phy_params(double t, PhyParams& p)
@@ -322,6 +325,36 @@ cdef class ChemModel:
 
   def classifySpeciesByPhase(self):
     self.cdata.classifySpeciesByPhase()
+
+  def get_aux_info(self):
+    return {
+      't_calc': self.cdata.auxdata.t_calc,
+      'k_eva_tot': self.cdata.auxdata.k_eva_tot,
+      'k_ads_tot': self.cdata.auxdata.k_ads_tot,
+      'mant_tot': self.cdata.auxdata.mant_tot,
+      'surf_tot': self.cdata.auxdata.surf_tot}
+
+  cdef _get_ads_reactions(self):
+    return [{'reactants': _.sReactants,
+             'products': _.sProducts,
+             'abc': _.abc,
+             'Trange': _.Trange,
+             'itype': _.itype}
+            for _ in self.cdata.auxdata.ads_reactions]
+
+  def get_ads_reactions(self):
+    return self._get_ads_reactions()
+
+  cdef _get_eva_reactions(self):
+    return [{'reactants': _.sReactants,
+             'products': _.sProducts,
+             'abc': _.abc,
+             'Trange': _.Trange,
+             'itype': _.itype}
+            for _ in self.cdata.auxdata.eva_reactions]
+
+  def get_eva_reactions(self):
+    return self._get_eva_reactions()
 
   def get_all_reactions(self):
     self.all_reactions = self._get_all_reactions()

@@ -223,6 +223,16 @@ Reaction::Reaction(
 }
 
 
+bool operator== (const Reaction &r1, const Reaction &r2)
+{
+  return ((r1.sReactants == r2.sReactants) &&
+          (r1.sProducts == r2.sProducts) &&
+          (r1.abc == r2.abc) &&
+          (r1.Trange == r2.Trange) &&
+          (r1.itype == r2.itype));
+}
+
+
 void Chem_data::allocate_y() {
   if (y != nullptr) {
     delete [] y;
@@ -383,6 +393,15 @@ std::map<std::string, DTP_FLOAT> Chem_data::get_all_phy_params() {
 void Chem_data::assort_reactions()
 {
   for (auto const& r: this->reactions) {
+    if ((std::find(auxdata.ads_reactions.begin(),
+                   auxdata.ads_reactions.end(), r)
+                != auxdata.ads_reactions.end()) ||
+        (std::find(auxdata.eva_reactions.begin(),
+                   auxdata.eva_reactions.end(), r)
+                != auxdata.eva_reactions.end())) {
+      return;
+    }
+
     if (r.itype == 61) {
       //if ((species.idx2name[r.idxReactants[0]] == "H2") ||
       //    (species.idx2name[r.idxReactants[0]] == "H")) {

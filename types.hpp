@@ -72,6 +72,7 @@ class Reaction {
       std::vector<DTP_FLOAT> a_,
       std::vector<DTP_FLOAT> Tr,
       int it);
+  friend bool operator== (const Reaction &r1, const Reaction &r2);
 };
 
 
