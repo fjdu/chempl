@@ -10,6 +10,11 @@ namespace RATE_EQ {
 int Updater_RE::makeSparse(
     const TYPES::Reactions& reactions,
     std::vector<std::vector<bool> >& sps) {
+  for (int i=0; i<sps.size(); ++i) {
+    for (int j=0; j<sps[i].size(); ++j) {
+      sps[i][j] = false;
+    }
+  }
   for (auto const& r: reactions) {
     for (auto const& i: r.idxReactants) {
       for (auto const& j: r.idxReactants) {
@@ -33,6 +38,8 @@ int Updater_RE::makeSparse(
 
 
 Updater_RE::Updater_RE() {
+  LRW = 0;
+  LIW = 0;
   data = nullptr;
   RWORK = nullptr;
   IWORK = nullptr;
@@ -80,18 +87,12 @@ void Updater_RE::set_user_data(TYPES::Chem_data *data_) {
   // std::cout << "Solver data pointer -> " << data << "\n" << std::endl;
 }
 
-void Updater_RE::set_sparse() {
+void Updater_RE::allocate_sparse() {
   if (sparseMaskJac.size() != NEQ) {
     for (auto& s: sparseMaskJac) {std::vector<bool>().swap(s);}
     std::vector<std::vector<bool> >().swap(sparseMaskJac);
     for (int i=0; i<NEQ; ++i) {
       sparseMaskJac.push_back(std::vector<bool>(NEQ, false));
-    }
-  } else {
-    for (int i=0; i<NEQ; ++i) {
-      for (int j=0; j<NEQ; ++j) {
-        sparseMaskJac[i][j] = false;
-      }
     }
   }
 }
@@ -116,16 +117,22 @@ int Updater_RE::initialize_solver(
   std::cout << "NNZ = " << NNZ << " ("
             << (double)NNZ / (double)(NEQ*NEQ) << ")" << std::endl;
 
-  LRW = 20 + 20 * NEQ + LRW_F * NNZ;
-  LIW = 31 + NEQ + NNZ;
+  int lrw = 20 + 20 * NEQ + LRW_F * NNZ;
+  int liw = 31 + NEQ + NNZ;
 
-  if (IWORK != nullptr) {delete [] IWORK; IWORK = nullptr;}
-  if (RWORK != nullptr) {delete [] RWORK; RWORK = nullptr;}
-  IWORK = new int[LIW];
-  RWORK = new double[LRW];
+  if ((IWORK == nullptr) || (RWORK == nullptr) ||
+      (LRW != lrw) || (LIW != liw)) {
+    LRW = lrw;
+    LIW = liw;
 
-  std::cout << "RWORK size = " << LRW << std::endl;
-  std::cout << "IWORK size = " << LIW << std::endl;
+    if (IWORK != nullptr) {delete [] IWORK; IWORK = nullptr;}
+    if (RWORK != nullptr) {delete [] RWORK; RWORK = nullptr;}
+    IWORK = new int[LIW];
+    RWORK = new double[LRW];
+
+    std::cout << "RWORK size = " << LRW << std::endl;
+    std::cout << "IWORK size = " << LIW << std::endl;
+  }
 
   std::fill(IWORK, IWORK+LIW, 0);
   std::fill(RWORK, RWORK+LRW, 0.0);
@@ -162,10 +169,12 @@ void Updater_RE::set_solver_msg_lun(int lun) {
 void Updater_RE::allocate_rsav_isav() {
   lrsav = 256;
   lisav = 128;
-  if (RSAV != nullptr) {delete [] RSAV; RSAV = nullptr;}
-  if (ISAV != nullptr) {delete [] ISAV; ISAV = nullptr;}
-  RSAV = new double[lrsav];
-  ISAV = new int[lisav];
+  if (RSAV == nullptr) {
+    RSAV = new double[lrsav];
+  }
+  if (ISAV == nullptr) {
+    ISAV = new int[lisav];
+  }
 }
 
 void Updater_RE::save_restore_common_block(int job) {

@@ -32,7 +32,7 @@ class Updater_RE {
     int initialize_solver(double reltol=1e-6, double abstol=1e-30, int mf=21, int LRW_F=6, int solver_id=0);
     int makeSparse(const TYPES::Reactions& reactions, std::vector<std::vector<bool> >& sps);
     void set_user_data(TYPES::Chem_data *data_);
-    void set_sparse();
+    void allocate_sparse();
     void set_solver_msg(int mflag);
     void set_solver_msg_lun(int lun);
     void save_restore_common_block(int job);

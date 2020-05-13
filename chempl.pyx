@@ -120,7 +120,7 @@ cdef extern from "calculate_reaction_rate.hpp" namespace "CALC_RATE":
 cdef extern from "rate_equation_lsode.hpp" namespace "RATE_EQ":
   cdef cppclass Updater_RE:
     void set_user_data(Chem_data* udata)
-    void set_sparse()
+    void allocate_sparse()
     int initialize_solver(double reltol, double abstol, int mf, int LRW_F, int solver_id)
     void allocate_rsav_isav()
     void save_restore_common_block(int job)
@@ -148,10 +148,10 @@ cdef class ChemModel:
   def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6,
                  showmsg=1, msglun=6, solver_id=0):
     self.updater_re.set_user_data(self.cdata.ptr)
-    self.updater_re.set_sparse()
+    self.updater_re.allocate_sparse()
     self.updater_re.initialize_solver(rtol, atol, mf, LRW_F, solver_id)
-    self.updater_re.set_solver_msg(showmsg);
-    self.updater_re.set_solver_msg_lun(msglun);
+    self.updater_re.set_solver_msg(showmsg)
+    self.updater_re.set_solver_msg_lun(msglun)
     self.updater_re.allocate_rsav_isav()
     self.cdata.allocate_y()
 
@@ -206,18 +206,6 @@ cdef class ChemModel:
     if interruptMode and istate != 1:
       self.save_common_block()
     return t1, [self.cdata.y[i] for i in range(self.updater_re.NEQ)]
-
-  cdef _get_all_reactions(self):
-    return [{'reactants': _.sReactants,
-             'products': _.sProducts,
-             'abc': _.abc,
-             'Trange': _.Trange,
-             'itype': _.itype,
-             'drdy': _.drdy,
-             'rate': _.rate,
-             'heat': _.heat
-            }
-            for _ in self.cdata.reactions]
 
   def add_reaction(self,
                    vector[string] sReactants,
@@ -355,6 +343,18 @@ cdef class ChemModel:
 
   def get_eva_reactions(self):
     return self._get_eva_reactions()
+
+  cdef _get_all_reactions(self):
+    return [{'reactants': _.sReactants,
+             'products': _.sProducts,
+             'abc': _.abc,
+             'Trange': _.Trange,
+             'itype': _.itype,
+             'drdy': _.drdy,
+             'rate': _.rate,
+             'heat': _.heat
+            }
+            for _ in self.cdata.reactions]
 
   def get_all_reactions(self):
     self.all_reactions = self._get_all_reactions()
