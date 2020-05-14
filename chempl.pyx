@@ -35,6 +35,7 @@ cdef extern from "types.hpp" namespace "TYPES":
 
   cdef cppclass AuxData:
     double t_calc, k_eva_tot, k_ads_tot, mant_tot, surf_tot
+    int n_surf2mant, n_mant2surf
     vector[Reaction] ads_reactions, eva_reactions
 
 
@@ -54,7 +55,7 @@ cdef extern from "types.hpp" namespace "TYPES":
   ctypedef cppmap[int, RateCalculator] RateCalculators
 
   cdef cppclass Chem_data:
-    void add_reaction(Reaction& rs)
+    void add_reaction(Reaction rs)
     void modify_reaction(const int& iReact, const cppmap[string, vector[double]] &par)
     void clear_reactions()
     void find_duplicate_reactions()
@@ -320,7 +321,10 @@ cdef class ChemModel:
       'k_eva_tot': self.cdata.auxdata.k_eva_tot,
       'k_ads_tot': self.cdata.auxdata.k_ads_tot,
       'mant_tot': self.cdata.auxdata.mant_tot,
-      'surf_tot': self.cdata.auxdata.surf_tot}
+      'surf_tot': self.cdata.auxdata.surf_tot,
+      'n_surf2mant': self.cdata.auxdata.n_surf2mant,
+      'n_mant2surf': self.cdata.auxdata.n_mant2surf
+    }
 
   cdef _get_ads_reactions(self):
     return [{'reactants': _.sReactants,

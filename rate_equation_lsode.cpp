@@ -187,16 +187,12 @@ void Updater_RE::f(int *neq, double *t, double *y, double *ydot)
     ydot[i] = 0.0;
   }
 
-  // std::cout << "Solver data points to: " << data << "\n" << std::endl;
+  TYPES::update_phy_params(*t, data->physical_params);
   CALC_RATE::update_surfmant(
       *t, y, data->physical_params,
       data->species, data->auxdata);
-  TYPES::update_phy_params(*t, data->physical_params);
 
   for (auto &reaction: data->reactions) {
-    if (reaction.itype == 67) {
-      continue;
-    }
     TYPES::DTP_FLOAT r =
       (((data->rate_calculators))[reaction.itype])(*t, y,
         reaction, data->physical_params,
@@ -215,9 +211,6 @@ void Updater_RE::jac(int *neq, double *t, double *y, int *j, double *ian, double
 {
   int jc = (*j) - 1;
   for (auto const& r: data->reactions) {
-    if (r.itype == 67) {
-      continue;
-    }
     for (int i=0; i < r.idxReactants.size(); ++i) {
       if (r.idxReactants[i] != jc) {
         continue;

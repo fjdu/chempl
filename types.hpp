@@ -98,6 +98,8 @@ class AuxData {
   public:
     DTP_FLOAT t_calc, k_eva_tot, k_ads_tot, mant_tot, surf_tot;
     Reactions ads_reactions, eva_reactions;
+    std::vector<int> ads_species, eva_species;
+    int n_surf2mant, n_mant2surf;
     AuxData();
 };
 
@@ -127,7 +129,8 @@ class Chem_data {
     Chem_data* ptr;
     DTP_FLOAT* y;
 
-    void add_reaction(const Reaction&);
+    bool updateIfIsDuplicate(const Reaction&);
+    void add_reaction(Reaction);
     void modify_reaction(const int&,
       const std::map<std::string, std::vector<double> > &);
     void find_duplicate_reactions();

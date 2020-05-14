@@ -16,8 +16,9 @@ namespace LOGIS {
 
 
 TYPES::Reaction str2reaction(const std::string& str,
-    int nReactants=3, int nProducts=4, int nABC=3, int lenSpeciesName=12,
-    int lenABC=9, int nT=2, int lenT=6, int lenType=3, int rowlen_min=126) {
+    int nReactants=3, int nProducts=4, int nABC=3,
+    int lenSpeciesName=12, int lenABC=9, int nT=2, int lenT=6,
+    int lenType=3, int rowlen_min=126) {
   std::regex comment(R"(^[!#].*$)");
   std::regex emptyline(R"(^\s*$)");
   TYPES::Reaction reaction;
@@ -76,7 +77,7 @@ TYPES::Reaction str2reaction(const std::string& str,
   try {
     reaction.itype = std::stoi(tmp);
   } catch (...) {
-    std::cerr << "Exception in load_reactions: "
+    std::cerr << "Exception in str2reaction: "
               << tmp << std::endl;
   }
 
@@ -91,61 +92,18 @@ void load_reactions(const std::string& fname, TYPES::Chem_data& user_data,
   std::ifstream inputFile(fname);
   std::string line;
 
-  TYPES::Species& species = user_data.species;
-  TYPES::Reactions& reactions = user_data.reactions;
-  TYPES::ReactionTypes& r_types = user_data.reaction_types;
-
   if (inputFile.good()) {
     while (std::getline(inputFile, line)) {
 
-      TYPES::Reaction rthis = str2reaction(line);
-      if (rthis.sReactants.size() == 0) {
+      TYPES::Reaction rthis = str2reaction(line,
+        nReactants, nProducts, nABC, lenSpeciesName,
+        lenABC, nT, lenT, lenType, rowlen_min);
+      if ((rthis.sReactants.size() == 0) ||
+          (rthis.sProducts.size() == 0)) {
         continue;
       }
 
-      bool isDuplicate = false;
-      for (auto &r: reactions) {
-        if ((r.sReactants == rthis.sReactants) &&
-            (r.sProducts == rthis.sProducts) &&
-            (r.itype == rthis.itype)) {
-          int iTr;
-          for (iTr=r.Trange.size()-2; iTr>=0; iTr -= 2) {
-            if (r.Trange[iTr] <= rthis.Trange[0]) {
-              break;
-            }
-          }
-          r.Trange.insert(r.Trange.begin()+iTr+2, rthis.Trange.begin(), rthis.Trange.end());
-          r.abc.insert(r.abc.begin() + (iTr*3)/2+3, rthis.abc.begin(), rthis.abc.end());
-          isDuplicate = true;
-          break;
-        }
-      }
-      if (isDuplicate) {
-        continue;
-      }
-
-      for (auto s: rthis.sReactants) {
-        if (species.name2idx.find(s) == species.name2idx.end()) {
-          species.name2idx[s] = species.name2idx.size();
-          species.idx2name.push_back(s);
-        }
-        rthis.idxReactants.push_back(species.name2idx[s]);
-      }
-      for (auto s: rthis.sProducts) {
-        if (species.name2idx.find(s) == species.name2idx.end()) {
-          species.name2idx[s] = species.name2idx.size();
-          species.idx2name.push_back(s);
-        }
-        rthis.idxProducts.push_back(species.name2idx[s]);
-      }
-
-      if (r_types.find(rthis.itype) == r_types.end()) {
-        r_types[rthis.itype] = 1;
-      } else {
-        r_types[rthis.itype] += 1;
-      }
-
-      reactions.push_back(rthis);
+      user_data.add_reaction(rthis);
     }
   } else {
     std::cerr << "Error in load_reactions: "

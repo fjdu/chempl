@@ -195,8 +195,11 @@ std::vector<std::string> PhyParams::get_timeDependency_names() {
   return names;
 }
 
+
 AuxData::AuxData():
-  t_calc(NAN), k_eva_tot(0.0), k_ads_tot(0.0), mant_tot(0.0), surf_tot(0.0) {}
+  t_calc(NAN), k_eva_tot(0.0), k_ads_tot(0.0),
+  mant_tot(0.0), surf_tot(0.0),
+  n_surf2mant(0), n_mant2surf(0) {}
 
 
 Reaction::Reaction() {
@@ -260,69 +263,67 @@ Chem_data::~Chem_data() {
 }
 
 
-void Chem_data::add_reaction(const Reaction& rs) {
-  Species& species = this->species;
-  ReactionTypes& r_types = this->reaction_types;
-  Reaction reaction = rs;
+bool Chem_data::updateIfIsDuplicate(const Reaction& rs) {
+  bool isDuplicate = false;
+  for (auto &r: reactions) {
+    if ((r.sReactants == rs.sReactants) &&
+        (r.sProducts == rs.sProducts) &&
+        (r.itype == rs.itype)) {
+      int iTr;
+      for (iTr=r.Trange.size()-2; iTr>=0; iTr -= 2) {
+        if (r.Trange[iTr] <= rs.Trange[0]) {
+          break;
+        }
+      }
+      r.Trange.insert(r.Trange.begin()+iTr+2, rs.Trange.begin(), rs.Trange.end());
+      r.abc.insert(r.abc.begin() + (iTr*3)/2+3, rs.abc.begin(), rs.abc.end());
+      isDuplicate = true;
+      break;
+    }
+  }
+  return isDuplicate;
+}
+
+
+void Chem_data::add_reaction(Reaction rs) {
+  if (updateIfIsDuplicate(rs)) {
+    return;
+  }
 
   int nReactants=rs.sReactants.size(), nProducts=rs.sProducts.size();
 
   std::vector<std::string> stmp;
   stmp.reserve(nReactants+nProducts);
-
   stmp.insert(stmp.end(), rs.sReactants.begin(), rs.sReactants.end());
   stmp.insert(stmp.end(), rs.sProducts.begin(), rs.sProducts.end());
 
   for (int i=0; i<nReactants+nProducts; ++i) {
     std::string name = UTILS::trim(stmp[i]);
 
-    if ((name == "PHOTON") || (name == "CRPHOT") || (name == "CRP")) {
+    if ((name == "PHOTON") || (name == "CRPHOT") ||
+        (name == "CRP") || (name.size() == 0)) {
       continue;
     }
 
-    if ((name.size() > 0) &&
-        (species.name2idx.find(name) == species.name2idx.end())) {
-      int nSpecies = species.name2idx.size();
-      species.name2idx[name] = nSpecies;
+    if (species.name2idx.find(name) == species.name2idx.end()) {
+      species.name2idx[name] = species.name2idx.size();
       species.idx2name.push_back(name);
     }
 
-    if (name.size() > 0) {
-      int iSpecies = species.name2idx[name];
-      if (i < nReactants) {
-        reaction.idxReactants.push_back(iSpecies);
-      } else {
-        reaction.idxProducts.push_back(iSpecies);
-      }
+    if (i < nReactants) {
+      rs.idxReactants.push_back(species.name2idx[name]);
+    } else {
+      rs.idxProducts.push_back(species.name2idx[name]);
     }
   }
 
-  if (r_types.find(reaction.itype) == r_types.end()) {
-    r_types[reaction.itype] = 1;
+  if (reaction_types.find(rs.itype) == reaction_types.end()) {
+    reaction_types[rs.itype] = 1;
   } else {
-    r_types[reaction.itype] += 1;
+    reaction_types[rs.itype] += 1;
   }
 
-  this->reactions.push_back(reaction);
-
-  // int n=this->reactions.size();
-  // if (n > 0) {
-  //   std::cout << "Reaction " << n << " added: ";
-  //   for (int i=0; i<nReactants; ++i) {
-  //     std::cout << this->reactions[n-1].sReactants[i];
-  //     if (i<nReactants-1) {
-  //       std::cout << " + ";
-  //     }
-  //   }
-  //   std::cout << " -> ";
-  //   for (int i=0; i<nProducts; ++i) {
-  //     std::cout << this->reactions[n-1].sProducts[i];
-  //     if (i<nProducts-1) {
-  //       std::cout << " + ";
-  //     }
-  //   }
-  //   std::cout << std::endl;
-  // }
+  reactions.push_back(rs);
 }
 
 
@@ -392,15 +393,22 @@ std::map<std::string, DTP_FLOAT> Chem_data::get_all_phy_params() {
 
 void Chem_data::assort_reactions()
 {
+  std::vector<Reaction>().swap(auxdata.ads_reactions);
+  std::vector<Reaction>().swap(auxdata.eva_reactions);
+  std::vector<int>().swap(this->auxdata.ads_species);
+  std::vector<int>().swap(this->auxdata.eva_species);
+  this->auxdata.n_surf2mant = 0;
+  this->auxdata.n_mant2surf = 0;
+
   for (auto const& r: this->reactions) {
-    if ((std::find(auxdata.ads_reactions.begin(),
-                   auxdata.ads_reactions.end(), r)
-                != auxdata.ads_reactions.end()) ||
-        (std::find(auxdata.eva_reactions.begin(),
-                   auxdata.eva_reactions.end(), r)
-                != auxdata.eva_reactions.end())) {
-      return;
-    }
+    // if ((std::find(auxdata.ads_reactions.begin(),
+    //                auxdata.ads_reactions.end(), r)
+    //             != auxdata.ads_reactions.end()) ||
+    //     (std::find(auxdata.eva_reactions.begin(),
+    //                auxdata.eva_reactions.end(), r)
+    //             != auxdata.eva_reactions.end())) {
+    //   return;
+    // }
 
     if (r.itype == 61) {
       //if ((species.idx2name[r.idxReactants[0]] == "H2") ||
@@ -408,12 +416,18 @@ void Chem_data::assort_reactions()
       //  continue;
       //}
       this->auxdata.ads_reactions.push_back(r);
+      this->auxdata.ads_species.push_back(r.idxReactants[0]);
     } else if (r.itype == 62) {
       //if ((species.idx2name[r.idxReactants[0]] == "gH2") ||
       //    (species.idx2name[r.idxReactants[0]] == "gH")) {
       //  continue;
       //}
       this->auxdata.eva_reactions.push_back(r);
+      this->auxdata.eva_species.push_back(r.idxReactants[0]);
+    } else if (r.itype == 65) {
+      this->auxdata.n_mant2surf += 1;
+    } else if (r.itype == 66) {
+      this->auxdata.n_surf2mant += 1;
     }
   }
 }
