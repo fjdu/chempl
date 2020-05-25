@@ -6,6 +6,11 @@ from libcpp.map cimport map as cppmap
 from libcpp.set cimport set as cppset
 from libcpp.utility cimport pair
 from myconsts import Consts
+import datetime
+import re
+import numpy as np
+
+cs = Consts()
 
 cdef extern from "types.hpp" namespace "TYPES":
 
@@ -22,7 +27,7 @@ cdef extern from "types.hpp" namespace "TYPES":
              vector[double] abc,
              vector[double] Trange,
              int itype)
-    
+
   cdef cppclass Species:
     cppmap[string, int] name2idx
     vector[string] idx2name
@@ -178,10 +183,10 @@ cdef class ChemModel:
 
   def save_common_block(self):
     self.updater_re.save_restore_common_block(job=1)
-    
+
   def restore_common_block(self):
     self.updater_re.save_restore_common_block(job=2)
-    
+
   def update(self, vector[double] y, double t, double dt, int istate=0, interruptMode=False):
     cdef int i
     cdef double t1
@@ -284,7 +289,7 @@ cdef class ChemModel:
 
   def update_phy_params(self, t):
     update_phy_params(t, self.cdata.physical_params)
-    
+
   def assort_reactions(self):
     return self.cdata.assort_reactions()
 
@@ -503,3 +508,138 @@ def simpleInterpol(ts, vs, t):
 
 def rate_Arrhenius(T, abc, iS=0):
     return arrhenius(T, abc, iS)
+
+
+def run_one_model(p, model=None):
+    t_start = datetime.datetime.now()
+
+    model.prepare()
+    model.set_solver(solver_id=p['model_id'])
+
+    if p.get('y0'):
+        init_y = p['y0']
+    else:
+        init_y = model.abundances
+
+    s = {'ts': [], 'ys': [], 'phy_s': [], 'finished': False,
+         'y': [_ for _ in init_y],
+         't': p.get('t0') or 0.0, 'dt': p['dt0']}
+
+    model.set_phy_params_by_dict(p['phy_params'])
+
+    for i in range(p['nmax']):
+        s['t'], s['y'] = model.update(s['y'], t=s['t'], dt=s['dt'])
+        s['phy_s'].append(model.get_all_phy_params())
+        s['ts'].append(s['t'])
+        s['ys'].append(s['y'])
+        if s['t'] >= p['t_max_s']:
+            s['finished'] = True
+            break
+        s['dt'] *= p['t_ratio']
+        if s['t'] + s['dt'] > p['t_max_s']:
+            s['dt'] = p['t_max_s'] - s['t']
+    print('Solver:', p['model_id'], 'finished:',
+          (datetime.datetime.now() - t_start).total_seconds(), 'seconds elapsed')
+    return s
+
+
+def get_total_charge(ab_s, model):
+    s = 0.0
+    for i in range(len(ab_s)):
+        s += ab_s[i] * (model.elementsSpecies[i][b'+']
+                      - model.elementsSpecies[i][b'-'])
+    return s
+
+
+def get_phy_params_default():
+  return {
+    b'Av': 20.0,
+    b'G0_UV': 1.0,
+    b'Ncol_H2': 4e22,
+    b'T_dust': 15.0,
+    b'T_gas': 15.0,
+    b'chemdesorption_factor': 0.05,
+    b'chi_Xray': 0.0,
+    b'chi_cosmicray': 1.0,
+    b'dust2gas_mass': 1e-2,
+    b'dust_albedo': 0.6,
+    b'dust_material_density': 2.0,
+    b'dust_radius': 0.1e-4,
+    b'dust_site_density': 1e15,
+    b'dv_km_s': 1.0,
+    b'v_km_s': 14.5,
+    b'mean_mol_weight': 1.4,
+    b'n_gas': 5e4,
+    b't_max_year': 1e7}
+
+
+def hasElement(s, name, ele):
+    return s.assignElementsToOneSpecies(name, cs.element_masses)[ele]
+
+
+def N_H_to_Av(N_H, ratio=5.3e-22):
+    # Draine, equation 21.7
+    return N_H * ratio
+
+
+def Av_to_N_H(Av, ratio=5.3e-22):
+    # Draine, equation 21.7
+    return Av / ratio
+
+
+def N_H_to_ngas(N_H, thickness_pc=None):
+    pc = 3.1e18 # cm
+    return N_H / (thickness_pc * pc)
+
+
+def Td_from_Av(Av, G0=1):
+    # Tielens Book, 9.18
+    T0 = 12.2 * np.power(G0, 0.25)
+    tau100 = 1e-3
+    nu0 = 3e15
+    return np.power(8.9e-11 * nu0 * G0 * np.exp(-1.8*Av) +
+                    2.78**5 + 3.4e-2 * (0.42 - np.log(3.5e-2 * tau100 * T0)
+                                               * tau100 * T0**6),
+                    0.2)
+
+def chem2tex(s):
+    return re.sub('([+-]+)', r'$^{\1}$',
+                  re.sub('(\d+)', r'$_{\1}$', s))
+
+
+def printFormationDestruction(sp, md, res, tmin=None, tmax=None, nstep=10,
+                              showFirst=10, showFraction=0.1):
+    """def printFormationDestruction(sp, md, res, tmin=None, tmax=None, nstep=10,
+                              showFirst=10, showFraction=0.1):
+    """
+    iSpe = md.name2idx[sp]
+    for n in range(0, len(res['ts']), nstep):
+        t = res['ts'][n] / cs.phy_SecondsPerYear
+        if not (tmin <= t <= tmax):
+            continue
+        frr = md.getFormationReactionsWithRates(iSpe, res['ts'][n], res['ys'][n])
+        drr = md.getDestructionReactionsWithRates(iSpe, res['ts'][n], res['ys'][n])
+        Tg, Td, ng = md.get_phy_param(b'T_gas'), md.get_phy_param(b'T_dust'), md.get_phy_param(b'n_gas')
+        ftt = np.sum([_[1] for _ in frr])
+        dtt = np.sum([_[1] for _ in drr])
+        ftscale = res['ys'][n][iSpe] / ftt / cs.phy_SecondsPerYear
+        dtscale = res['ys'][n][iSpe] / dtt / cs.phy_SecondsPerYear
+        frmax = frr[0][1]
+        drmax = drr[0][1]
+        print('{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.2f}, {:.2f}, {:.2e}, {:.2e}, {:.2e}, {:.2e}, {:d}'.format(
+            t, ftt, dtt, (ftt-dtt)/(ftt+dtt), Tg, Td, ng, ftscale, dtscale, res['ys'][n][iSpe], n))
+        for ifr,fr in frr[:showFirst]:
+            if fr < frmax * showFraction:
+                break
+            reac = md.reactions[ifr]
+            print(f'{fr:.3e}',
+                  ' + '.join([_.decode() for _ in reac['reactants']]), ' -> ',
+                  ' + '.join([_.decode() for _ in reac['products']]), reac['abc'], ifr)
+        for idr,dr in drr[:showFirst]:
+            if dr < drmax * showFraction:
+                break
+            reac = md.reactions[idr]
+            print(f'{-dr:.3e}',
+                  ' + '.join([_.decode() for _ in reac['reactants']]), ' -> ',
+                  ' + '.join([_.decode() for _ in reac['products']]), reac['abc'], idr)
+    return

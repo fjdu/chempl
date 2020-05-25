@@ -136,6 +136,7 @@ class Chem_data {
     void find_duplicate_reactions();
     void clear_reactions();
     void allocate_y();
+    void allocate_y(int n);
     void deallocate_y();
 
     void set_phy_param(std::string name, DTP_FLOAT v);

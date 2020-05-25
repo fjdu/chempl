@@ -244,6 +244,18 @@ void Chem_data::allocate_y() {
 }
 
 
+void Chem_data::allocate_y(int n=0) {
+  if (y != nullptr) {
+    delete [] y;
+  }
+  if (n>0) {
+    y = new DTP_FLOAT[n];
+  } else {
+    y = new DTP_FLOAT[species.idx2name.size()];
+  }
+}
+
+
 void Chem_data::deallocate_y() {
   if (y != nullptr) {
     delete [] y;
