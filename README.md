@@ -14,9 +14,16 @@
 
     `make`
 
+  This will create an executable with the default name `re` (meaning "rate equation")
+
 # Examples
 
-Before detailed documentation becomes available,
-you may look at this [Jupyter notebook](https://github.com/fjdu/chempl/blob/master/Examples-2020-07-19.ipynb).
+- For the python wrapper
+
+  Before detailed documentation becomes available, you may look at this [Jupyter notebook](https://github.com/fjdu/chempl/blob/master/Examples-2020-07-19.ipynb).
 
 Comments and suggestions are welcome!
+
+- For the command line executable, you can run an example model by
+
+    `./re paths_test.dat`
