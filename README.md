@@ -22,7 +22,7 @@
 
   Before detailed documentation becomes available, you may look at this [Jupyter notebook](https://github.com/fjdu/chempl/blob/master/Examples-2020-07-19.ipynb).
 
-Comments and suggestions are welcome!
+  Comments and suggestions are welcome!
 
 - For the command line executable, you can run an example model by
 
