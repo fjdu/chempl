@@ -16,6 +16,25 @@
 
   This will create an executable with the default name `re` (meaning "rate equation")
 
+Note that in the file "setup.py", there is one entry
+
+    library_dirs=["./", "/usr/local/Cellar/gcc/9.2.0_1/lib/gcc/9/"]
+
+which specifies the location of the gfortran library (i.e. where libgfortran.a is located).
+
+In the `makefile` there is also one entry
+
+    LINKOPT?=-lgfortran -L/usr/local/Cellar/gcc/9.2.0_1/lib/gcc/9/
+
+which is for similar purpose (for the command line executable).
+
+You will probably need to change the two entries based on the setup in your computer.
+
+You may try to find the location of libgfortran.a using the following command
+
+    dirname `gfortran --print-file-name libgfortran.a`
+
+
 # Examples
 
 - For the python wrapper

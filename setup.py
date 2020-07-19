@@ -26,7 +26,7 @@ extension2 = Extension(
 
 setup(
     name="chempl",
-    version='0.0',
+    version='0.1',
     description='A playable astrochemical code',
     author='Fujun Du',
     author_email='fjdu@pmo.ac.cn fujun.du@gmail.com',
