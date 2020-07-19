@@ -8,6 +8,7 @@ FCC?=gfortran
 #LINKOPT=-lc++ -Wall $(OPTLVL)
 LINKER?=g++
 LINKOPT?=-lgfortran -L/usr/local/Cellar/gcc/9.2.0_1/lib/gcc/9/
+#LINKOPT?=-lgfortran -L"$(dirname `gfortran --print-file-name libgfortran.dylib`)"
 
 ifeq ($(FCC), ifort)
     lflag_prepro ?= -fpp

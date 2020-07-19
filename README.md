@@ -30,7 +30,7 @@ which is for similar purpose (for the command line executable).
 
 You will probably need to change the two entries based on the setup in your computer.
 
-You may try to find the location of libgfortran.a using the following command
+You may try to find the location of `libgfortran.a` using the following command
 
     dirname `gfortran --print-file-name libgfortran.a`
 
