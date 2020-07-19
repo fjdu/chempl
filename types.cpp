@@ -373,6 +373,10 @@ void Chem_data::clear_reactions() {
   this->reaction_types.clear();
   this->auxdata.ads_reactions.clear();
   this->auxdata.eva_reactions.clear();
+  this->auxdata.ads_species.clear();
+  this->auxdata.eva_species.clear();
+  this->auxdata.n_surf2mant = 0;
+  this->auxdata.n_mant2surf = 0;
 }
 
 

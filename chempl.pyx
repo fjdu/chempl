@@ -148,18 +148,10 @@ cdef class ChemModel:
   cdef Chem_data cdata
   cdef Updater_RE updater_re
 
-  def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6,
-                 showmsg=1, msglun=6, solver_id=0):
-    self.updater_re.set_user_data(self.cdata.ptr)
-    self.updater_re.allocate_sparse()
-    self.updater_re.initialize_solver(rtol, atol, mf, LRW_F, solver_id)
-    self.updater_re.set_solver_msg(showmsg)
-    self.updater_re.set_solver_msg_lun(msglun)
-    self.updater_re.allocate_rsav_isav()
-    self.cdata.allocate_y()
-    return self
-
   def allocate_y(self):
+    """
+    allocate internal storage for the unknown vector, which is needed for interaction with the solver.
+    """
     self.cdata.allocate_y()
 
   def deallocate_y(self):
@@ -178,6 +170,33 @@ cdef class ChemModel:
       'NNZ':    self.updater_re.NNZ,
       'RTOL':   self.updater_re.RTOL,
       'ATOL':   self.updater_re.ATOL}
+
+  def set_solver_internals(self, **kargs):
+    methods = {
+      'ITOL':   lambda x: self.updater_re.set_ITOL(x),
+      'ITASK':  lambda x: self.updater_re.set_ITASK(x),
+      'ISTATE': lambda x: self.updater_re.set_ISTATE(x),
+      'IOPT':   lambda x: self.updater_re.set_IOPT(x),
+      'MF':     lambda x: self.updater_re.set_MF(x),
+      'RTOL':   lambda x: self.updater_re.set_RTOL(x),
+      'ATOL':   lambda x: self.updater_re.set_ATOL(x)}
+    for k in kargs:
+      if k in methods:
+        methods[k](kargs[k])
+
+  def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6,
+                 showmsg=1, msglun=6, solver_id=0):
+    self.updater_re.set_user_data(self.cdata.ptr)
+    self.updater_re.allocate_sparse()
+    self.updater_re.initialize_solver(rtol, atol, mf, LRW_F, solver_id)
+    self.updater_re.set_solver_msg(showmsg)
+    self.updater_re.set_solver_msg_lun(msglun)
+    self.updater_re.allocate_rsav_isav()
+    self.cdata.allocate_y()
+    return self
+
+  def reset_solver(self):
+    self.updater_re.set_ISTATE(1)
 
   def save_common_block(self):
     self.updater_re.save_restore_common_block(job=1)
@@ -233,6 +252,9 @@ cdef class ChemModel:
     self.cdata.add_reaction(rs)
 
   def clear_reactions(self):
+    """
+    Remove all the reactions in a network
+    """
     self.cdata.clear_reactions()
 
   def find_duplicate_reactions(self):
@@ -452,6 +474,10 @@ cdef class ChemModel:
 
   def load_reactions(self, fname, nReactants=3, nProducts=4, nABC=3,
     lenSpeciesName=12, lenABC=9, nT=2, lenT=6, lenType=3, rowlen_min=126):
+    """
+    load_reactions(self, fname, nReactants=3, nProducts=4, nABC=3,
+    lenSpeciesName=12, lenABC=9, nT=2, lenT=6, lenType=3, rowlen_min=126)
+    """
     load_reactions(fname, self.cdata, nReactants, nProducts,
     nABC, lenSpeciesName, lenABC, nT, lenT, lenType, rowlen_min)
 
@@ -503,6 +529,15 @@ cdef class ChemModel:
       self.set_phy_params_by_dict(phy_params)
 
   def prepare(self):
+    """
+    After the reaction network is loaded, sort out some auxiliary
+    information of the network needed in the rate calculation, then
+    calculate some physical parameters of each species.
+
+    Dependency: the reaction network
+
+    Does not depend on the physical parameters or the initial abundances.
+    """
     self.assort_reactions()
     self.assignElementsToSpecies()
     self.calculateSpeciesMasses()
@@ -529,7 +564,7 @@ def rate_Arrhenius(T, abc, iS=0):
 def run_one_model(p=None, model=None):
     """
     run_one_model(p=None, model=None)
-    Run one model with parameter set p and model.
+    Run one model with a set of parameters and a model
 
     p: a dictionary containing the following
     p = {
@@ -542,6 +577,10 @@ def run_one_model(p=None, model=None):
       'nmax': max number of time steps,
       'phy_params': a dictionary of physical params,
     }
+
+    model: a loaded network
+
+    Return: a dictionary containing the time steps and abundance evolution tracks
     """
     t_start = datetime.datetime.now()
 
