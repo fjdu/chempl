@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
-#include "logistics.hpp"
 #include "types.hpp"
 #include "rate_equation_lsode.hpp"
 #include "constants.hpp"
@@ -22,7 +21,7 @@ int main(int argc, char **argv)
     fname_path_config = argv[1];
   }
 
-  TYPES::PathsDict pdict = LOGIS::loadPathConfig(fname_path_config);
+  TYPES::PathsDict pdict = TYPES::loadPathConfig(fname_path_config);
   for (auto const& p: pdict) {
     std::cout << p.first << " = " << p.second << std::endl;
   }
@@ -37,7 +36,7 @@ int main(int argc, char **argv)
               << " " << std::endl;
   }
 
-  LOGIS::load_reactions(pdict["f_reactions"], user_data);
+  TYPES::load_reactions(pdict["f_reactions"], user_data);
   std::cout << "Number of reactions: "
             << user_data.reactions.size() << std::endl;
   std::cout << "Number of species: "
@@ -67,7 +66,7 @@ int main(int argc, char **argv)
   std::cout << "Number of mantle species: "
             << user_data.species.mantleSpecies.size() << std::endl;
 
-  LOGIS::loadInitialAbundances(user_data.species, pdict["f_initial_abundances"]);
+  TYPES::loadInitialAbundances(user_data.species, pdict["f_initial_abundances"]);
   std::cout << "Number of species with initial abundances: "
             << std::count_if(user_data.species.abundances.begin(),
                              user_data.species.abundances.end(),
@@ -80,7 +79,7 @@ int main(int argc, char **argv)
     }
   }
 
-  LOGIS::loadSpeciesEnthalpies(user_data.species, pdict["f_enthalpies"]);
+  TYPES::loadSpeciesEnthalpies(user_data.species, pdict["f_enthalpies"]);
   std::cout << "Number of species with enthalpies: "
             << user_data.species.enthalpies.size() << std::endl;
   //for (auto const& s: user_data.species->enthalpies) {

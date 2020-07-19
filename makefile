@@ -34,9 +34,9 @@ exe?=re
 
 all: $(exe)
 
-OBJS=main.o rate_equation_lsode.o ode_wrapper.o types.o constants.o opkdmain.o opkda1.o opkda2.o logistics.o calculate_reaction_rate.o utils.o
+OBJS=main.o rate_equation_lsode.o ode_wrapper.o types.o constants.o opkdmain.o opkda1.o opkda2.o calculate_reaction_rate.o utils.o
 
-OBJSWRAPPER=rate_equation_lsode.o ode_wrapper.o types.o constants.o logistics.o calculate_reaction_rate.o utils.o opkdmain.o opkda1.o opkda2.o
+OBJSWRAPPER=rate_equation_lsode.o ode_wrapper.o types.o constants.o calculate_reaction_rate.o utils.o opkdmain.o opkda1.o opkda2.o
 
 LIB_DIR=.
 CHEMPLAYLIB=$(LIB_DIR)/libchempl.a
@@ -56,11 +56,8 @@ types.o: types.hpp types.cpp
 constants.o: constants.cpp
 	$(CPL) $(CPLOPT) -c constants.cpp
 
-main.o: main.cpp rate_equation_lsode.hpp logistics.hpp types.hpp calculate_reaction_rate.hpp
+main.o: main.cpp rate_equation_lsode.hpp types.hpp calculate_reaction_rate.hpp
 	$(CPL) $(CPLOPT) -c main.cpp
-
-logistics.o: logistics.cpp
-	$(CPL) $(CPLOPT) -c logistics.cpp
 
 calculate_reaction_rate.o: calculate_reaction_rate.cpp calculate_reaction_rate.hpp
 	$(CPL) $(CPLOPT) -c calculate_reaction_rate.cpp

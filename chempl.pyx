@@ -95,17 +95,15 @@ cdef extern from "types.hpp" namespace "TYPES":
   void update_phy_params(double t, PhyParams& p)
   cppmap[string, int] assignElementsToOneSpecies(string name, const Elements& elements)
 
-
-cdef extern from "utils.hpp" namespace "UTILS":
-  double interpol(const vector[double]& ts, const vector[double]& vs, double t)
-
-
-cdef extern from "logistics.hpp" namespace "LOGIS":
   void load_reactions(const string& fname, Chem_data& cdata,
     int nReactants, int nProducts, int nABC, int lenSpeciesName,
     int lenABC, int nT, int lenT, int lenType, int rowlen_min)
   int loadInitialAbundances(Species& species, string fname)
   int loadSpeciesEnthalpies(Species& species, string fname)
+
+
+cdef extern from "utils.hpp" namespace "UTILS":
+  double interpol(const vector[double]& ts, const vector[double]& vs, double t)
 
 
 cdef extern from "calculate_reaction_rate.hpp" namespace "CALC_RATE":
@@ -149,7 +147,6 @@ cdef class ChemModel:
 
   cdef Chem_data cdata
   cdef Updater_RE updater_re
-  cdef public all_reactions
 
   def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6,
                  showmsg=1, msglun=6, solver_id=0):
@@ -160,6 +157,7 @@ cdef class ChemModel:
     self.updater_re.set_solver_msg_lun(msglun)
     self.updater_re.allocate_rsav_isav()
     self.cdata.allocate_y()
+    return self
 
   def allocate_y(self):
     self.cdata.allocate_y()
@@ -257,34 +255,55 @@ cdef class ChemModel:
     return self.cdata.getDestructionReactionsWithRates(iSpecies, t, self.cdata.y)
 
   def set_phy_param(self, string name, double val):
+    """
+    set_phy_param(self, string name, double val)
+    """
     self.cdata.set_phy_param(name, val)
     self.cdata.physical_params.prep_params()
 
   def set_phy_param_from_file(self, string fname):
+    """
+    set_phy_param_from_file(self, string fname)
+    """
     self.cdata.physical_params.from_file(fname)
     self.cdata.physical_params.prep_params()
 
   def get_phy_param(self, string name):
+    """
+    get_phy_param(self, string name)
+    """
     return self.cdata.get_phy_param(name)
 
   def set_phy_params_by_dict(self, d):
+    """
+    set_phy_params_by_dict(self, d)
+    """
     for k in d:
       self.set_phy_param(k, d[k])
     self.cdata.physical_params.prep_params()
 
   def get_all_phy_params(self):
+    """
+    get_all_phy_params(self)
+    """
     return self.cdata.get_all_phy_params()
 
   def add_time_dependency(self, name, ts, vs):
-    """add_phy_param_time_dependency(name, ts, vs)"""
+    """
+    add_phy_param_time_dependency(name, ts, vs)
+    """
     self.cdata.physical_params.add_a_timedependency(name, ts, vs)
 
   def remove_time_dependency(self, name):
-    """remove_phy_param_time_dependency(name)"""
+    """
+    remove_phy_param_time_dependency(name)
+    """
     self.cdata.physical_params.remove_a_timedependency(name)
 
   def get_time_dependency_names(self):
-    """get_timeDependency_names()"""
+    """
+    get_timeDependency_names()
+    """
     return self.cdata.physical_params.get_timeDependency_names()
 
   def update_phy_params(self, t):
@@ -353,7 +372,9 @@ cdef class ChemModel:
   def get_eva_reactions(self):
     return self._get_eva_reactions()
 
-  cdef _get_all_reactions(self):
+  cdef get_all_reactions(self):
+    """return all the reactions.
+    This call can be slow, so make a copy if the reaction list is to be frequently used."""
     return [{'reactants': _.sReactants,
              'products': _.sProducts,
              'abc': _.abc,
@@ -365,16 +386,9 @@ cdef class ChemModel:
             }
             for _ in self.cdata.reactions]
 
-  def get_all_reactions(self):
-    self.all_reactions = self._get_all_reactions()
-    return self.all_reactions
-
   @property
   def reactions(self):
-    if self.all_reactions is not None:
-      return self.all_reactions
-    self.all_reactions = self._get_all_reactions()
-    return self.all_reactions
+    return self.get_all_reactions()
 
   @property
   def reaction_types(self):
@@ -473,12 +487,11 @@ cdef class ChemModel:
     return assignElementsToOneSpecies(name, elements)
 
   def __init__(self, fReactions=None, fInitialAbundances=None,
-               fSpeciesEnthalpies=None):
+               fSpeciesEnthalpies=None, phy_params=None):
     """
   __init__(self, fReactions=None, fInitialAbundances=None,
-           fSpeciesEnthalpies=None)
+           fSpeciesEnthalpies=None, phy_params=None)
     """
-    self.all_reactions = None
 
     if fReactions is not None:
       self.load_reactions(fReactions)
@@ -486,6 +499,8 @@ cdef class ChemModel:
       self.loadInitialAbundances(fInitialAbundances)
     if fSpeciesEnthalpies is not None:
       self.loadSpeciesEnthalpies(fSpeciesEnthalpies)
+    if phy_params is not None:
+      self.set_phy_params_by_dict(phy_params)
 
   def prepare(self):
     self.assort_reactions()
@@ -497,6 +512,7 @@ cdef class ChemModel:
     self.calculateReactionHeat()
     self.classifySpeciesByPhase()
     self.assignReactionHandlers()
+    return self
 
 
 def simpleInterpol(ts, vs, t):
@@ -510,11 +526,27 @@ def rate_Arrhenius(T, abc, iS=0):
     return arrhenius(T, abc, iS)
 
 
-def run_one_model(p, model=None):
+def run_one_model(p=None, model=None):
+    """
+    run_one_model(p=None, model=None)
+    Run one model with parameter set p and model.
+
+    p: a dictionary containing the following
+    p = {
+      'model_id': integer,
+      'y0': a vector of initial abundances,
+      't0': initial time (in seconds),
+      'dt0': intial time step,
+      't_ratio': ratio between time steps,
+      'tmax': final time,
+      'nmax': max number of time steps,
+      'phy_params': a dictionary of physical params,
+    }
+    """
     t_start = datetime.datetime.now()
 
     model.prepare()
-    model.set_solver(solver_id=p['model_id'])
+    model.set_solver(solver_id=p.get('model_id') or 0)
 
     if p.get('y0'):
         init_y = p['y0']
@@ -523,21 +555,22 @@ def run_one_model(p, model=None):
 
     s = {'ts': [], 'ys': [], 'phy_s': [], 'finished': False,
          'y': [_ for _ in init_y],
-         't': p.get('t0') or 0.0, 'dt': p['dt0']}
+         't': p.get('t0') or 0.0, 'dt': p.get('dt0') or 1.0}
 
     model.set_phy_params_by_dict(p['phy_params'])
+    tmax = p.get('tmax') or p.get('t_max_s') or 3.15e13
 
-    for i in range(p['nmax']):
+    for i in range(p.get('nmax') or 2000):
         s['t'], s['y'] = model.update(s['y'], t=s['t'], dt=s['dt'])
         s['phy_s'].append(model.get_all_phy_params())
         s['ts'].append(s['t'])
         s['ys'].append(s['y'])
-        if s['t'] >= p['t_max_s']:
+        if s['t'] >= tmax:
             s['finished'] = True
             break
-        s['dt'] *= p['t_ratio']
-        if s['t'] + s['dt'] > p['t_max_s']:
-            s['dt'] = p['t_max_s'] - s['t']
+        s['dt'] *= p.get('t_ratio') or 1.1
+        if s['t'] + s['dt'] > tmax:
+            s['dt'] = tmax - s['t']
     print('Solver:', p['model_id'], 'finished:',
           (datetime.datetime.now() - t_start).total_seconds(), 'seconds elapsed')
     return s
@@ -552,6 +585,7 @@ def get_total_charge(ab_s, model):
 
 
 def get_phy_params_default():
+  """return a template of the physical parameters"""
   return {
     b'Av': 20.0,
     b'G0_UV': 1.0,
@@ -609,7 +643,7 @@ def chem2tex(s):
 
 def printFormationDestruction(sp, md, res, tmin=None, tmax=None, nstep=10,
                               showFirst=10, showFraction=0.1):
-    """def printFormationDestruction(sp, md, res, tmin=None, tmax=None, nstep=10,
+    """printFormationDestruction(sp, md, res, tmin=None, tmax=None, nstep=10,
                               showFirst=10, showFraction=0.1):
     """
     iSpe = md.name2idx[sp]
@@ -626,8 +660,10 @@ def printFormationDestruction(sp, md, res, tmin=None, tmax=None, nstep=10,
         dtscale = res['ys'][n][iSpe] / dtt / cs.phy_SecondsPerYear
         frmax = frr[0][1]
         drmax = drr[0][1]
-        print('{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.2f}, {:.2f}, {:.2e}, {:.2e}, {:.2e}, {:.2e}, {:d}'.format(
-            t, ftt, dtt, (ftt-dtt)/(ftt+dtt), Tg, Td, ng, ftscale, dtscale, res['ys'][n][iSpe], n))
+        print('{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.2f}, {:.2f}, {:.2e}, '
+              '{:.2e}, {:.2e}, {:.2e}, {:d}'.format(
+            t, ftt, dtt, (ftt-dtt)/(ftt+dtt), Tg, Td, ng, ftscale,
+            dtscale, res['ys'][n][iSpe], n))
         for ifr,fr in frr[:showFirst]:
             if fr < frmax * showFraction:
                 break

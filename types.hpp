@@ -187,6 +187,25 @@ class Recorder {
 std::map<std::string, int> assignElementsToOneSpecies(
     const std::string& name, const Elements& elements);
 
+PathsDict loadPathConfig(std::string);
+
+
+Reaction str2reaction(const std::string& str,
+    int nReactants=3, int nProducts=4, int nABC=3,
+    int lenSpeciesName=12, int lenABC=9, int nT=2, int lenT=6,
+    int lenType=3, int rowlen_min=126);
+
+
+void load_reactions(const std::string& fname,
+           Chem_data& user_data,
+           int nReactants=3, int nProducts=4, int nABC=3,
+           int lenSpeciesName=12, int lenABC=9, int nT=2,
+           int lenT=6, int lenType=3, int rowlen_min=126);
+
+void loadInitialAbundances(Species& species, std::string fname);
+
+void loadSpeciesEnthalpies(TYPES::Species& species, std::string fname);
+
 
 }
 #endif //TYPES_H
