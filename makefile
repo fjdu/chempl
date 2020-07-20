@@ -7,8 +7,11 @@ FCC?=gfortran
 #LINKER?=gfortran
 #LINKOPT=-lc++ -Wall $(OPTLVL)
 LINKER?=g++
-LINKOPT?=-lgfortran -L/usr/local/Cellar/gcc/9.2.0_1/lib/gcc/9/
-#LINKOPT?=-lgfortran -L"$(dirname `gfortran --print-file-name libgfortran.dylib`)"
+#LINKOPT?=-lgfortran -L/usr/local/Cellar/gcc/9.2.0_1/lib/gcc/9/
+LINKOPT?=-lgfortran -L"$(shell dirname `gfortran --print-file-name libgfortran.a`)"
+
+#q:
+#	echo $(LINKOPT)
 
 ifeq ($(FCC), ifort)
     lflag_prepro ?= -fpp
@@ -48,7 +51,7 @@ chempl: setup.py chempl.pyx myconsts.pyx myconsts.pxd $(CHEMPLAYLIB)
 $(CHEMPLAYLIB): $(OBJSWRAPPER)
 	ar rcs $(CHEMPLAYLIB) $(OBJSWRAPPER)
 
-$(exe): $(OBJS)
+$(exe): makefile $(OBJS)
 	$(LINKER) $(LINKOPT) -o $(exe) $(OBJS)
 
 types.o: types.hpp types.cpp
