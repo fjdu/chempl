@@ -491,23 +491,44 @@ cdef class ChemModel:
     assignReactionHandlers(self.cdata)
 
   def setAbundanceByName(self, name, val):
+    """
+    setAbundanceByName(self, name, val)
+    """
     if len(self.cdata.species.abundances) == 0:
       self.cdata.species.allocate_abundances()
     idx = self.cdata.species.name2idx[name]
     self.cdata.species.abundances[idx] = val
 
   def setAbundanceByDict(self, a):
+    """
+    setAbundanceByDict(self, a)
+    """
     if len(self.cdata.species.abundances) == 0:
       self.cdata.species.allocate_abundances()
     for k in a:
       idx = self.cdata.species.name2idx[k]
       self.cdata.species.abundances[idx] = a[k]
+    return self
 
   def setAbundances(self, vals):
+    """
+    setAbundances(self, vals)
+    """
     if len(self.cdata.species.abundances) == 0:
       self.cdata.species.allocate_abundances()
     for i in range(len(self.cdata.species.idx2name)):
       self.cdata.species.abundances[i] = vals[i]
+
+  def clearAbundances(self):
+    """
+    clearAbundances(self)
+    Set all abundances to zero.
+    """
+    if len(self.cdata.species.abundances) == 0:
+      self.cdata.species.allocate_abundances()
+    for i in range(len(self.cdata.species.idx2name)):
+      self.cdata.species.abundances[i] = 0.0
+    return self
 
   def assignElementsToOneSpecies(self, name, elements):
     return assignElementsToOneSpecies(name, elements)
@@ -680,40 +701,57 @@ def chem2tex(s):
                   re.sub('(\d+)', r'$_{\1}$', s))
 
 
-def printFormationDestruction(sp, md, res, tmin=None, tmax=None, nstep=10,
+def makeStrArrAsTable(sArr, nSpace=0):
+    lenArr = [[len(s) for s in row] for row in sArr]
+    col_len_s = [max([row[i]+nSpace for row in lenArr])
+                 for i in range(len(sArr[0]))]
+    return [['{{:<{L}}}'.format(L=col_len_s[i]).format(row[i])
+             for i in range(len(row))] for row in sArr]
+
+
+def printFormationDestruction(species, model, res, tmin=None, tmax=None, nstep=10,
                               showFirst=10, showFraction=0.1):
-    """printFormationDestruction(sp, md, res, tmin=None, tmax=None, nstep=10,
+    """printFormationDestruction(species, model, res, tmin=None, tmax=None, nstep=10,
                               showFirst=10, showFraction=0.1):
     """
-    iSpe = md.name2idx[sp]
+    header = ['Time', 'total_f', 'total_d', 'tscale_n', 'tscale_f', 'tscale_d',
+              'Tg', 'Td', 'ngas', 'y', 'tidx']
+    iSpe = model.name2idx[species]
     for n in range(0, len(res['ts']), nstep):
         t = res['ts'][n] / cs.phy_SecondsPerYear
-        if not (tmin <= t <= tmax):
+        if (tmin is not None) and (tmax is not None):
+          if not (tmin <= t <= tmax):
             continue
-        frr = md.getFormationReactionsWithRates(iSpe, res['ts'][n], res['ys'][n])
-        drr = md.getDestructionReactionsWithRates(iSpe, res['ts'][n], res['ys'][n])
-        Tg, Td, ng = md.get_phy_param(b'T_gas'), md.get_phy_param(b'T_dust'), md.get_phy_param(b'n_gas')
+        frr = model.getFormationReactionsWithRates(iSpe, res['ts'][n], res['ys'][n])
+        drr = model.getDestructionReactionsWithRates(iSpe, res['ts'][n], res['ys'][n])
+        Tg, Td, ng = (model.get_phy_param(b'T_gas'),
+                      model.get_phy_param(b'T_dust'),
+                      model.get_phy_param(b'n_gas'))
         ftt = np.sum([_[1] for _ in frr])
         dtt = np.sum([_[1] for _ in drr])
+        net = ftt - dtt
         ftscale = res['ys'][n][iSpe] / ftt / cs.phy_SecondsPerYear
         dtscale = res['ys'][n][iSpe] / dtt / cs.phy_SecondsPerYear
+        tscale_net = res['ys'][n][iSpe] / net / cs.phy_SecondsPerYear
         frmax = frr[0][1]
         drmax = drr[0][1]
-        print('{:.3e}, {:.3e}, {:.3e}, {:.3e}, {:.2f}, {:.2f}, {:.2e}, '
-              '{:.2e}, {:.2e}, {:.2e}, {:d}'.format(
-            t, ftt, dtt, (ftt-dtt)/(ftt+dtt), Tg, Td, ng, ftscale,
-            dtscale, res['ys'][n][iSpe], n))
+        s = ('{:.3e} {:.3e} {:.3e} {:.2e} {:.2e} {:.2e} {:.2f} {:.2f} {:.2e} '
+              '{:.2e} {:d}'.format(
+            t, ftt, dtt, tscale_net, ftscale, dtscale,
+            Tg, Td, ng, res['ys'][n][iSpe], n)).split()
+        for row in makeStrArrAsTable([header, s]):
+            print(' '.join(row))
         for ifr,fr in frr[:showFirst]:
             if fr < frmax * showFraction:
                 break
-            reac = md.reactions[ifr]
+            reac = model.reactions[ifr]
             print(f'{fr:.3e}',
                   ' + '.join([_.decode() for _ in reac['reactants']]), ' -> ',
                   ' + '.join([_.decode() for _ in reac['products']]), reac['abc'], ifr)
         for idr,dr in drr[:showFirst]:
             if dr < drmax * showFraction:
                 break
-            reac = md.reactions[idr]
+            reac = model.reactions[idr]
             print(f'{-dr:.3e}',
                   ' + '.join([_.decode() for _ in reac['reactants']]), ' -> ',
                   ' + '.join([_.decode() for _ in reac['products']]), reac['abc'], idr)
