@@ -40,3 +40,8 @@ You may try to find the location of "libgfortran.a" using the following command
 - For the command line executable, you can run an example model by
 
     `./re paths_test.dat`
+
+# Publication
+
+- A paper describing `Chempl` is uploaded to arxiv: [Chempl: a playable package for modeling interstellar chemistry
+](https://arxiv.org/abs/2007.11294)
