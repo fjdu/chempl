@@ -46,12 +46,11 @@ You may try to find the location of "libgfortran.a" using the following command
 - A paper describing `Chempl` can be downloaded from arxiv:
   [Chempl: a playable package for modeling interstellar chemistry](https://arxiv.org/abs/2007.11294)
   - Citation (BibTeX):
-
     ```@ARTICLE{2020arXiv200711294D,
            author = {{Du}, Fujun},
             title = "{Chempl: a playable package for modeling interstellar chemistry}",
           journal = {arXiv e-prints},
-         keywords = {Astrophysics - Solar and Stellar Astrophysics, Astrophysics - Instrumentation and Methods for Astrophysics, Nonlinear Sciences - Chaotic Dynamics},
+         keywords = {Astrophysics - Solar and Stellar Astrophysics, Astrophysics - Instrumentation and Methods for Astrophysics},
              year = 2020,
             month = jul,
               eid = {arXiv:2007.11294},
