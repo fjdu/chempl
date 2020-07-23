@@ -43,5 +43,5 @@ You may try to find the location of "libgfortran.a" using the following command
 
 # Publication
 
-- A paper describing `Chempl` is uploaded to arxiv: [Chempl: a playable package for modeling interstellar chemistry
+- A paper describing `Chempl` can be downloaded from arxiv: [Chempl: a playable package for modeling interstellar chemistry
 ](https://arxiv.org/abs/2007.11294)
