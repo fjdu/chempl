@@ -3,6 +3,8 @@
 # Requirement
 
 - Up-to-date compilers for Fortran, C++, and Cython
+- Python 3
+- For running the examples in the Jupyter notebooks, Anaconda3 is recommended
 
 # Compile
 
