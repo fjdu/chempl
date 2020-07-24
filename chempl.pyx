@@ -185,10 +185,16 @@ cdef class ChemModel:
         methods[k](kargs[k])
 
   def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6,
-                 showmsg=1, msglun=6, solver_id=0):
+                 showmsg=1, msglun=6, solver_id=0, model_id=None):
+    """
+    set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6,
+                 showmsg=1, msglun=6, solver_id=0, model_id=None)
+    When both solver_id and model_id are provided, model_id is used.
+    """
     self.updater_re.set_user_data(self.cdata.ptr)
     self.updater_re.allocate_sparse()
-    self.updater_re.initialize_solver(rtol, atol, mf, LRW_F, solver_id)
+    sid = model_id if model_id is not None else solver_id
+    self.updater_re.initialize_solver(rtol, atol, mf, LRW_F, sid)
     self.updater_re.set_solver_msg(showmsg)
     self.updater_re.set_solver_msg_lun(msglun)
     self.updater_re.allocate_rsav_isav()
