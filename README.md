@@ -1,8 +1,10 @@
 `Chempl` is an astrochemical code meant to be easy to play with in a python environment.
 
+Please raise an issue if you encounter any problems while compiling or running `Chempl`.
+
 # Requirement
 
-- Up-to-date compilers for Fortran, C++, and Cython; the C++ compiler must support the c++11 option
+- Up-to-date compilers for Fortran, C++, and Cython; the C++ compiler must support the `-c++11` option
 - Python 3
 - For running the examples in the Jupyter notebooks, Anaconda3 is recommended
 
