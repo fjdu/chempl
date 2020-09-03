@@ -30,6 +30,6 @@ setup(
     description='A playable astrochemical code',
     author='Fujun Du',
     author_email='fjdu@pmo.ac.cn fujun.du@gmail.com',
-    ext_modules=cythonize([extension1, extension2], language_level = "3",
+    ext_modules=cythonize([extension1, extension2], language_level=3,
     gdb_debug=True)
 )
