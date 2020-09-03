@@ -36,6 +36,7 @@ int main(int argc, char **argv)
               << " " << std::endl;
   }
 
+  std::cout << "Loading reactions..." << std::endl;
   TYPES::load_reactions(pdict["f_reactions"], user_data);
   std::cout << "Number of reactions: "
             << user_data.reactions.size() << std::endl;
@@ -72,7 +73,7 @@ int main(int argc, char **argv)
                              user_data.species.abundances.end(),
                              [](TYPES::DTP_FLOAT v){return v>1e-40;})
             << std::endl;
-  for (int i=0; i<user_data.species.idx2name.size(); ++i) {
+  for (std::size_t i=0; i<user_data.species.idx2name.size(); ++i) {
     if (user_data.species.abundances[i] > 1.0e-40) {
       std::cout << user_data.species.idx2name[i] << " "
                 << user_data.species.abundances[i] << std::endl;
@@ -103,14 +104,18 @@ int main(int argc, char **argv)
 
   RATE_EQ::Updater_RE updater_re;
   updater_re.set_user_data(&user_data);
+  std::cout << "Allocating sparse..." << std::endl;
   updater_re.allocate_sparse();
+  std::cout << "Initializing solver..." << std::endl;
   updater_re.initialize_solver(1e-6, 1e-30);
+  std::cout << "Setting solver msg..." << std::endl;
   updater_re.set_solver_msg(1);
   //updater_re.set_solver_msg_lun(79);
 
   TYPES::DTP_FLOAT t=0.0, dt=1e-1, t_ratio=1.08;
   int NMAX = 5000;
   double t_max_seconds = user_data.physical_params.t_max_year * CONST::phy_SecondsPerYear;
+  std::cout << "Allocating working vector..." << std::endl;
   double *y = new double[updater_re.NEQ];
   for (int i=0; i<updater_re.NEQ; ++i) {
     y[i] = user_data.species.abundances[i];

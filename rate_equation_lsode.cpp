@@ -10,8 +10,8 @@ namespace RATE_EQ {
 int Updater_RE::makeSparse(
     const TYPES::Reactions& reactions,
     std::vector<std::vector<bool> >& sps) {
-  for (int i=0; i<sps.size(); ++i) {
-    for (int j=0; j<sps[i].size(); ++j) {
+  for (std::size_t i=0; i<sps.size(); ++i) {
+    for (std::size_t j=0; j<sps[i].size(); ++j) {
       sps[i][j] = false;
     }
   }
@@ -88,7 +88,7 @@ void Updater_RE::set_user_data(TYPES::Chem_data *data_) {
 }
 
 void Updater_RE::allocate_sparse() {
-  if (sparseMaskJac.size() != NEQ) {
+  if (sparseMaskJac.size() != (std::size_t)NEQ) {
     for (auto& s: sparseMaskJac) {std::vector<bool>().swap(s);}
     std::vector<std::vector<bool> >().swap(sparseMaskJac);
     for (int i=0; i<NEQ; ++i) {
@@ -113,6 +113,7 @@ int Updater_RE::initialize_solver(
   ISTATE = 1;
   SOLVER_ID = solver_id;
 
+  std::cout << "Making sparse..." << std::endl;
   NNZ = makeSparse(data->reactions, sparseMaskJac);
   std::cout << "NNZ = " << NNZ << " ("
             << (double)NNZ / (double)(NEQ*NEQ) << ")" << std::endl;
@@ -211,7 +212,7 @@ void Updater_RE::jac(int *neq, double *t, double *y, int *j, double *ian, double
 {
   int jc = (*j) - 1;
   for (auto const& r: data->reactions) {
-    for (int i=0; i < r.idxReactants.size(); ++i) {
+    for (std::size_t i=0; i < r.idxReactants.size(); ++i) {
       if (r.idxReactants[i] != jc) {
         continue;
       }

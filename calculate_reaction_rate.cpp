@@ -83,7 +83,7 @@ TYPES::DTP_FLOAT rateArrhenius(
   int iIntvmin = 0, iIntvmin2, iTrgmin = 0, iTrgmin2 = 0;
   const double TTol = 5.0;
 
-  for (int i=0; i<r.Trange.size(); ++i) {
+  for (std::size_t i=0; i<r.Trange.size(); ++i) {
     double dfthis = abs(T - r.Trange[i]);
     if (dfTmin > dfthis) {
       dfTmin2 = dfTmin;

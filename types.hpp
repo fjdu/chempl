@@ -91,6 +91,8 @@ class Species {
     std::set<int> gasSpecies, surfaceSpecies, mantleSpecies;
     std::vector<DTP_FLOAT> abundances;
     void allocate_abundances();
+    Species();
+    ~Species();
 };
 
 

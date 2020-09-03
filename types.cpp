@@ -175,7 +175,7 @@ void PhyParams::add_a_timedependency(std::string name,
 
 void PhyParams::remove_a_timedependency(std::string name) {
   int ifound = -1;
-  for (int i=0; i < this->timeDependencies.size(); ++i) {
+  for (std::size_t i=0; i < this->timeDependencies.size(); ++i) {
     if (this->timeDependencies[i].name == name) {
       ifound = i;
       break;
@@ -318,7 +318,8 @@ void Chem_data::add_reaction(Reaction rs) {
     }
 
     if (species.name2idx.find(name) == species.name2idx.end()) {
-      species.name2idx[name] = species.name2idx.size();
+      int size_tmp = (int)species.name2idx.size();
+      species.name2idx[name] = size_tmp;
       species.idx2name.push_back(name);
     }
 
@@ -340,7 +341,7 @@ void Chem_data::add_reaction(Reaction rs) {
 
 
 void Chem_data::modify_reaction(const int& iReact, const std::map<std::string, std::vector<double> > &par) {
-  if ((iReact < 0) || (iReact >= reactions.size())) {return;}
+  if ((iReact < 0) || (iReact >= (int)reactions.size())) {return;}
   for (auto &p: par) {
     if (p.first == "abc") {
       reactions[iReact].abc = p.second;
@@ -358,7 +359,7 @@ void Chem_data::modify_reaction(const int& iReact, const std::map<std::string, s
 
 
 void Chem_data::find_duplicate_reactions() {
-  for (int i=0; i < reactions.size(); ++i) {
+  for (std::size_t i=0; i < reactions.size(); ++i) {
     if (reactions[i].abc.size() > 3) {
       if (std::find(dupli.begin(), dupli.end(), i) == dupli.end()) {
         dupli.push_back(i);
@@ -458,7 +459,7 @@ std::map<std::string, int> assignElementsToOneSpecies(
     eleDict[e.first] = 0;
   }
 
-  for (int iBg=0; iBg<name.size();) {
+  for (std::size_t iBg=0; iBg<name.size();) {
     bool found = false;
     for (int nlen=name.size()-iBg; nlen>0; --nlen) {
       auto q = elements.find(name.substr(iBg, nlen));
@@ -644,7 +645,7 @@ double Chem_data::calculate_a_rate(
 
 std::vector<int> Chem_data::getFormationReactions(int iSpecies) {
   std::vector<int> res;
-  for (int i=0; i<reactions.size(); ++i) {
+  for (std::size_t i=0; i<reactions.size(); ++i) {
     if (std::find(reactions[i].idxProducts.begin(),
                   reactions[i].idxProducts.end(), iSpecies)
         != reactions[i].idxProducts.end()) {
@@ -657,7 +658,7 @@ std::vector<int> Chem_data::getFormationReactions(int iSpecies) {
 
 std::vector<int> Chem_data::getDestructionReactions(int iSpecies) {
   std::vector<int> res;
-  for (int i=0; i<reactions.size(); ++i) {
+  for (std::size_t i=0; i<reactions.size(); ++i) {
     if (std::find(reactions[i].idxReactants.begin(),
                   reactions[i].idxReactants.end(), iSpecies)
         != reactions[i].idxReactants.end()) {
@@ -674,7 +675,7 @@ Chem_data::getFormationReactionsWithRates(
   update_phy_params(t, physical_params);
 
   std::vector<std::pair<int, double> > res;
-  for (int i=0; i<reactions.size(); ++i) {
+  for (std::size_t i=0; i<reactions.size(); ++i) {
     if (std::find(reactions[i].idxProducts.begin(),
                   reactions[i].idxProducts.end(), iSpecies)
         != reactions[i].idxProducts.end()) {
@@ -698,7 +699,7 @@ Chem_data::getDestructionReactionsWithRates(
   update_phy_params(t, physical_params);
 
   std::vector<std::pair<int, double> > res;
-  for (int i=0; i<reactions.size(); ++i) {
+  for (std::size_t i=0; i<reactions.size(); ++i) {
     if (std::find(reactions[i].idxReactants.begin(),
                   reactions[i].idxReactants.end(), iSpecies)
         != reactions[i].idxReactants.end()) {
@@ -724,6 +725,13 @@ void update_phy_params(
   }
 }
 
+Species::Species() {
+  name2idx.clear();
+}
+
+Species::~Species() {
+  name2idx.clear();
+}
 
 void Species::allocate_abundances() {
   this->abundances = std::vector<TYPES::DTP_FLOAT>(this->name2idx.size());
@@ -820,7 +828,7 @@ Reaction str2reaction(const std::string& str,
   if (std::regex_match(str, emptyline)) {
     return reaction;
   }
-  if (str.size() < rowlen_min) {
+  if ((int)str.size() < rowlen_min) {
     return reaction;
   }
 
@@ -916,7 +924,7 @@ void loadInitialAbundances(TYPES::Species& species, std::string fname) {
   if (species.abundances.size() != species.name2idx.size()) {
     species.abundances = std::vector<TYPES::DTP_FLOAT>(species.name2idx.size());
   }
-  for (int i=0; i<species.abundances.size(); ++i) {
+  for (std::size_t i=0; i<species.abundances.size(); ++i) {
     species.abundances[i] = 0.0;
   }
 
