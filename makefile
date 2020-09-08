@@ -32,6 +32,7 @@ endif
 endif
 
 FCCOPT?=-c $(lflags_debug)
+FCCOPTLEGACY?=$(FCCOPT) -std=legacy
 
 
 exe?=re
@@ -81,7 +82,7 @@ ode_wrapper.o: ode_wrapper.f90
 	$(FCC) $(FCCOPT) ode_wrapper.f90
 
 opkdmain.o: opkdmain.f opkda1.f opkda2.f
-	$(FCC) $(FCCOPT) opkd*.f
+	$(FCC) $(FCCOPTLEGACY) opkd*.f
 
 clean:
 	rm *.o *.gch *.a *.so
