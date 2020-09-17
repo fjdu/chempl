@@ -4,14 +4,7 @@ DEBUGCPP=-g
 CPLOPT=-std=c++11 -Wall $(DEBUGCPP) $(OPTLVL) -fPIC
 FCC?=gfortran
 
-#LINKER?=gfortran
-#LINKOPT=-lc++ -Wall $(OPTLVL)
 LINKER?=g++
-#LINKOPT?=-lgfortran -L/usr/local/Cellar/gcc/9.2.0_1/lib/gcc/9/
-LINKOPT?=-L"$(shell dirname `gfortran --print-file-name libgfortran.a`)" -lgfortran
-
-#q:
-#	echo $(LINKOPT)
 
 ifeq ($(FCC), ifort)
     lflag_prepro ?= -fpp
@@ -19,6 +12,7 @@ ifeq ($(FCC), ifort)
     lflags_debug = -debug -save-temps -fpic -heap-arrays -O0 -g -traceback -check all -fpe0 -fp-stack-check $(lflags_precise)
     lflags_fast = -O2 $(lflag_prepro)
     lflags_profiling = $(lflags_fast) -profile-functions -profile-loops=all -profile-loops-report=2 $(lflag_prepro)
+    LINKOPT?=-lifort
 else
 ifeq ($(FCC), gfortran)
     lflag_prepro ?= -cpp
@@ -26,6 +20,7 @@ ifeq ($(FCC), gfortran)
     lflags_debug = $(lflags_precise) -fbacktrace -ffree-line-length-0
     lflags_fast = -O3 $(lflag_prepro)
     lflags_profiling = $(lflags_fast) -pg $(lflag_prepro)
+    LINKOPT?=-L"$(shell dirname `gfortran --print-file-name libgfortran.a`)" -lgfortran
 else
     $(error UnknownCompiler: $(FCC))
 endif

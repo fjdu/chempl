@@ -62,8 +62,8 @@ TYPES::DTP_FLOAT Updater_RE::update(double t, double dt, double *y)
   double t0 = t;
   double tout = t + dt;
 
-  dlsodes_w(f, &NEQ, y, &t, &tout, &ITOL, &RTOL, &ATOL, &ITASK,
-            &ISTATE, &IOPT, RWORK, &LRW, IWORK, &LIW, jac, &MF);
+  dlsodes_w(f, NEQ, y, &t, tout, ITOL, RTOL, ATOL, ITASK,
+            &ISTATE, IOPT, RWORK, LRW, IWORK, LIW, jac, MF);
 
   std::cout << (char)27 << "[A"
             << std::setw(9) << std::setprecision(3) << std::left

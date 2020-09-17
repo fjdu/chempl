@@ -10,11 +10,11 @@ extern "C" {
 
 void dlsodes_w(
   void (*)(int *, double *, double *, double *), //f
-  int *NEQ, double *y, double *t, double *tout, int *ITOL,
-  double *RTOL, double *ATOL, int *ITASK, int *ISTATE, int *IOPT,
-  double *RWORK, int *LRW, int *IWORK, int *LIW,
+  int NEQ, double *y, double *t, double tout, int ITOL,
+  double RTOL, double ATOL, int ITASK, int *ISTATE, int IOPT,
+  double *RWORK, int LRW, int *IWORK, int LIW,
   void (*)(int *, double *, double *, int *, double *, double *, double *),
-  int *MF);
+  int MF);
 
 void xsetf_w(int* mflag);
 void xsetun_w(int* lun);
