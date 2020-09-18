@@ -57,7 +57,7 @@ Updater_RE::~Updater_RE() {
 }
 
 
-TYPES::DTP_FLOAT Updater_RE::update(double t, double dt, double *y)
+TYPES::DTP_FLOAT Updater_RE::update(double t, double dt, double *y, bool verbose)
 {
   double t0 = t;
   double tout = t + dt;
@@ -65,19 +65,21 @@ TYPES::DTP_FLOAT Updater_RE::update(double t, double dt, double *y)
   dlsodes_w(f, NEQ, y, &t, tout, ITOL, RTOL, ATOL, ITASK,
             &ISTATE, IOPT, RWORK, LRW, IWORK, LIW, jac, MF);
 
-  std::cout << (char)27 << "[A"
-            << std::setw(9) << std::setprecision(3) << std::left
-            << t0 << " -> "
-            << std::setw(9) << std::setprecision(3) << std::left
-            << t
-            << " ISTATE=" << ISTATE
-            << " #f="   << IWORK[11]
-            << " #jac=" << IWORK[12]
-            << " LRW=" << IWORK[16]
-            << " LIW=" << IWORK[17]
-            << " NNZ=" << IWORK[18]
-            << " SID=" << SOLVER_ID
-            << std::endl;
+  if (verbose) {
+    std::cout << (char)27 << "[A"
+              << std::setw(9) << std::setprecision(3) << std::left
+              << t0 << " -> "
+              << std::setw(9) << std::setprecision(3) << std::left
+              << t
+              << " ISTATE=" << ISTATE
+              << " #f="   << IWORK[11]
+              << " #jac=" << IWORK[12]
+              << " LRW=" << IWORK[16]
+              << " LIW=" << IWORK[17]
+              << " NNZ=" << IWORK[18]
+              << " SID=" << SOLVER_ID
+              << std::endl;
+  }
   return t;
 }
 
@@ -102,7 +104,8 @@ int Updater_RE::initialize_solver(
     double abstol,
     int mf, //021: use Jac; 022: not.
     int LRW_F,
-    int solver_id)
+    int solver_id,
+    bool keepStructure)
 {
   MF = mf;
   IOPT = 1;
@@ -112,6 +115,10 @@ int Updater_RE::initialize_solver(
   ITASK = 1;
   ISTATE = 1;
   SOLVER_ID = solver_id;
+  
+  if (keepStructure) {
+    return 0;
+  }
 
   std::cout << "Making sparse..." << std::endl;
   NNZ = makeSparse(data->reactions, sparseMaskJac);

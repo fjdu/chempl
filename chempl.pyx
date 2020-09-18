@@ -5,10 +5,12 @@ from libcpp.vector cimport vector
 from libcpp.map cimport map as cppmap
 from libcpp.set cimport set as cppset
 from libcpp.utility cimport pair
+from libcpp cimport bool
 from myconsts import Consts
 import datetime
 import re
 import numpy as np
+from  multiprocessing import Pool
 
 cs = Consts()
 
@@ -125,10 +127,11 @@ cdef extern from "rate_equation_lsode.hpp" namespace "RATE_EQ":
   cdef cppclass Updater_RE:
     void set_user_data(Chem_data* udata)
     void allocate_sparse()
-    int initialize_solver(double reltol, double abstol, int mf, int LRW_F, int solver_id)
+    int initialize_solver(double reltol, double abstol, int mf, int LRW_F,
+                          int solver_id, bool keepStructure)
     void allocate_rsav_isav()
     void save_restore_common_block(int job)
-    double update(double t, double dt, double* y)
+    double update(double t, double dt, double* y, bool verbose)
     void set_solver_msg(int mflag)
     void set_solver_msg_lun(int lun)
     void set_MF(int i_)
@@ -185,7 +188,7 @@ cdef class ChemModel:
         methods[k](kargs[k])
 
   def set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6,
-                 showmsg=1, msglun=6, solver_id=0, model_id=None):
+                 showmsg=1, msglun=6, solver_id=0, model_id=None, keepStructure=False):
     """
     set_solver(self, rtol=1e-6, atol=1e-30, mf=21, LRW_F=6,
                  showmsg=1, msglun=6, solver_id=0, model_id=None)
@@ -194,7 +197,7 @@ cdef class ChemModel:
     self.updater_re.set_user_data(self.cdata.ptr)
     self.updater_re.allocate_sparse()
     sid = model_id if model_id is not None else solver_id
-    self.updater_re.initialize_solver(rtol, atol, mf, LRW_F, sid)
+    self.updater_re.initialize_solver(rtol, atol, mf, LRW_F, sid, keepStructure)
     self.updater_re.set_solver_msg(showmsg)
     self.updater_re.set_solver_msg_lun(msglun)
     self.updater_re.allocate_rsav_isav()
@@ -210,7 +213,8 @@ cdef class ChemModel:
   def restore_common_block(self):
     self.updater_re.save_restore_common_block(job=2)
 
-  def update(self, vector[double] y, double t, double dt, int istate=0, interruptMode=False):
+  def update(self, vector[double] y, double t, double dt, int istate=0,
+             interruptMode=False, verbose=True):
     cdef int i
     cdef double t1
 
@@ -230,7 +234,7 @@ cdef class ChemModel:
         print('Unrecoverable error: ISTATE = ', self.updater_re.ISTATE)
         return
 
-    t1 = self.updater_re.update(t, dt, self.cdata.y)
+    t1 = self.updater_re.update(t, dt, self.cdata.y, verbose)
 
     if interruptMode and istate != 1:
       self.save_common_block()
@@ -478,6 +482,10 @@ cdef class ChemModel:
   def duplicate_reactions(self):
     return self.cdata.dupli
 
+  @property
+  def y(self):
+    return [self.cdata.y[i] for i in range(self.updater_re.NEQ)]
+
   def load_reactions(self, fname, nReactants=3, nProducts=4, nABC=3,
     lenSpeciesName=12, lenABC=9, nT=2, lenT=6, lenType=3, rowlen_min=126):
     """
@@ -588,7 +596,7 @@ def rate_Arrhenius(T, abc, iS=0):
     return arrhenius(T, abc, iS)
 
 
-def run_one_model(p=None, model=None):
+def run_one_model(p=None, model=None, firstRun=True, verbose=True):
     """
     run_one_model(p=None, model=None)
     Run one model with a set of parameters and a model
@@ -607,12 +615,19 @@ def run_one_model(p=None, model=None):
 
     model: a loaded network
 
+    firstRun: whether the model is being run for the first time; if not, some preparation steps can be saved
+
+    verbose: if False, some screen printout will be suppressed.  Default: True
+
     Return: a dictionary containing the time steps and abundance evolution tracks
     """
     t_start = datetime.datetime.now()
 
-    model.prepare()
-    model.set_solver(solver_id=p.get('model_id') or 0)
+    if firstRun:
+        model.prepare()
+        model.set_solver(solver_id=p.get('model_id') or 0)
+    else:
+        model.set_solver(solver_id=p.get('model_id') or 0, keepStructure=True)
 
     if p.get('y0'):
         init_y = p['y0']
@@ -627,7 +642,7 @@ def run_one_model(p=None, model=None):
     tmax = p.get('tmax') or p.get('t_max_s') or 3.15e13
 
     for i in range(p.get('nmax') or 2000):
-        s['t'], s['y'] = model.update(s['y'], t=s['t'], dt=s['dt'])
+        s['t'], s['y'] = model.update(s['y'], t=s['t'], dt=s['dt'], verbose=verbose)
         s['phy_s'].append(model.get_all_phy_params())
         s['ts'].append(s['t'])
         s['ys'].append(s['y'])
@@ -637,9 +652,28 @@ def run_one_model(p=None, model=None):
         s['dt'] *= p.get('t_ratio') or 1.1
         if s['t'] + s['dt'] > tmax:
             s['dt'] = tmax - s['t']
-    print('Solver:', p['model_id'], 'finished:',
-          (datetime.datetime.now() - t_start).total_seconds(), 'seconds elapsed')
+    if verbose:
+        print('Solver:', p['model_id'], 'finished:',
+              (datetime.datetime.now() - t_start).total_seconds(), 'seconds elapsed')
     return s
+
+
+def run_multiple_params_sequentially(model=None, phy_params_s=None,
+                                     t0=0.0, dt0=1.0, t_ratio=1.1, tmax_yr=1e6, nmax=2000,
+                                     follow=False, verbose=False):
+    return [run_one_model(
+        p={'model_id': 0,
+           'y0': model.y if (follow and i>0) else model.abundances,
+           't0': t0,
+           'dt0': dt0,
+           't_ratio': t_ratio,
+           'tmax': tmax_yr*cs.phy_SecondsPerYear,
+           'nmax': nmax,
+           'phy_params': pps,
+          },
+        model=model,
+        firstRun=True if i==0 else False,
+        verbose=verbose) for (i,pps) in enumerate(phy_params_s)]
 
 
 def get_total_charge(ab_s, model):

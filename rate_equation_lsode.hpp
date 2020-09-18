@@ -28,8 +28,8 @@ class Updater_RE {
   public:
     static void f(int *neq, double *t, double *y, double *ydot);
     static void jac(int *neq, double *t, double *y, int *j, double *ian, double *jan, double *pdj);
-    TYPES::DTP_FLOAT update(double t, double dt, double *y);
-    int initialize_solver(double reltol=1e-6, double abstol=1e-30, int mf=21, int LRW_F=6, int solver_id=0);
+    TYPES::DTP_FLOAT update(double t, double dt, double *y, bool verbose=true);
+    int initialize_solver(double reltol=1e-6, double abstol=1e-30, int mf=21, int LRW_F=6, int solver_id=0, bool keepStructure=false);
     int makeSparse(const TYPES::Reactions& reactions, std::vector<std::vector<bool> >& sps);
     void set_user_data(TYPES::Chem_data *data_);
     void allocate_sparse();
