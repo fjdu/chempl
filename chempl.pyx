@@ -796,3 +796,33 @@ def printFormationDestruction(species, model, res, tmin=None, tmax=None, nstep=1
                   ' + '.join([_.decode() for _ in reac['reactants']]), ' -> ',
                   ' + '.join([_.decode() for _ in reac['products']]), reac['abc'], idr)
     return
+
+
+
+def printElementalResidence(element, model, res, tmin=None, tmax=None, nstep=10,
+                            showFirst=10, showFraction=0.1):
+    """printElementalResidence(element, model, res, tmin=None, tmax=None, nstep=10,
+                               showFirst=10, showFraction=0.1):
+    """
+    nspe = len(res['ys'][0])
+
+    for n in range(0, len(res['ts']), nstep):
+        t = res['ts'][n] / cs.phy_SecondsPerYear
+        if (tmin is not None) and (tmax is not None):
+          if not (tmin <= t <= tmax):
+            continue
+
+        print("t = {:.3e}".format(t))
+
+        els = [(i, res['ys'][n][i] * model.elementsSpecies[i][element])
+               for i in range(nspe)]
+        els = sorted(els, key=lambda x: -x[1])
+        etotal = sum([_[1] for _ in els])
+
+        for i in range(min(showFirst, nspe)):
+          frac = els[i][1]/etotal
+          print(i, model.idx2name[els[i][0]],
+                '{e:.3e}  {f:.4g}'.format(e=els[i][1], f=frac))
+          if frac < showFraction:
+            break
+    return

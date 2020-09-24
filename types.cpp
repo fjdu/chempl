@@ -681,7 +681,13 @@ Chem_data::getFormationReactionsWithRates(
         != reactions[i].idxProducts.end()) {
       std::pair<int, double> p;
       p.first = i;
-      p.second = calculate_a_rate(t, y, reactions[i]);
+      double r=calculate_a_rate(t, y, reactions[i]), tt=0.0;
+      for (auto s: reactions[i].idxProducts) {
+        if (s == iSpecies) {
+          tt += r;
+        }
+      }
+      p.second = tt;
       res.push_back(p);
     }
   }
@@ -705,7 +711,13 @@ Chem_data::getDestructionReactionsWithRates(
         != reactions[i].idxReactants.end()) {
       std::pair<int, double> p;
       p.first = i;
-      p.second = calculate_a_rate(t, y, reactions[i]);
+      double r=calculate_a_rate(t, y, reactions[i]), tt=0.0;
+      for (auto s: reactions[i].idxReactants) {
+        if (s == iSpecies) {
+          tt += r;
+        }
+      }
+      p.second = tt;
       res.push_back(p);
     }
   }
