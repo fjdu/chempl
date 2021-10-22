@@ -1,7 +1,7 @@
 f_phy_params = phy_params_test.dat
-#f_reactions = rate06_comb.dat # rate12_combined.dat # rate12_combined_H_chemisorption.dat # rate06_withgrain_lowH2Bind_hiOBind_lowCObind_C2H.dat # 
+f_reactions = rate12_combined.dat # rate12_combined_H_chemisorption.dat # rate06_withgrain_lowH2Bind_hiOBind_lowCObind_C2H.dat # 
 #f_reactions = rate06_dipole_red_com_deut_20120711_noH2O2Scram_lowHbind_Xander.dat
-f_reactions = rate12_combined_no_surface_reaction.dat
+# f_reactions = rate12_combined_no_surface_reaction.dat
 # f_reactions = rate12_only_gas_phase_isotopized_driven.dat
 #f_initial_abundances = init_CO_mantle.dat
 #f_initial_abundances = init_high_C_to_O.dat

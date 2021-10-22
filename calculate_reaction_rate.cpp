@@ -428,6 +428,8 @@ TYPES::DTP_FLOAT rate_CO_photodissociation(
     const TYPES::Species& s,
     TYPES::AuxData& m)
 { // Adapted from: udfa_rate12/rate13_cse_code/cssubs.f
+  // This function is for the case of expanding envelope of evolved stars.
+  // It should NOT be used in the generic ISM cases.
   const double FRACE = 1.0/3.0, LAMDAE = 1000.0*1.0E-08,
     FOSCE = 0.017, BANDS = 1.0, smallnum=1e-6;
   double XCO = y[r.idxReactants[0]];
@@ -459,6 +461,8 @@ TYPES::DTP_FLOAT rate_CO_photodissociation_better(
     const TYPES::Species& s,
     TYPES::AuxData& m)
 {
+  // This function can be used for generic ISM.
+  // Reference: Morris & Jura 1983
   const double FRACE = 1.0/3.0, LAMDAE = 1000.0*1.0E-08,
     FOSCE = 0.017, BANDS = 1.0, smallnum=1e-6;
   double AUV = p.Ncol_H * CONST::phy_colDen2AUV_1000A;
