@@ -156,7 +156,9 @@ int PhyParams::from_file(std::string fname)
       }
     }
   } else {
-    std::cout << "Error in PhyParams::from_file: " << fname << std::endl;
+    std::cout << "Error in PhyParams::from_file: " << std::endl;
+    std::cerr << "Fail to open file: \"" << fname << "\"\n"
+              << strerror(errno) << std::endl;
   }
   return 0;
 }
@@ -753,9 +755,9 @@ void Species::allocate_abundances() {
 Recorder::Recorder(std::string fname_): fname(fname_) {
   ofs.open(fname);
   if (ofs.fail()) {
-    std::cerr << "Fail to open file: "
-              << fname << std::endl;
-    throw std::runtime_error(std::strerror(errno));
+    std::cout << "Error in Recorder initialization: " << std::endl;
+    std::cerr << "Fail to open file: \"" << fname << "\"\n"
+              << strerror(errno) << std::endl;
   }
 }
 
@@ -820,7 +822,9 @@ PathsDict loadPathConfig(std::string fname) {
       }
     }
   } else {
-    std::cout << "Error in loadPathConfig: " << fname << std::endl;
+    std::cout << "Error in loadPathConfig:" << std::endl;
+    std::cerr << "Fail to open file: \"" << fname << "\"\n"
+              << strerror(errno) << std::endl;
   }
   return pd;
 }
