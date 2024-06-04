@@ -1,11 +1,3 @@
-#include <map>
-#include <string>
-#include <vector>
-#include <set>
-#include <iostream>
-#include <fstream>
-#include <regex>
-#include <utility>
 #include "constants.hpp"
 #include "types.hpp"
 #include "utils.hpp"
@@ -158,7 +150,7 @@ int PhyParams::from_file(std::string fname)
   } else {
     std::cout << "Error in PhyParams::from_file: " << std::endl;
     std::cerr << "Fail to open file: \"" << fname << "\"\n"
-              << strerror(errno) << std::endl;
+              << std::strerror(errno) << std::endl;
   }
   return 0;
 }
@@ -757,7 +749,7 @@ Recorder::Recorder(std::string fname_): fname(fname_) {
   if (ofs.fail()) {
     std::cout << "Error in Recorder initialization: " << std::endl;
     std::cerr << "Fail to open file: \"" << fname << "\"\n"
-              << strerror(errno) << std::endl;
+              << std::strerror(errno) << std::endl;
   }
 }
 
@@ -824,7 +816,7 @@ PathsDict loadPathConfig(std::string fname) {
   } else {
     std::cout << "Error in loadPathConfig:" << std::endl;
     std::cerr << "Fail to open file: \"" << fname << "\"\n"
-              << strerror(errno) << std::endl;
+              << std::strerror(errno) << std::endl;
   }
   return pd;
 }
