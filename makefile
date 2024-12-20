@@ -3,6 +3,7 @@ OPTLVL=-O3
 DEBUGCPP=-g
 CPLOPT=-std=c++11 -Wall $(DEBUGCPP) $(OPTLVL) -fPIC
 FCC?=gfortran
+PYTHON?=python3
 
 LINKER?=g++
 
@@ -44,7 +45,7 @@ CHEMPLLIB=$(LIB_DIR)/libchempl.a
 MYCONSTSLIB=$(LIB_DIR)/libmyconsts.a
 
 chempl: setup.py chempl.pyx myconsts.pyx myconsts.pxd $(CHEMPLLIB) $(MYCONSTSLIB)
-	python3 setup.py build_ext --inplace
+	$(PYTHON) setup.py build_ext --inplace
 
 $(CHEMPLLIB): $(OBJSWRAPPER)
 	ar rcs $(CHEMPLLIB) $(OBJSWRAPPER)

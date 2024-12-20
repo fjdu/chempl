@@ -14,6 +14,14 @@ from  multiprocessing import Pool
 
 cs = Consts()
 
+class StrKeyDict(dict):
+  def __getitem__(self, k):
+    if k in self:
+      return self.get(k)
+    if type(k) == str:
+      return self.get(k.encode('utf-8'))
+
+
 cdef extern from "types.hpp" namespace "TYPES":
 
   cdef cppclass Reaction:
@@ -286,11 +294,15 @@ cdef class ChemModel:
       self.cdata.y[i] = y[i]
     return self.cdata.getDestructionReactionsWithRates(iSpecies, t, self.cdata.y)
 
-  def set_phy_param(self, string name, double val):
+  def set_phy_param(self, name, val):
     """
-    set_phy_param(self, string name, double val)
+    set_phy_param(self, name, val)
     """
-    self.cdata.set_phy_param(name, val)
+    if type(name) == str:
+      self.cdata.set_phy_param(name.encode('utf-8'), val)
+    else:
+      self.cdata.set_phy_param(name, val)
+    #
     self.cdata.physical_params.prep_params()
 
   def set_phy_param_from_file(self, string fname):
@@ -300,18 +312,24 @@ cdef class ChemModel:
     self.cdata.physical_params.from_file(fname)
     self.cdata.physical_params.prep_params()
 
-  def get_phy_param(self, string name):
+  def get_phy_param(self, name):
     """
-    get_phy_param(self, string name)
+    get_phy_param(self, name)
     """
-    return self.cdata.get_phy_param(name)
+    if type(name) == str:
+      return self.cdata.get_phy_param(name.encode('utf-8'))
+    else:
+      return self.cdata.get_phy_param(name)
 
   def set_phy_params_by_dict(self, d):
     """
     set_phy_params_by_dict(self, d)
     """
     for k in d:
-      self.set_phy_param(k, d[k])
+      k_ = k
+      if type(k) == str:
+        k_ = k.encode('utf-8')
+      self.set_phy_param(k_, d[k])
     self.cdata.physical_params.prep_params()
 
   def get_all_phy_params(self):
@@ -432,7 +450,7 @@ cdef class ChemModel:
 
   @property
   def name2idx(self):
-    return self.cdata.species.name2idx
+    return StrKeyDict(self.cdata.species.name2idx)
 
   @property
   def idx2name(self):
@@ -492,13 +510,19 @@ cdef class ChemModel:
     load_reactions(self, fname, nReactants=3, nProducts=4, nABC=3,
     lenSpeciesName=12, lenABC=9, nT=2, lenT=6, lenType=3, rowlen_min=126)
     """
+    if type(fname) == str:
+      fname = fname.encode('utf-8')
     load_reactions(fname, self.cdata, nReactants, nProducts,
     nABC, lenSpeciesName, lenABC, nT, lenT, lenType, rowlen_min)
 
   def loadInitialAbundances(self, fname):
+    if type(fname) == str:
+      fname = fname.encode('utf-8')
     loadInitialAbundances(self.cdata.species, fname)
 
   def loadSpeciesEnthalpies(self, fname):
+    if type(fname) == str:
+      fname = fname.encode('utf-8')
     loadSpeciesEnthalpies(self.cdata.species, fname)
 
   def assignReactionHandlers(self):
@@ -508,6 +532,8 @@ cdef class ChemModel:
     """
     setAbundanceByName(self, name, val)
     """
+    if type(name) == str:
+      name = name.encode('utf-8')
     if len(self.cdata.species.abundances) == 0:
       self.cdata.species.allocate_abundances()
     idx = self.cdata.species.name2idx[name]
@@ -797,6 +823,45 @@ def printFormationDestruction(species, model, res, tmin=None, tmax=None, nstep=1
                   ' + '.join([_.decode() for _ in reac['products']]), reac['abc'], idr)
     return
 
+
+def collectFormationDestruction(species, model, res, tmin=None, tmax=None, nstep=10, latex=True):
+    """collectFormationDestruction(species, model, res, tmin=None, tmax=None, nstep=10):
+    """
+    iSpe = model.name2idx[species]
+    fr_s = dict()
+    dr_s = dict()
+    rstr_s = dict()
+    for n in range(0, len(res['ts']), nstep):
+        t = res['ts'][n] / cs.phy_SecondsPerYear
+        if (tmin is not None) and (tmax is not None):
+          if not (tmin <= t <= tmax):
+            continue
+        frr = model.getFormationReactionsWithRates(iSpe, res['ts'][n], res['ys'][n])
+        drr = model.getDestructionReactionsWithRates(iSpe, res['ts'][n], res['ys'][n])
+        for ir,fr in frr:
+          if not ir in fr_s:
+            fr_s[ir] = [(t,fr)]
+          else:
+            fr_s[ir].append((t,fr))
+        for ir,dr in drr:
+          if not ir in dr_s:
+            dr_s[ir] = [(t,dr)]
+          else:
+            dr_s[ir].append((t,dr))
+    all_r = set([_ for _ in fr_s] + [_ for _ in dr_s])
+    for ir in all_r:
+        reac = model.reactions[ir]
+        if latex:
+          rstr_s[ir] = ( ' + '.join([chem2tex(_.decode()) for _ in reac['reactants']])
+                       + r' $\to$ '
+                       + ' + '.join([chem2tex(_.decode()) for _ in reac['products']])
+                       + ' [' + ','.join(['{:.3g}'.format(_) for _ in reac['abc']]) + ']')
+        else:
+          rstr_s[ir] = ( ' + '.join([_.decode() for _ in reac['reactants']])
+                       + ' -> '
+                       + ' + '.join([_.decode() for _ in reac['products']])
+                       + ' [' + ','.join(['{:.3g}'.format(_) for _ in reac['abc']]) + ']')
+    return fr_s, dr_s, rstr_s
 
 
 def printElementalResidence(element, model, res, tmin=None, tmax=None, nstep=10,
