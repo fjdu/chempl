@@ -849,18 +849,17 @@ def collectFormationDestruction(species, model, res, tmin=None, tmax=None, nstep
           else:
             dr_s[ir].append((t,dr))
     all_r = set([_ for _ in fr_s] + [_ for _ in dr_s])
+    _proc = lambda x: x.decode()
+    _to = ' -> '
+    if latex:
+      _proc = lambda x: chem2tex(x.decode())
+      _to = r' $\to$ '
     for ir in all_r:
-        reac = model.reactions[ir]
-        if latex:
-          rstr_s[ir] = ( ' + '.join([chem2tex(_.decode()) for _ in reac['reactants']])
-                       + r' $\to$ '
-                       + ' + '.join([chem2tex(_.decode()) for _ in reac['products']])
-                       + ' [' + ','.join(['{:.3g}'.format(_) for _ in reac['abc']]) + ']')
-        else:
-          rstr_s[ir] = ( ' + '.join([_.decode() for _ in reac['reactants']])
-                       + ' -> '
-                       + ' + '.join([_.decode() for _ in reac['products']])
-                       + ' [' + ','.join(['{:.3g}'.format(_) for _ in reac['abc']]) + ']')
+      reac = model.reactions[ir]
+      rstr_s[ir] = ( ' + '.join([_proc(_) for _ in reac['reactants']])
+                   + _to
+                   + ' + '.join([_proc(_) for _ in reac['products']])
+                   + ' [' + ','.join(['{:.3g}'.format(_) for _ in reac['abc']]) + ']')
     return fr_s, dr_s, rstr_s
 
 
